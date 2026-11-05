@@ -51,11 +51,11 @@ De app staat dan op `https://lanas-gouden-missie.<jouw-subdomein>.workers.dev`. 
 
 ## De stem
 
-Alle vaste teksten (instructies, complimenten, flitswoorden, verhaaltjes en de getallen 0 tot 100) zijn ingesproken met **ElevenLabs**, stem **Roos**: een jonge, vrolijke Nederlandse stem. De bestanden staan in `public/audio/tts/` en werken ook offline. Verhaaltjessommen worden steeds anders gemaakt; die leest de tabletstem voor.
+Alle vaste teksten (instructies, complimenten, flitswoorden, verhaaltjes en de getallen 0 tot 100) zijn ingesproken met **ElevenLabs**, stem **Roos**: een jonge, vrolijke Nederlandse stem. De bestanden staan in `public/audio/tts/` en werken ook offline. Ook de verhaaltjessommen: die komen uit een vaste verzameling van 72 (24 per niveau, `content/verhaaltjessommen.json`), zodat alles vooraf is ingesproken en de tabletstem niet meer nodig is. Een test bewaakt dat elke gesproken som en elk verhaaltje een bestand heeft. Nieuwe verzameling maken: `npm run verhaalsommen` en dan `npm run audio`.
 
 - **Vlot tempo:** instructies op 1,15, zinnen op 1,05 en getallen op 1,1 (instelbaar in `content/stem.json`). De app knipt bovendien de stilte aan begin en eind van elk fragment weg, zodat de stukjes van een som direct op elkaar aansluiten.
 - **Modellen:** `eleven_multilingual_v2` voor zinnen (ondersteunt tempo), `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden en getallen.
-- **Verbruik:** alles inspreken kostte ongeveer 2.300 credits.
+- **Verbruik:** alles inspreken kostte ongeveer 8.000 credits (waarvan ~5.600 voor de verhaaltjessommen).
 - **Andere stem kiezen:** in de ouderhoek staan proefstemmen (Roos, Ruth, Emma, Melanie). Zet de id van de gekozen stem in `content/stem.json` en draai `npm run audio`.
 
 **Opnieuw inspreken** (bijv. na nieuwe woorden of verhalen):

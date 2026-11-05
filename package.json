@@ -12,7 +12,8 @@
     "audio": "tsx tools/maak-audio.ts",
     "audio:proef": "tsx tools/maak-audio.ts --dry-run",
     "deploy": "npm run build && wrangler deploy",
-    "deploy:proef": "npm run build && wrangler deploy --dry-run"
+    "deploy:proef": "npm run build && wrangler deploy --dry-run",
+    "verhaalsommen": "tsx tools/maak-verhaalsommen.ts"
   },
   "devDependencies": {
     "@elevenlabs/elevenlabs-js": "^2.76.0",

@@ -1,0 +1,441 @@
+{
+  "_uitleg": "Vaste verhaaltjessommen per niveau, vooraf ingesproken. Maak opnieuw met: npm run verhaalsommen (daarna npm run audio).",
+  "R1": [
+    {
+      "a": 5,
+      "op": "+",
+      "b": 8,
+      "tekst": "Mira heeft 5 lichtstokken. Zoey geeft er 8 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 17,
+      "op": "-",
+      "b": 8,
+      "tekst": "Rumi heeft 17 stickers. Ze geeft er 8 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 2,
+      "op": "+",
+      "b": 5,
+      "tekst": "In de zaal zitten 2 kinderen. Er komen nog 5 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 3,
+      "op": "+",
+      "b": 8,
+      "tekst": "Rumi zingt 3 liedjes. Daarna zingt ze er nog 8. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 5,
+      "op": "+",
+      "b": 9,
+      "tekst": "Mira heeft 5 lichtstokken. Zoey geeft er 9 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 8,
+      "op": "+",
+      "b": 9,
+      "tekst": "In de zaal zitten 8 kinderen. Er komen nog 9 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 5,
+      "op": "+",
+      "b": 7,
+      "tekst": "Rumi zingt 5 liedjes. Daarna zingt ze er nog 7. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 18,
+      "op": "-",
+      "b": 3,
+      "tekst": "Er zijn 18 demonen. Zoey zingt er 3 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 11,
+      "op": "-",
+      "b": 2,
+      "tekst": "Mira heeft 11 ballonnen. Er knappen er 2. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 8,
+      "op": "+",
+      "b": 8,
+      "tekst": "Mira heeft 8 lichtstokken. Zoey geeft er 8 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 9,
+      "op": "+",
+      "b": 7,
+      "tekst": "In de zaal zitten 9 kinderen. Er komen nog 7 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 12,
+      "op": "-",
+      "b": 9,
+      "tekst": "Rumi heeft 12 stickers. Ze geeft er 9 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 13,
+      "op": "-",
+      "b": 6,
+      "tekst": "Er zijn 13 demonen. Zoey zingt er 6 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 9,
+      "op": "+",
+      "b": 6,
+      "tekst": "Rumi zingt 9 liedjes. Daarna zingt ze er nog 6. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 17,
+      "op": "-",
+      "b": 9,
+      "tekst": "Mira heeft 17 ballonnen. Er knappen er 9. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 6,
+      "op": "+",
+      "b": 8,
+      "tekst": "Mira heeft 6 lichtstokken. Zoey geeft er 8 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 15,
+      "op": "-",
+      "b": 8,
+      "tekst": "Rumi heeft 15 stickers. Ze geeft er 8 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 13,
+      "op": "-",
+      "b": 4,
+      "tekst": "Er zijn 13 demonen. Zoey zingt er 4 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 3,
+      "op": "+",
+      "b": 9,
+      "tekst": "In de zaal zitten 3 kinderen. Er komen nog 9 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 12,
+      "op": "-",
+      "b": 4,
+      "tekst": "Mira heeft 12 ballonnen. Er knappen er 4. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 7,
+      "op": "+",
+      "b": 5,
+      "tekst": "Rumi zingt 7 liedjes. Daarna zingt ze er nog 5. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 18,
+      "op": "-",
+      "b": 9,
+      "tekst": "Rumi heeft 18 stickers. Ze geeft er 9 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 15,
+      "op": "-",
+      "b": 9,
+      "tekst": "Er zijn 15 demonen. Zoey zingt er 9 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 16,
+      "op": "-",
+      "b": 2,
+      "tekst": "Mira heeft 16 ballonnen. Er knappen er 2. Hoeveel ballonnen heeft Mira nog?"
+    }
+  ],
+  "R3": [
+    {
+      "a": 31,
+      "op": "+",
+      "b": 8,
+      "tekst": "Mira heeft 31 lichtstokken. Zoey geeft er 8 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 15,
+      "op": "-",
+      "b": 2,
+      "tekst": "Rumi heeft 15 stickers. Ze geeft er 2 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 87,
+      "op": "-",
+      "b": 53,
+      "tekst": "Er zijn 87 demonen. Zoey zingt er 53 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 30,
+      "op": "-",
+      "b": 20,
+      "tekst": "Mira heeft 30 ballonnen. Er knappen er 20. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 33,
+      "op": "-",
+      "b": 11,
+      "tekst": "Rumi heeft 33 stickers. Ze geeft er 11 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 32,
+      "op": "-",
+      "b": 11,
+      "tekst": "Er zijn 32 demonen. Zoey zingt er 11 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 74,
+      "op": "+",
+      "b": 13,
+      "tekst": "In de zaal zitten 74 kinderen. Er komen nog 13 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 73,
+      "op": "+",
+      "b": 14,
+      "tekst": "Rumi zingt 73 liedjes. Daarna zingt ze er nog 14. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 13,
+      "op": "+",
+      "b": 33,
+      "tekst": "Mira heeft 13 lichtstokken. Zoey geeft er 33 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 70,
+      "op": "+",
+      "b": 30,
+      "tekst": "In de zaal zitten 70 kinderen. Er komen nog 30 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 74,
+      "op": "-",
+      "b": 22,
+      "tekst": "Mira heeft 74 ballonnen. Er knappen er 22. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 69,
+      "op": "-",
+      "b": 24,
+      "tekst": "Rumi heeft 69 stickers. Ze geeft er 24 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 58,
+      "op": "-",
+      "b": 6,
+      "tekst": "Er zijn 58 demonen. Zoey zingt er 6 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 16,
+      "op": "+",
+      "b": 2,
+      "tekst": "Rumi zingt 16 liedjes. Daarna zingt ze er nog 2. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 20,
+      "op": "-",
+      "b": 10,
+      "tekst": "Mira heeft 20 ballonnen. Er knappen er 10. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 30,
+      "op": "+",
+      "b": 40,
+      "tekst": "Mira heeft 30 lichtstokken. Zoey geeft er 40 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 58,
+      "op": "-",
+      "b": 3,
+      "tekst": "Rumi heeft 58 stickers. Ze geeft er 3 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 27,
+      "op": "-",
+      "b": 5,
+      "tekst": "Er zijn 27 demonen. Zoey zingt er 5 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 77,
+      "op": "-",
+      "b": 25,
+      "tekst": "Mira heeft 77 ballonnen. Er knappen er 25. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 76,
+      "op": "+",
+      "b": 2,
+      "tekst": "In de zaal zitten 76 kinderen. Er komen nog 2 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 94,
+      "op": "+",
+      "b": 3,
+      "tekst": "Rumi zingt 94 liedjes. Daarna zingt ze er nog 3. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 95,
+      "op": "+",
+      "b": 4,
+      "tekst": "Mira heeft 95 lichtstokken. Zoey geeft er 4 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 16,
+      "op": "+",
+      "b": 32,
+      "tekst": "In de zaal zitten 16 kinderen. Er komen nog 32 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 20,
+      "op": "+",
+      "b": 45,
+      "tekst": "Rumi zingt 20 liedjes. Daarna zingt ze er nog 45. Hoeveel liedjes zingt Rumi?"
+    }
+  ],
+  "R4": [
+    {
+      "a": 76,
+      "op": "+",
+      "b": 8,
+      "tekst": "Mira heeft 76 lichtstokken. Zoey geeft er 8 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 92,
+      "op": "-",
+      "b": 5,
+      "tekst": "Rumi heeft 92 stickers. Ze geeft er 5 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 94,
+      "op": "-",
+      "b": 79,
+      "tekst": "Er zijn 94 demonen. Zoey zingt er 79 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 91,
+      "op": "-",
+      "b": 16,
+      "tekst": "Mira heeft 91 ballonnen. Er knappen er 16. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 15,
+      "op": "+",
+      "b": 6,
+      "tekst": "In de zaal zitten 15 kinderen. Er komen nog 6 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 26,
+      "op": "-",
+      "b": 8,
+      "tekst": "Rumi heeft 26 stickers. Ze geeft er 8 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 61,
+      "op": "-",
+      "b": 3,
+      "tekst": "Er zijn 61 demonen. Zoey zingt er 3 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 67,
+      "op": "-",
+      "b": 9,
+      "tekst": "Mira heeft 67 ballonnen. Er knappen er 9. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 57,
+      "op": "-",
+      "b": 8,
+      "tekst": "Rumi heeft 57 stickers. Ze geeft er 8 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 53,
+      "op": "-",
+      "b": 5,
+      "tekst": "Er zijn 53 demonen. Zoey zingt er 5 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 32,
+      "op": "+",
+      "b": 19,
+      "tekst": "Rumi zingt 32 liedjes. Daarna zingt ze er nog 19. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 42,
+      "op": "-",
+      "b": 9,
+      "tekst": "Mira heeft 42 ballonnen. Er knappen er 9. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 56,
+      "op": "+",
+      "b": 18,
+      "tekst": "Mira heeft 56 lichtstokken. Zoey geeft er 18 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 15,
+      "op": "+",
+      "b": 9,
+      "tekst": "In de zaal zitten 15 kinderen. Er komen nog 9 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 38,
+      "op": "+",
+      "b": 18,
+      "tekst": "Rumi zingt 38 liedjes. Daarna zingt ze er nog 18. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 85,
+      "op": "-",
+      "b": 66,
+      "tekst": "Rumi heeft 85 stickers. Ze geeft er 66 weg. Hoeveel stickers heeft Rumi nog?"
+    },
+    {
+      "a": 23,
+      "op": "+",
+      "b": 9,
+      "tekst": "Mira heeft 23 lichtstokken. Zoey geeft er 9 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 44,
+      "op": "-",
+      "b": 27,
+      "tekst": "Er zijn 44 demonen. Zoey zingt er 27 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 85,
+      "op": "+",
+      "b": 7,
+      "tekst": "In de zaal zitten 85 kinderen. Er komen nog 7 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 51,
+      "op": "-",
+      "b": 6,
+      "tekst": "Mira heeft 51 ballonnen. Er knappen er 6. Hoeveel ballonnen heeft Mira nog?"
+    },
+    {
+      "a": 14,
+      "op": "+",
+      "b": 49,
+      "tekst": "Rumi zingt 14 liedjes. Daarna zingt ze er nog 49. Hoeveel liedjes zingt Rumi?"
+    },
+    {
+      "a": 32,
+      "op": "+",
+      "b": 9,
+      "tekst": "Mira heeft 32 lichtstokken. Zoey geeft er 9 bij. Hoeveel lichtstokken heeft Mira nu?"
+    },
+    {
+      "a": 17,
+      "op": "+",
+      "b": 9,
+      "tekst": "In de zaal zitten 17 kinderen. Er komen nog 9 kinderen bij. Hoeveel kinderen zitten er nu?"
+    },
+    {
+      "a": 89,
+      "op": "+",
+      "b": 2,
+      "tekst": "Rumi zingt 89 liedjes. Daarna zingt ze er nog 2. Hoeveel liedjes zingt Rumi?"
+    }
+  ]
+}

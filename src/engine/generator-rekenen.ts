@@ -1,3 +1,4 @@
+import pool from '../../content/verhaaltjessommen.json';
 import { getal, kies, schud, standaardRnd, type Rnd } from './toeval';
 
 /**
@@ -172,12 +173,12 @@ export function maakAfleiders(a: number, b: number, op: '+' | '-', antwoord: num
   return gekozen;
 }
 
-const VERHALEN_PLUS = [
+export const VERHALEN_PLUS = [
   (a: number, b: number) => `Mira heeft ${a} lichtstokken. Zoey geeft er ${b} bij. Hoeveel lichtstokken heeft Mira nu?`,
   (a: number, b: number) => `In de zaal zitten ${a} kinderen. Er komen nog ${b} kinderen bij. Hoeveel kinderen zitten er nu?`,
   (a: number, b: number) => `Rumi zingt ${a} liedjes. Daarna zingt ze er nog ${b}. Hoeveel liedjes zingt Rumi?`,
 ];
-const VERHALEN_MIN = [
+export const VERHALEN_MIN = [
   (a: number, b: number) => `Rumi heeft ${a} stickers. Ze geeft er ${b} weg. Hoeveel stickers heeft Rumi nog?`,
   (a: number, b: number) => `Er zijn ${a} demonen. Zoey zingt er ${b} weg. Hoeveel demonen zijn er nog?`,
   (a: number, b: number) => `Mira heeft ${a} ballonnen. Er knappen er ${b}. Hoeveel ballonnen heeft Mira nog?`,
@@ -210,14 +211,31 @@ export function somSoort(a: number, op: '+' | '-', b: number): string {
   return `${op === '+' ? 'plus' : 'min'} ${bereik} ${soort}`;
 }
 
+export type VerhaalSom = { a: number; op: '+' | '-'; b: number; tekst: string };
+
+/**
+ * Verhaaltjessommen komen uit een vaste verzameling (content/verhaaltjessommen.json),
+ * zodat ze allemaal vooraf door de stem zijn ingesproken.
+ * Nieuwe maken: npm run verhaalsommen, daarna npm run audio.
+ */
+export function verhaalPool(niveau: RekenNiveau): VerhaalSom[] {
+  return (pool as unknown as Record<RekenNiveau, VerhaalSom[]>)[niveau] ?? [];
+}
+
+/** Ruwe som (zonder verhaaltje) van een niveau; voor het maken van de verzameling. */
+export function maakKaleSom(niveau: RekenNiveau, rnd: Rnd = standaardRnd) {
+  return kiesGewogen(TYPES[niveau], rnd)(rnd);
+}
+
 export function maakSom(niveau: RekenNiveau, opties: { rnd?: Rnd; verhaalKans?: number } = {}): Som {
   const rnd = opties.rnd ?? standaardRnd;
-  const { a, b, op } = kiesGewogen(TYPES[niveau], rnd)(rnd);
-  const som = somUit(a, op, b, rnd);
-  if (a >= 2 && rnd() < (opties.verhaalKans ?? 0.2)) {
-    som.verhaal = kies(op === '+' ? VERHALEN_PLUS : VERHALEN_MIN, rnd)(a, b);
+  const verhalen = verhaalPool(niveau);
+  if (verhalen.length && rnd() < (opties.verhaalKans ?? 0.2)) {
+    const v = kies(verhalen, rnd);
+    return { ...somUit(v.a, v.op, v.b, rnd), verhaal: v.tekst };
   }
-  return som;
+  const { a, b, op } = maakKaleSom(niveau, rnd);
+  return somUit(a, op, b, rnd);
 }
 
 /** Een reeks sommen zonder dubbele. */

@@ -6,6 +6,7 @@ import teksten from '../../content/teksten.json';
 import characters from '../../content/characters.json';
 import woorden from '../../content/lezen/woorden-flits.json';
 import verhalen from '../../content/lezen/verhalen-E4.json';
+import verhaalSommen from '../../content/verhaaltjessommen.json';
 import type { Spreeksoort } from './hash';
 
 export type TeSpreken = { tekst: string; soort: Spreeksoort };
@@ -39,6 +40,11 @@ export function alleTeksten(): TeSpreken[] {
       voeg(q.vraag, 'zin');
       q.keuzes.forEach((k) => voeg(k, 'zin'));
     }
+  }
+
+  for (const [sleutel, lijst] of Object.entries(verhaalSommen)) {
+    if (sleutel.startsWith('_') || !Array.isArray(lijst)) continue;
+    for (const v of lijst) voeg(v.tekst, 'zin');
   }
 
   for (let n = 0; n <= 100; n++) voeg(String(n), 'getal');

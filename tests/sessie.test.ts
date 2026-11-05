@@ -188,3 +188,44 @@ describe('overzicht voor de ouderhoek', () => {
     expect(vaakVerwisseld(stats)).toEqual([{ woord: 'lucht', gekozen: 'licht', keer: 2 }]);
   });
 });
+
+describe('alles wordt door de ingesproken stem gezegd', () => {
+  it('verhaaltjessommen komen uit de vaste, ingesproken verzameling', async () => {
+    const { alleTeksten } = await import('../src/audio/alle-teksten');
+    const zinnen = new Set(alleTeksten().filter((t) => t.soort === 'zin').map((t) => t.tekst));
+    const rnd = zaadRnd(9);
+    for (const niveau of REKEN_NIVEAUS) {
+      for (const som of maakSommen(niveau, 40, { rnd, verhaalKans: 1 })) {
+        expect(som.verhaal).toBeDefined();
+        expect(zinnen.has(som.verhaal!)).toBe(true);
+      }
+    }
+  });
+
+  it('elke verhaaltjessom klopt en past bij zijn niveau', async () => {
+    const { verhaalPool } = await import('../src/engine/generator-rekenen');
+    for (const niveau of REKEN_NIVEAUS) {
+      const pool = verhaalPool(niveau);
+      expect(pool.length).toBeGreaterThanOrEqual(20);
+      for (const v of pool) {
+        expect(v.tekst).toContain(String(v.a));
+        expect(v.tekst).toContain(String(v.b));
+        const uitkomst = v.op === '+' ? v.a + v.b : v.a - v.b;
+        expect(uitkomst).toBeGreaterThanOrEqual(0);
+        expect(uitkomst).toBeLessThanOrEqual(niveau === 'R1' ? 20 : 100);
+      }
+    }
+  });
+
+  it('alle sommen en antwoorden blijven tussen 0 en 100 (die getallen zijn ingesproken)', () => {
+    const rnd = zaadRnd(10);
+    for (const niveau of REKEN_NIVEAUS) {
+      for (const s of maakSommen(niveau, 50, { rnd })) {
+        for (const n of [s.a, s.b, s.antwoord]) {
+          expect(n).toBeGreaterThanOrEqual(0);
+          expect(n).toBeLessThanOrEqual(100);
+        }
+      }
+    }
+  });
+});
