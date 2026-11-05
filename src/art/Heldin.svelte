@@ -72,6 +72,13 @@
       <stop offset="0.5" stop-color="#fbbf24" />
       <stop offset="1" stop-color="#b45309" />
     </linearGradient>
+    <!-- tekenfilm-omlijning rond het hele figuur -->
+    <filter id="{id}-lijn" x="-15%" y="-15%" width="130%" height="130%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="1.8" result="dik" />
+      <feFlood flood-color="#1a0b2e" result="kleur" />
+      <feComposite in="kleur" in2="dik" operator="in" result="rand" />
+      <feMerge><feMergeNode in="rand" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
     <filter id="{id}-gloed" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="4" result="b" />
       <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
@@ -80,6 +87,7 @@
 
   <ellipse cx="100" cy="378" rx="46" ry="7" fill="#000" opacity="0.3" />
 
+  <g filter="url(#{id}-lijn)">
   <g class="lijf">
     <!-- ============ ACHTERHAAR ============ -->
     {#if wie === 'rumi'}
@@ -320,6 +328,7 @@
         <circle cx="141" cy="182" r="7" fill={HUID} />
       {/if}
     </g>
+  </g>
   </g>
 </svg>
 

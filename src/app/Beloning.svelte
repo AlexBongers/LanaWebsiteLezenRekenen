@@ -37,6 +37,7 @@
 
 <div class="scherm">
   <div class="kaart">
+    <p class="lana">Goed gedaan, Lana!</p>
     <h2 class="goudtekst">Concert gewonnen!</h2>
 
     <div class="sterren">
@@ -54,9 +55,9 @@
     </div>
 
     <div class="groep">
-      <Heldin wie={anderen[0]} stemming="juich" hoogte={200} />
-      <Heldin wie={heldin} stemming="juich" hoogte={240} />
-      <Heldin wie={anderen[1]} stemming="juich" hoogte={200} />
+      <Heldin wie={anderen[0]} stemming="dans" hoogte={230} />
+      <Heldin wie={heldin} stemming="juich" hoogte={280} />
+      <Heldin wie={anderen[1]} stemming="dans" hoogte={230} />
     </div>
 
     <div class="noten">+{noten} gouden noten</div>
@@ -88,9 +89,17 @@
     gap: 6px;
     padding: 20px 60px 30px;
   }
+  .lana {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 600;
+    color: #f9a8d4;
+    text-shadow: 0 0 18px rgba(236, 72, 153, 0.8);
+    animation: pop-in 0.5s ease-out;
+  }
   h2 {
     margin: 0;
-    font-size: 80px;
+    font-size: 72px;
     animation: pop-in 0.6s ease-out;
   }
   .sterren {
@@ -98,8 +107,8 @@
     gap: 18px;
   }
   .sterren svg {
-    width: 84px;
-    height: 84px;
+    width: 72px;
+    height: 72px;
     animation: pop-in 0.5s ease-out backwards;
   }
   .sterren svg.aan {

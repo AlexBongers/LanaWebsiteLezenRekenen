@@ -1,18 +1,102 @@
 {
-  "provider": "azure",
-  "stem": "nl-NL-FennaNeural",
-  "taal": "nl-NL",
-  "tempo": {
-    "instructie": "-5%",
-    "woord": "-15%",
-    "zin": "-10%",
-    "getal": "-5%"
+  "_uitleg": "provider: 'google', 'elevenlabs' of 'azure'. stem: de id van de gekozen stem. Na het wijzigen: npm run audio",
+  "provider": "google",
+  "stem": "nl-NL-Chirp3-HD-Aoede",
+  "google": {
+    "tempo": {
+      "instructie": 1.0,
+      "woord": 0.85,
+      "zin": 0.92,
+      "getal": 0.95
+    }
+  },
+  "elevenlabs": {
+    "modelZinnen": "eleven_multilingual_v2",
+    "modelWoorden": "eleven_turbo_v2_5",
+    "stabiliteit": 0.5,
+    "gelijkenis": 0.75,
+    "stijl": 0.35,
+    "tempo": {
+      "instructie": 1.0,
+      "woord": 0.85,
+      "zin": 0.92,
+      "getal": 0.95
+    }
+  },
+  "azure": {
+    "tempo": {
+      "instructie": "-5%",
+      "woord": "-15%",
+      "zin": "-10%",
+      "getal": "-5%"
+    }
   },
   "proefstemmen": [
-    { "id": "nl-NL-FennaNeural", "naam": "Fenna" },
-    { "id": "nl-NL-ColetteNeural", "naam": "Colette" },
-    { "id": "de-DE-SeraphinaMultilingualNeural", "naam": "Seraphina" },
-    { "id": "en-US-AvaMultilingualNeural", "naam": "Ava" }
+    {
+      "provider": "google",
+      "id": "nl-NL-Chirp3-HD-Aoede",
+      "naam": "Aoede"
+    },
+    {
+      "provider": "google",
+      "id": "nl-NL-Chirp3-HD-Kore",
+      "naam": "Kore"
+    },
+    {
+      "provider": "google",
+      "id": "nl-NL-Chirp3-HD-Leda",
+      "naam": "Leda"
+    },
+    {
+      "provider": "google",
+      "id": "nl-NL-Chirp3-HD-Zephyr",
+      "naam": "Zephyr"
+    },
+    {
+      "provider": "google",
+      "id": "nl-NL-Chirp3-HD-Despina",
+      "naam": "Despina"
+    },
+    {
+      "provider": "google",
+      "id": "nl-NL-Chirp3-HD-Sulafat",
+      "naam": "Sulafat"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "naam": "Matilda"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "naam": "Sarah"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "naam": "Laura"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "naam": "Lily"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "naam": "Jessica"
+    },
+    {
+      "provider": "azure",
+      "id": "nl-NL-FennaNeural",
+      "naam": "Fenna (Azure)"
+    },
+    {
+      "provider": "azure",
+      "id": "nl-NL-ColetteNeural",
+      "naam": "Colette (Azure)"
+    }
   ],
   "proefzin": "Hoi Lana! Ik ben de stem van de groep. Zullen we samen het gouden schild sterk maken?"
 }

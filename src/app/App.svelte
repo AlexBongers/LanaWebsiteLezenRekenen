@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
   import Achtergrond from '../ui/Achtergrond.svelte';
   import Bevestig from '../ui/Bevestig.svelte';
   import Start from './Start.svelte';
@@ -86,17 +87,19 @@
 
 <Achtergrond {accent} />
 
-{#if scherm === 'start'}
-  <Start opStart={begin} />
-{:else if scherm === 'keuze'}
-  <HeldinKeuze opKies={kies} opOuder={() => (scherm = 'ouder')} />
-{:else if scherm === 'level'}
-  {#key heldin}
-    <Level {heldin} opTerug={naarKeuze} opStop={() => (vraagStop = true)} />
-  {/key}
-{:else if scherm === 'ouder'}
-  <Ouderhoek opSluit={() => (scherm = 'keuze')} />
-{/if}
+{#key scherm + (scherm === 'level' ? heldin : '')}
+  <div class="laag" in:scale={{ start: 0.96, duration: 420, delay: 120 }} out:fade={{ duration: 180 }}>
+    {#if scherm === 'start'}
+      <Start opStart={begin} />
+    {:else if scherm === 'keuze'}
+      <HeldinKeuze opKies={kies} opOuder={() => (scherm = 'ouder')} />
+    {:else if scherm === 'level'}
+      <Level {heldin} opTerug={naarKeuze} opStop={() => (vraagStop = true)} />
+    {:else if scherm === 'ouder'}
+      <Ouderhoek opSluit={() => (scherm = 'keuze')} />
+    {/if}
+  </div>
+{/key}
 
 {#if vraagStop}
   <Bevestig vraag={teksten.stoppen} ja="Ja, stoppen" nee="Nee, verder!" opJa={naarKeuze} opNee={() => (vraagStop = false)} />
@@ -108,6 +111,10 @@
 </div>
 
 <style>
+  .laag {
+    position: absolute;
+    inset: 0;
+  }
   .draai {
     display: none;
   }

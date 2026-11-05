@@ -2,6 +2,16 @@
   /** Nachtelijke stad met sterren, spotlights en een zacht gouden schild. */
   let { accent = '#8b5cf6' }: { accent?: string } = $props();
 
+  // Zwevende muzieknoten en glinsters
+  const noten = Array.from({ length: 16 }, (_, i) => ({
+    teken: ['♪', '♫', '✦', '♬', '✧', '♩'][i % 6],
+    x: (i * 47 + 7) % 100,
+    duur: 14 + (i % 5) * 3,
+    vertraging: -((i * 3.7) % 18),
+    grootte: 18 + (i % 4) * 8,
+    kleur: ['#fde68a', '#f9a8d4', '#c4b5fd', '#a5f3fc'][i % 4],
+  }));
+
   const sterren = Array.from({ length: 70 }, (_, i) => ({
     x: (i * 137.5) % 100,
     y: ((i * 61.8) % 62) + 1,
@@ -18,6 +28,14 @@
     {/each}
   </svg>
   <div class="schild"></div>
+  <div class="noten">
+    {#each noten as n}
+      <span
+        style="left:{n.x}%; font-size:{n.grootte}px; color:{n.kleur}; animation-duration:{n.duur}s; animation-delay:{n.vertraging}s"
+        >{n.teken}</span
+      >
+    {/each}
+  </div>
   <div class="spot spot-1"></div>
   <div class="spot spot-2"></div>
   <div class="spot spot-3"></div>
@@ -75,6 +93,20 @@
     background-image:
       radial-gradient(circle at 50% 100%, rgba(251, 191, 36, 0.12), transparent 40%);
     animation: schild-glow 6s ease-in-out infinite;
+  }
+  .noten span {
+    position: absolute;
+    bottom: -40px;
+    opacity: 0;
+    text-shadow: 0 0 12px currentColor;
+    animation: stijg linear infinite;
+  }
+  @keyframes stijg {
+    0% { transform: translateY(0) translateX(0) rotate(-10deg); opacity: 0; }
+    10% { opacity: 0.55; }
+    50% { transform: translateY(-55vh) translateX(30px) rotate(10deg); }
+    85% { opacity: 0.4; }
+    100% { transform: translateY(-110vh) translateX(-20px) rotate(-10deg); opacity: 0; }
   }
   .spot {
     position: absolute;

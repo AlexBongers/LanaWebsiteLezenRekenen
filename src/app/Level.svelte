@@ -11,6 +11,8 @@
   import { verwerkSessie } from '../engine/adaptief';
   import { bewaar, vg, type HeldinId } from '../store/voortgang.svelte';
   import { stopSpreken } from '../audio/stem';
+  import { speelCombo } from '../audio/geluid';
+  import { vliegNoten } from '../ui/vlieg';
 
   let { heldin, opTerug, opStop }: { heldin: HeldinId; opTerug: () => void; opStop: () => void } = $props();
 
@@ -27,10 +29,31 @@
 
   let Spel = $derived(SPEL[heldin]);
 
-  function opNoten(n: number) {
-    vg.noten += n;
+  let tellerEl: HTMLElement | undefined = $state();
+  let reeks = 0;
+  let combo: number | null = $state(null);
+  let comboTimer: ReturnType<typeof setTimeout> | undefined;
+  const COMBO = [3, 5, 8, 12];
+
+  function opNoten(n: number, bron?: Element | null) {
+    vliegNoten(n, bron, tellerEl);
     verdiend += n;
-    void bewaar();
+    // De teller springt pas op als de noten aankomen.
+    setTimeout(() => {
+      vg.noten += n;
+      void bewaar();
+    }, 800);
+    // Reeks van meteen-goede antwoorden (2 noten = bij de eerste poging goed).
+    if (n === 2) reeks++;
+    else if (n === 1) reeks = 0;
+    if (COMBO.includes(reeks)) {
+      clearTimeout(comboTimer);
+      combo = reeks;
+      speelCombo();
+      verdiend += 1;
+      setTimeout(() => (vg.noten += 1), 800);
+      comboTimer = setTimeout(() => (combo = null), 1800);
+    }
   }
 
   function opKlaar(resultaten: boolean[]) {
@@ -61,6 +84,7 @@
 
   function nogEens() {
     uitslag = null;
+    reeks = 0;
     voortgang = 0;
     verdiend = 0;
     eerste = false;
@@ -83,8 +107,18 @@
       </svg>
     </button>
     <div class="schild"><SchildBalk waarde={voortgang} /></div>
-    <NotenTeller aantal={vg.noten} />
+    <div bind:this={tellerEl}><NotenTeller aantal={vg.noten} /></div>
   </header>
+
+  {#if combo}
+    {#key combo}
+      <div class="combo" style="--kleur:{characters[heldin].kleur}">
+        <span class="vuur">🔥</span>
+        <span>{combo} op rij!</span>
+        <span class="bonus">+1 ♪</span>
+      </div>
+    {/key}
+  {/if}
 
   <main>
     {#key ronde}
@@ -122,5 +156,38 @@
   main {
     position: relative;
     flex: 1;
+  }
+  .combo {
+    position: absolute;
+    left: 50%;
+    top: 92px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 30px;
+    border-radius: 999px;
+    font-size: 42px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(90deg, var(--kleur), #f59e0b);
+    box-shadow: 0 0 40px var(--kleur), 0 8px 0 rgba(0, 0, 0, 0.25);
+    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+    animation: combo 1.8s ease-out forwards;
+    pointer-events: none;
+  }
+  .vuur {
+    animation: pop-in 0.5s ease-out;
+  }
+  .bonus {
+    font-size: 26px;
+    color: #fff7c2;
+  }
+  @keyframes combo {
+    0% { transform: translateX(-50%) scale(0.2) rotate(-10deg); opacity: 0; }
+    15% { transform: translateX(-50%) scale(1.15) rotate(3deg); opacity: 1; }
+    25% { transform: translateX(-50%) scale(1) rotate(0); }
+    80% { transform: translateX(-50%) scale(1); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-30px) scale(0.9); opacity: 0; }
   }
 </style>

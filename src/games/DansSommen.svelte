@@ -5,6 +5,7 @@
   import Demon from '../art/Demon.svelte';
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Tekstballon from '../ui/Tekstballon.svelte';
   import { maakSommen, REKEN_NIVEAUS, type Som } from '../engine/generator-rekenen';
   import { spreek, somDelen, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelPoef } from '../audio/geluid';
@@ -25,6 +26,7 @@
   let pogingen = $state(0);
   let fout: number[] = $state([]);
   let weg: number | null = $state(null);
+  let lacht: number | null = $state(null);
   let onthuld = $state(false);
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('dans');
@@ -60,13 +62,15 @@
       glitterOp(demonEls[i]);
       stemming = 'juich';
       if (!opnieuw.has(index)) resultaten.push(pogingen === 0);
-      opNoten(pogingen === 0 ? 2 : 1);
+      opNoten(pogingen === 0 ? 2 : 1, demonEls[i]);
       await spreek(compliment());
       await wacht(300);
       volgende();
     } else {
       speelBijna();
       fout = [...fout, keuze];
+      lacht = i;
+      setTimeout(() => (lacht = lacht === i ? null : lacht), 1300);
       pogingen++;
       stemming = 'denk';
       if (pogingen >= 2) {
@@ -97,6 +101,7 @@
     pogingen = 0;
     fout = [];
     weg = null;
+    lacht = null;
     onthuld = false;
     bezig = false;
     stemming = 'dans';
@@ -106,6 +111,7 @@
 
 <div class="spel">
   <div class="heldin">
+    <Tekstballon kleur="#ec4899" />
     <Heldin wie="mira" {stemming} hoogte={420} />
   </div>
 
@@ -146,6 +152,7 @@
           onclick={() => (onthuld && keuze === som.antwoord ? volgende() : kies(keuze, i))}
           aria-label="Antwoord {keuze}"
         >
+          {#if lacht === i}<span class="hihi">hihi!</span>{/if}
           <span class="bord">{keuze}</span>
           <Demon soort={i + index} grootte={104} />
         </button>
@@ -166,6 +173,7 @@
     grid-template-columns: 290px 1fr;
   }
   .heldin {
+    position: relative;
     align-self: end;
     justify-self: center;
     padding-bottom: 16px;
@@ -284,6 +292,21 @@
     animation: schud 0.5s ease-in-out;
     filter: grayscale(0.85) brightness(0.6);
     opacity: 0.55;
+  }
+  .hihi {
+    position: absolute;
+    right: -26px;
+    top: -34px;
+    z-index: 2;
+    padding: 4px 12px;
+    border-radius: 14px;
+    background: #fff;
+    color: #7c3aed;
+    font-size: 22px;
+    font-weight: 700;
+    transform: rotate(10deg);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: pop-in 0.3s ease-out;
   }
   .demon.weg {
     animation: poef 0.6s ease-in forwards;

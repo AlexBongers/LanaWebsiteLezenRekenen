@@ -71,3 +71,8 @@ export function speelFanfare() {
 export function speelTik() {
   toon(660, 0, 0.08, 'sine', 0.08);
 }
+
+/** Combo: snel oplopend loopje. */
+export function speelCombo() {
+  [784, 988, 1175, 1568].forEach((f, i) => toon(f, i * 0.07, 0.22, 'square', 0.07));
+}

@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import Heldin from '../art/Heldin.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Tekstballon from '../ui/Tekstballon.svelte';
   import verhalen from '../../content/lezen/verhalen-E4.json';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed } from '../audio/geluid';
@@ -34,6 +35,7 @@
   let goedGekozen = $state(false);
   let onthuld = $state(false);
   let knopEls: HTMLElement[] = $state([]);
+  let klaarKnop: HTMLElement | undefined = $state();
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
 
   let vraag = $derived(verhaal.vragen[vraagIndex]);
@@ -56,7 +58,7 @@
     stopSpreken();
     actieveZin = null;
     speelGoed();
-    opNoten(3);
+    opNoten(3, klaarKnop);
     opVoortgang(1 / stappen);
     fase = 'vragen';
     stemming = 'juich';
@@ -76,7 +78,7 @@
       glitterOp(knopEls[i]);
       stemming = 'juich';
       resultaten.push(pogingen === 0);
-      opNoten(pogingen === 0 ? 2 : 1);
+      opNoten(pogingen === 0 ? 2 : 1, knopEls[i]);
       await spreek(compliment());
       await wacht(300);
       volgende();
@@ -116,6 +118,7 @@
 
 <div class="spel" class:vragen={fase === 'vragen'}>
   <div class="heldin">
+    {#if fase === 'lezen'}<Tekstballon kleur="#06b6d4" />{/if}
     <Heldin wie="zoey" {stemming} hoogte={fase === 'vragen' ? 260 : 360} />
   </div>
 
@@ -140,7 +143,7 @@
     {#if fase === 'lezen'}
       <div class="onder">
         <span class="tip">Tik op een zin als je hulp nodig hebt.</span>
-        <button class="knop-goud" onclick={klaarMetLezen}>Klaar met lezen ✓</button>
+        <button class="knop-goud" bind:this={klaarKnop} onclick={klaarMetLezen}>Klaar met lezen ✓</button>
       </div>
     {/if}
   </article>
@@ -188,6 +191,7 @@
     grid-template-columns: 150px 1fr 450px;
   }
   .heldin {
+    position: relative;
     align-self: end;
     justify-self: center;
     padding-bottom: 6px;

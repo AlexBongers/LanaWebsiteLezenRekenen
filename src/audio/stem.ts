@@ -90,10 +90,25 @@ function speelBestand(url: string, mijnBeurt: number): Promise<void> {
   });
 }
 
+// ---------- Wat wordt er nu gezegd? (voor de tekstballon) ----------
+
+type Luisteraar = (tekst: string | null, soort: Spreeksoort) => void;
+const luisteraars = new Set<Luisteraar>();
+
+export function luisterNaarStem(cb: Luisteraar): () => void {
+  luisteraars.add(cb);
+  return () => luisteraars.delete(cb);
+}
+
+function meld(tekst: string | null, soort: Spreeksoort = 'instructie') {
+  luisteraars.forEach((cb) => cb(tekst, soort));
+}
+
 // ---------- Openbaar ----------
 
 export function stopSpreken() {
   beurt++;
+  meld(null);
   if (huidigeAudio) {
     huidigeAudio.pause();
     huidigeAudio = null;
@@ -111,14 +126,16 @@ export async function spreek(tekst: string | string[], soort: Spreeksoort = 'ins
   const mijnBeurt = beurt;
   const delen = (Array.isArray(tekst) ? tekst : [tekst]).map(normaliseer).filter(Boolean);
   const bestanden = delen.map((d) => bestandVoor(d, soort));
+  meld(delen.join(' '), soort);
   if (bestanden.every((b): b is string => b !== null)) {
     for (const b of bestanden) {
       if (mijnBeurt !== beurt) return;
       await speelBestand(b, mijnBeurt);
     }
-    return;
+  } else {
+    await spreekMetApparaat(delen.join(' '), soort, mijnBeurt);
   }
-  await spreekMetApparaat(delen.join(' '), soort, mijnBeurt);
+  if (mijnBeurt === beurt) meld(null, soort);
 }
 
 /** Zet een som om naar losse stukjes om uit te spreken. */

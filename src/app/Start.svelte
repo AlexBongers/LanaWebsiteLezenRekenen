@@ -4,6 +4,11 @@
 </script>
 
 <div class="start">
+  <div class="glinsters" aria-hidden="true">
+    {#each [[18, 14, 0], [80, 10, 0.6], [12, 40, 1.2], [88, 36, 0.3], [30, 6, 0.9], [70, 44, 1.5]] as [x, y, d]}
+      <span style="left:{x}%; top:{y}%; animation-delay:{d}s">✦</span>
+    {/each}
+  </div>
   <h1>
     <span class="klein">Lana's</span>
     <span class="goudtekst groot">Gouden Missie</span>
@@ -11,9 +16,9 @@
   <p class="sub">Lezen en rekenen met de demon hunters</p>
 
   <div class="groep">
-    <div class="d1"><Heldin wie="rumi" stemming="dans" hoogte={330} /></div>
-    <div class="d2"><Heldin wie="mira" stemming="dans" hoogte={330} /></div>
-    <div class="d3"><Heldin wie="zoey" stemming="dans" hoogte={330} /></div>
+    <div class="d1 plek" style="--kleur:#8b5cf6"><Heldin wie="rumi" stemming="dans" hoogte={340} /></div>
+    <div class="d2 plek" style="--kleur:#ec4899"><Heldin wie="mira" stemming="dans" hoogte={340} /></div>
+    <div class="d3 plek" style="--kleur:#06b6d4"><Heldin wie="zoey" stemming="dans" hoogte={340} /></div>
   </div>
 
   <button class="knop-goud begin" onclick={opStart}>✨ Tik om te beginnen ✨</button>
@@ -59,6 +64,33 @@
     align-items: end;
     gap: 40px;
     margin: 4px 0 10px;
+  }
+  .plek {
+    position: relative;
+  }
+  .plek::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 190px;
+    height: 46px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse, color-mix(in srgb, var(--kleur) 80%, white), transparent 70%);
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+  .glinsters span {
+    position: absolute;
+    font-size: 34px;
+    color: #fde68a;
+    text-shadow: 0 0 14px #fbbf24;
+    animation: twinkel 2.2s ease-in-out infinite;
+  }
+  @keyframes twinkel {
+    0%, 100% { transform: scale(0.4) rotate(0); opacity: 0.2; }
+    50% { transform: scale(1.2) rotate(45deg); opacity: 1; }
   }
   .d1 { animation-delay: 0s; }
   .d2 :global(.lijf) { animation-delay: -0.3s !important; }

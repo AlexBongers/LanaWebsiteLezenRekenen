@@ -22,6 +22,19 @@
     );
     return new Set([...punten, ...extra]);
   });
+  // Labels die te dicht bij elkaar staan een stukje uit elkaar schuiven.
+  const MIN_AFSTAND = 34;
+  let labelX = $derived.by(() => {
+    const lijst = [...labels].sort((a, b) => a - b).map((n) => ({ n, x: x(n) }));
+    for (let i = 1; i < lijst.length; i++) {
+      const tekort = MIN_AFSTAND - (lijst[i].x - lijst[i - 1].x);
+      if (tekort > 0) {
+        lijst[i - 1].x -= tekort / 2;
+        lijst[i].x += tekort / 2;
+      }
+    }
+    return new Map(lijst.map((l) => [l.n, l.x]));
+  });
 </script>
 
 <svg viewBox="0 0 {B} {H}" class="lijn" aria-label="Getallenlijn">
@@ -38,7 +51,7 @@
   {/each}
   {#each [...labels] as n}
     <text
-      x={x(n)}
+      x={labelX.get(n) ?? x(n)}
       y="145"
       text-anchor="middle"
       font-size={punten.includes(n) ? 24 : 18}

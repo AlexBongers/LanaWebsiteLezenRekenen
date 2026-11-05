@@ -1,6 +1,6 @@
 export type SpelProps = {
-  /** Gouden noten erbij. */
-  opNoten: (n: number) => void;
+  /** Gouden noten erbij; `bron` is de plek waar ze vandaan vliegen. */
+  opNoten: (n: number, bron?: Element | null) => void;
   /** Voortgang van het schild, 0 tot 1. */
   opVoortgang: (fractie: number) => void;
   /** Klaar; per opgave of die bij de eerste poging goed was. */

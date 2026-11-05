@@ -23,7 +23,7 @@
     // Proefstemmen van de stemgenerator (alleen als ze gemaakt zijn met: npm run audio -- --proef)
     Promise.all(
       stemInfo.proefstemmen.map(async (p) => {
-        const url = `${import.meta.env.BASE_URL}audio/proef/${p.id}.mp3`;
+        const url = `${import.meta.env.BASE_URL}audio/proef/${p.provider}-${p.id}.mp3`;
         try {
           const r = await fetch(url, { method: 'HEAD' });
           return r.ok && (r.headers.get('content-type') ?? '').includes('audio') ? { ...p, url } : null;
@@ -147,7 +147,7 @@
       {#if aantalStemBestanden() > 0}
         <p>✅ {aantalStemBestanden()} teksten zijn ingesproken door de stemgenerator ({stemInfo.stem}).</p>
       {:else}
-        <p class="uitleg">De stemgenerator (Azure) is nog niet gebruikt. Tot die tijd spreekt de tablet zelf. Kies hieronder de mooiste Nederlandse stem van deze tablet.</p>
+        <p class="uitleg">De stemgenerator (ElevenLabs of Azure) is nog niet gebruikt. Tot die tijd spreekt de tablet zelf. Kies hieronder de mooiste Nederlandse stem van deze tablet.</p>
       {/if}
       {#if proefstemmen.length}
         <h3>Proefstemmen (laat Lana kiezen!)</h3>

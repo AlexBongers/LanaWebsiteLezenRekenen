@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import Heldin from '../art/Heldin.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Tekstballon from '../ui/Tekstballon.svelte';
   import {
     FLITS_MAX,
     FLITS_MIN,
@@ -63,7 +64,7 @@
         resultaten.push(pogingen === 0);
         if (pogingen === 0) vg.flitstijd = nieuweFlitstijd(vg.flitstijd, true);
       }
-      opNoten(pogingen === 0 ? 2 : 1);
+      opNoten(pogingen === 0 ? 2 : 1, podiumEl);
       await spreek(opgave.woord, 'woord');
       await spreek(compliment());
       await wacht(200);
@@ -110,6 +111,7 @@
 
 <div class="spel">
   <div class="heldin">
+    <Tekstballon kleur="#8b5cf6" />
     <Heldin wie="rumi" {stemming} hoogte={420} />
   </div>
 
@@ -182,6 +184,7 @@
     grid-template-columns: 290px 1fr;
   }
   .heldin {
+    position: relative;
     align-self: end;
     justify-self: center;
     padding-bottom: 16px;
