@@ -55,7 +55,7 @@ Alle vaste teksten (instructies, complimenten, flitswoorden, verhaaltjes en de g
 
 - **Vlot tempo:** instructies op 1,15, zinnen op 1,05 en getallen op 1,1 (instelbaar in `content/stem.json`). De app knipt bovendien de stilte aan begin en eind van elk fragment weg, zodat de stukjes van een som direct op elkaar aansluiten.
 - **Modellen:** `eleven_multilingual_v2` voor zinnen (ondersteunt tempo), `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden en getallen.
-- **Verbruik:** alles inspreken kostte ongeveer 8.000 credits (waarvan ~5.600 voor de verhaaltjessommen).
+- **Verbruik:** alles inspreken kostte ongeveer 4.500 credits.
 - **Andere stem kiezen:** in de ouderhoek staan proefstemmen (Roos, Ruth, Emma, Melanie). Zet de id van de gekozen stem in `content/stem.json` en draai `npm run audio`.
 
 **Opnieuw inspreken** (bijv. na nieuwe woorden of verhalen):
