@@ -3,6 +3,7 @@
  */
 import { get, set } from 'idb-keyval';
 import type { Vaardigheid } from '../engine/adaptief';
+import type { Herhaling } from '../engine/herhaling';
 import { FLITS_START } from '../engine/generator-lezen';
 
 export type HeldinId = 'rumi' | 'mira' | 'zoey';
@@ -14,7 +15,10 @@ export type Sessie = {
   totaal: number;
   noten: number;
   seconden: number;
+  auditie?: boolean;
 };
+
+export type Telling = { goed: number; totaal: number };
 
 export type Voortgang = {
   versie: 1;
@@ -27,7 +31,20 @@ export type Voortgang = {
   flitstijd: number;
   gelezenVerhalen: string[];
   sessies: Sessie[];
+  /** Herhalingsdoosjes: sleutel ("som.47+8", "woord.lucht") → doos. */
+  herhaling: Herhaling;
+  /** Is de auditie per wereld al gedaan? */
+  auditie: { rekenen: boolean; flits: boolean };
+  /** Voor het overzicht in de ouderhoek. */
+  stats: {
+    /** Per soort som, bijv. "min tot 100 met overschrijding". */
+    sommen: Record<string, Telling>;
+    /** Verwisselde woorden, bijv. "lucht→licht": 3. */
+    verwisselingen: Record<string, number>;
+  };
   instellingen: {
+    /** Na zoveel minuten volgt na het concert een pauze (0 = geen grens). */
+    sessieMinuten: number;
     opgavenPerSessie: number;
     apparaatStem: string | null;
     effecten: boolean;
@@ -48,7 +65,11 @@ export function standaardVoortgang(): Voortgang {
     flitstijd: FLITS_START,
     gelezenVerhalen: [],
     sessies: [],
+    herhaling: {},
+    auditie: { rekenen: false, flits: false },
+    stats: { sommen: {}, verwisselingen: {} },
     instellingen: {
+      sessieMinuten: 15,
       opgavenPerSessie: 8,
       apparaatStem: null,
       effecten: true,
@@ -63,10 +84,17 @@ export const vg: Voortgang = $state(standaardVoortgang());
 
 /** Vul ontbrekende velden aan (bij een oudere versie of een import). */
 function samenvoegen(basis: Voortgang, data: Partial<Voortgang>): Voortgang {
+  // Wie al gespeeld heeft voordat de auditie bestond, hoeft die niet meer te doen.
+  const gespeeld = (v?: Vaardigheid) => (v?.recent.length ?? 0) > 0;
   return {
     ...basis,
     ...data,
     vaardigheden: { ...basis.vaardigheden, ...(data.vaardigheden ?? {}) },
+    auditie: data.auditie ?? {
+      rekenen: gespeeld(data.vaardigheden?.rekenen),
+      flits: gespeeld(data.vaardigheden?.flits),
+    },
+    stats: { ...basis.stats, ...(data.stats ?? {}) },
     instellingen: { ...basis.instellingen, ...(data.instellingen ?? {}) },
   };
 }

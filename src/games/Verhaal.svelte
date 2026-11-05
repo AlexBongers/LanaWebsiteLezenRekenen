@@ -11,6 +11,7 @@
   import { vg } from '../store/voortgang.svelte';
   import { teksten, compliment, bijna, wacht } from './teksten';
   import type { SpelProps } from './types';
+  import type { Resultaat } from '../engine/sessie';
 
   let { opNoten, opVoortgang, opKlaar, intro }: SpelProps = $props();
 
@@ -25,7 +26,7 @@
 
   const verhaal = kiesVerhaal();
   const stappen = 1 + verhaal.vragen.length;
-  const resultaten: boolean[] = [];
+  const resultaten: Resultaat[] = [];
 
   let fase: 'lezen' | 'vragen' = $state('lezen');
   let actieveZin: number | null = $state(null);
@@ -77,7 +78,7 @@
       speelGoed();
       glitterOp(knopEls[i]);
       stemming = 'juich';
-      resultaten.push(pogingen === 0);
+      resultaten.push({ id: `verhaal.${verhaal.id}.${vraagIndex}`, niveau: 0, bron: 'niveau', goed: pogingen === 0 });
       opNoten(pogingen === 0 ? 2 : 1, knopEls[i]);
       await spreek(compliment());
       await wacht(300);
@@ -89,7 +90,7 @@
       stemming = 'denk';
       if (pogingen >= 2) {
         onthuld = true;
-        resultaten.push(false);
+        resultaten.push({ id: `verhaal.${verhaal.id}.${vraagIndex}`, niveau: 0, bron: 'niveau', goed: false });
         await spreek(teksten.hetIs);
         await spreek(vraag.keuzes[vraag.goed], 'zin');
       } else {

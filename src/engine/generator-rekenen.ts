@@ -183,12 +183,37 @@ const VERHALEN_MIN = [
   (a: number, b: number) => `Mira heeft ${a} ballonnen. Er knappen er ${b}. Hoeveel ballonnen heeft Mira nog?`,
 ];
 
+/** Een som opbouwen uit a, op en b (keuzes en sprongen erbij). */
+export function somUit(a: number, op: '+' | '-', b: number, rnd: Rnd = standaardRnd): Som {
+  const antwoord = op === '+' ? a + b : a - b;
+  const keuzes = schud([antwoord, ...maakAfleiders(a, b, op, antwoord, rnd)], rnd);
+  return { a, b, op, antwoord, keuzes, sprongen: maakSprongen(a, b, op) };
+}
+
+/** Vaste sleutel van een som, bijv. "som.47+8" (voor de herhalingsdoosjes). */
+export const somId = (s: { a: number; op: '+' | '-'; b: number }) => `som.${s.a}${s.op}${s.b}`;
+
+/** Terug van sleutel naar som; null als de sleutel niet klopt. */
+export function somUitId(id: string, rnd: Rnd = standaardRnd): Som | null {
+  const m = /^som\.(\d+)([+-])(\d+)$/.exec(id);
+  if (!m) return null;
+  return somUit(Number(m[1]), m[2] as '+' | '-', Number(m[3]), rnd);
+}
+
+/** Soort som voor het overzicht in de ouderhoek, bijv. "min tot 100 met overschrijding". */
+export function somSoort(a: number, op: '+' | '-', b: number): string {
+  const uitkomst = op === '+' ? a + b : a - b;
+  const bereik = Math.max(a, uitkomst) <= 20 ? 'tot 20' : 'tot 100';
+  const over = op === '+' ? (a % 10) + (b % 10) >= 10 : a % 10 < b % 10;
+  const heleTientallen = a % 10 === 0 && b % 10 === 0;
+  const soort = heleTientallen ? 'hele tientallen' : over ? 'met overschrijding' : 'zonder overschrijding';
+  return `${op === '+' ? 'plus' : 'min'} ${bereik} ${soort}`;
+}
+
 export function maakSom(niveau: RekenNiveau, opties: { rnd?: Rnd; verhaalKans?: number } = {}): Som {
   const rnd = opties.rnd ?? standaardRnd;
   const { a, b, op } = kiesGewogen(TYPES[niveau], rnd)(rnd);
-  const antwoord = op === '+' ? a + b : a - b;
-  const keuzes = schud([antwoord, ...maakAfleiders(a, b, op, antwoord, rnd)], rnd);
-  const som: Som = { a, b, op, antwoord, keuzes, sprongen: maakSprongen(a, b, op) };
+  const som = somUit(a, op, b, rnd);
   if (a >= 2 && rnd() < (opties.verhaalKans ?? 0.2)) {
     som.verhaal = kies(op === '+' ? VERHALEN_PLUS : VERHALEN_MIN, rnd)(a, b);
   }

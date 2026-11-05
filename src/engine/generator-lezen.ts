@@ -23,6 +23,21 @@ export function maakFlitsOpgaven(niveau: LeesNiveau, aantal: number, rnd: Rnd = 
   });
 }
 
+export const woordId = (woord: string) => `woord.${woord}`;
+
+/** Een flitsopgave terug opbouwen uit een sleutel ("woord.lucht"). */
+export function flitsUitId(id: string, rnd: Rnd = standaardRnd): FlitsOpgave | null {
+  const woord = id.replace(/^woord\./, '');
+  for (const niveau of LEES_NIVEAUS) {
+    const groep = woordGroepen(niveau).find((g) => g.includes(woord));
+    if (groep) return { woord, keuzes: schud(groep.slice(0, 3), rnd) };
+  }
+  return null;
+}
+
+/** Sleutel van het woordgroepje, om dubbele groepjes in één concert te voorkomen. */
+export const groepSleutel = (o: FlitsOpgave) => [...o.keuzes].sort().join('|');
+
 /** Flitstijd in milliseconden: sneller bij goed, langzamer bij fout. */
 export const FLITS_MIN = 350;
 export const FLITS_MAX = 3000;

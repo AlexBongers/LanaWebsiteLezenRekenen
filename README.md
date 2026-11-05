@@ -13,9 +13,13 @@ Een tablet-app (website) waarmee Lana spelenderwijs beter leert **lezen** en **r
 Verder:
 - Gouden noten die naar de teller vliegen, een gouden schild dat groeit, "3 op rij!"-combo's, sterren en confetti.
 - Een tekstballon bij de heldin laat zien wat de stem zegt, zodat Lana kan meelezen.
-- Het niveau past zich vanzelf aan: boven 85% goed gaat het een stapje moeilijker, onder 60% een stapje makkelijker.
+- **Auditie:** de eerste keer bij Mira en Rumi 8 opgaven die steeds moeilijker worden. Daarmee kiest de site het startniveau.
+- Het niveau past zich vanzelf aan: na 8 opgaven op haar niveau gaat het bij meer dan 85% goed een stapje moeilijker, onder 60% een stapje makkelijker.
+- **Mix per concert:** ongeveer 70% op haar niveau, 20% iets makkelijker (altijd beginnen met een opwarmer) en 10% een uitdaging.
+- **Herhalingsdoosjes:** wat niet meteen goed ging, komt het volgende concert terug, en daarna na 1, 3, 7 en 14 dagen tot het gekend is.
+- **Pauze:** na 10, 15 of 20 minuten (instelbaar) eindigt het na het lopende concert met een pauzescherm.
 - Een fout antwoord geeft eerst een hint. Bij een tweede fout wordt het antwoord rustig uitgelegd en komt de opgave later terug.
-- **Ouderhoek:** houd het slotje linksboven 3 seconden vast en reken de keersom uit. Hier vind je het overzicht, kun je het niveau zelf zetten, de stem kiezen en een back-up maken.
+- **Ouderhoek:** houd het slotje linksboven 3 seconden vast en reken de keersom uit. Hier vind je het overzicht (welke sommen lastig zijn, welke woorden ze verwisselt, wat er in de doosjes zit), kun je het niveau zelf zetten, de stem kiezen en een back-up maken.
 - Werkt offline, als app op het startscherm, liggend en schermvullend. De Android-terugknop vraagt eerst "wil je stoppen?".
 
 ## Online zetten op Cloudflare (Worker)

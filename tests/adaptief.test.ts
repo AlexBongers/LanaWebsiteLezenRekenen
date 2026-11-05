@@ -23,6 +23,23 @@ describe('niveau-aanpassing', () => {
   it('verandert niets bij te weinig opgaven', () => {
     expect(verwerkSessie({ niveau: 1, recent: [] }, reeks(3, 3), 2).niveau).toBe(1);
   });
+  it('telt over concerten heen tot er 8 opgaven zijn', () => {
+    const na1 = verwerkSessie({ niveau: 1, recent: [] }, reeks(4, 4), 2);
+    expect(na1.niveau).toBe(1);
+    expect(na1.opNiveau).toHaveLength(4);
+    const na2 = verwerkSessie(na1, reeks(4, 4), 2);
+    expect(na2.niveau).toBe(2);
+    expect(na2.opNiveau).toEqual([]);
+  });
+  it('kijkt naar de laatste 10 en begint opnieuw na een wissel', () => {
+    let v = verwerkSessie({ niveau: 1, recent: [] }, reeks(6, 8), 2); // 75%: blijven
+    expect(v.niveau).toBe(1);
+    v = verwerkSessie(v, reeks(4, 4), 2); // laatste 10: 8 goed = 80%, blijven
+    expect(v.niveau).toBe(1);
+    expect(v.opNiveau).toHaveLength(10);
+    v = verwerkSessie(v, reeks(5, 5), 2); // laatste 10: 9 goed = 90%, omhoog
+    expect(v.niveau).toBe(2);
+  });
   it('onthoudt maximaal 20 antwoorden', () => {
     const v = verwerkSessie({ niveau: 0, recent: reeks(15, 15) }, reeks(0, 10), 2);
     expect(v.recent).toHaveLength(20);

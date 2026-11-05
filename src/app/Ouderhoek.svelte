@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { bewaar, exporteer, importeer, vg, wisAlles } from '../store/voortgang.svelte';
-  import { percentage } from '../engine/adaptief';
+  import { percentage, zetNiveau } from '../engine/adaptief';
+  import { inDoosjes } from '../engine/herhaling';
+  import { lastigsteSommen, vaakVerwisseld } from '../engine/overzicht';
   import { FLITS_START } from '../engine/generator-lezen';
   import { aantalStemBestanden, nederlandseStemmen, spreek, zetApparaatStem } from '../audio/stem';
   import { zetEffectenAan } from '../audio/geluid';
@@ -41,6 +43,25 @@
   function pct(v: { recent: boolean[]; niveau: number }) {
     const p = percentage(v);
     return p === null ? 'nog geen gegevens' : `${p}% goed (laatste ${v.recent.length})`;
+  }
+
+  const lastig = $derived(lastigsteSommen(vg.stats).slice(0, 5));
+  const verwisseld = $derived(vaakVerwisseld(vg.stats));
+  const doosSommen = $derived(inDoosjes(vg.herhaling, 'som.'));
+  const doosWoorden = $derived(inDoosjes(vg.herhaling, 'woord.'));
+
+  const toonSom = (id: string) => id.slice(4).replace('+', ' + ').replace('-', ' − ');
+
+  async function kiesNiveau(vak: 'rekenen' | 'flits', e: Event) {
+    vg.vaardigheden[vak] = zetNiveau(vg.vaardigheden[vak], Number((e.target as HTMLSelectElement).value));
+    vg.auditie[vak] = true;
+    await bewaar();
+  }
+
+  async function auditieOpnieuw(vak: 'rekenen' | 'flits') {
+    vg.auditie[vak] = false;
+    await bewaar();
+    melding = `De auditie ${vak === 'rekenen' ? 'rekenen (Mira)' : 'flitslezen (Rumi)'} komt bij het volgende concert.`;
   }
 
   async function kiesStem(uri: string | null) {
@@ -95,13 +116,43 @@
           <tr><th>Verhalen (Zoey)</th><td>{vg.gelezenVerhalen.length} van 5 verhalen gelezen (AVI E4)</td><td>{pct(vg.vaardigheden.verhaal)}</td></tr>
         </tbody>
       </table>
+      <h3>Wat is lastig?</h3>
+      {#if lastig.length === 0 && verwisseld.length === 0}
+        <p class="uitleg">Na een paar concerten zie je hier welke sommen en woorden lastig zijn.</p>
+      {/if}
+      {#if lastig.length}
+        <table class="smal">
+          <tbody>
+            {#each lastig as l}
+              <tr class:rood={l.pct < 60} class:groen={l.pct >= 85}>
+                <th>{l.soort}</th><td>{l.pct}% meteen goed <small>({l.totaal}×)</small></td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {/if}
+      {#if verwisseld.length}
+        <p>Verwisselt vaak:
+          {#each verwisseld as v, i}{i > 0 ? ', ' : ' '}<strong>{v.woord}</strong> → {v.gekozen} <small>({v.keer}×)</small>{/each}
+        </p>
+      {/if}
+      <h3>Herhalingsdoosjes</h3>
+      {#if doosSommen.length + doosWoorden.length === 0}
+        <p class="uitleg">Leeg. Wat niet meteen goed gaat, komt hier en wordt vaker herhaald tot het gekend is.</p>
+      {:else}
+        <p class="uitleg">Komt vaker terug tot het 5 keer goed ging (doos 1 = net fout, doos 5 = bijna gekend).</p>
+        <div class="doosjes">
+          {#each doosSommen.slice(0, 16) as d}<span class="doos" title="doos {d.item.doos}">{toonSom(d.id)} <small>{d.item.doos}</small></span>{/each}
+          {#each doosWoorden.slice(0, 16) as d}<span class="doos" title="doos {d.item.doos}">{d.id.slice(6)} <small>{d.item.doos}</small></span>{/each}
+        </div>
+      {/if}
       {#if vg.sessies.length}
         <h3>Laatste concerten</h3>
         <ul class="sessies">
           {#each vg.sessies.slice(-6).reverse() as s}
             <li>
               {new Date(s.datum).toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' })}
-              · {s.heldin} · {s.goed}/{s.totaal} meteen goed · {Math.round(s.seconden / 60)} min
+              · {s.heldin}{s.auditie ? ' (auditie)' : ''} · {s.goed}/{s.totaal} meteen goed · {Math.round(s.seconden / 60)} min
             </li>
           {/each}
         </ul>
@@ -110,19 +161,23 @@
 
     <section>
       <h2>Niveau</h2>
-      <p class="uitleg">De site past het niveau zelf aan (boven 85% goed: moeilijker, onder 60%: makkelijker). Hier kun je het zelf zetten.</p>
+      <p class="uitleg">De eerste keer doet Lana per wereld een korte auditie. Daarna past de site het niveau zelf aan: na 8 opgaven op haar niveau gaat het bij meer dan 85% goed een stapje omhoog en onder 60% een stapje omlaag. Elk concert heeft ongeveer 70% opgaven op haar niveau, 20% iets makkelijker en 10% iets moeilijker. Hier kun je het niveau zelf zetten.</p>
       <label>
         Rekenen
-        <select bind:value={vg.vaardigheden.rekenen.niveau} onchange={bewaar}>
+        <select value={vg.vaardigheden.rekenen.niveau} onchange={(e) => kiesNiveau('rekenen', e)}>
           {#each REKENEN as r, i}<option value={i}>{r}</option>{/each}
         </select>
       </label>
       <label>
         Flitslezen
-        <select bind:value={vg.vaardigheden.flits.niveau} onchange={bewaar}>
+        <select value={vg.vaardigheden.flits.niveau} onchange={(e) => kiesNiveau('flits', e)}>
           {#each FLITS as f, i}<option value={i}>{f}</option>{/each}
         </select>
       </label>
+      <div class="rij">
+        <button class="klein" onclick={() => auditieOpnieuw('rekenen')}>Auditie rekenen opnieuw</button>
+        <button class="klein" onclick={() => auditieOpnieuw('flits')}>Auditie flitsen opnieuw</button>
+      </div>
       <button class="klein" onclick={() => { vg.flitstijd = FLITS_START; bewaar(); }}>Flitstijd terug naar 1,5 s</button>
 
       <h2>Instellingen</h2>
@@ -130,6 +185,15 @@
         Opdrachten per concert
         <select bind:value={vg.instellingen.opgavenPerSessie} onchange={bewaar}>
           {#each [6, 8, 10, 12] as n}<option value={n}>{n}</option>{/each}
+        </select>
+      </label>
+      <label>
+        Pauze na
+        <select bind:value={vg.instellingen.sessieMinuten} onchange={bewaar}>
+          <option value={10}>10 minuten</option>
+          <option value={15}>15 minuten</option>
+          <option value={20}>20 minuten</option>
+          <option value={0}>geen pauze</option>
         </select>
       </label>
       <label class="vink">
@@ -234,6 +298,34 @@
   }
   th {
     width: 26%;
+  }
+  table.smal th {
+    width: 60%;
+    font-weight: 500;
+  }
+  tr.rood td {
+    color: #b91c1c;
+    font-weight: 600;
+  }
+  tr.groen td {
+    color: #15803d;
+  }
+  .doosjes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .doos {
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    font-size: 15px;
+  }
+  .doos small {
+    color: #92400e;
+    font-size: 11px;
+    vertical-align: super;
   }
   .uitleg {
     color: #475569;

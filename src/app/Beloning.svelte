@@ -13,14 +13,24 @@
     totaal,
     noten,
     omhoog,
+    titel = 'Concert gewonnen!',
+    melding,
+    pauze = false,
     opNogEens,
     opTerug,
+    opPauze = opTerug,
   }: {
     heldin: HeldinId;
     goed: number;
     totaal: number;
     noten: number;
     omhoog: boolean;
+    titel?: string;
+    /** Extra regel, bijv. het startniveau na de auditie. */
+    melding?: string;
+    /** Speeltijd om: alleen nog een knop naar het pauzescherm. */
+    pauze?: boolean;
+    opPauze?: () => void;
     opNogEens: () => void;
     opTerug: () => void;
   } = $props();
@@ -31,14 +41,17 @@
   onMount(() => {
     speelFanfare();
     grootFeest();
-    void spreek(teksten.beloning);
+    void (async () => {
+      await spreek(melding ? teksten.auditie.klaar : teksten.beloning);
+      if (pauze) await spreek(teksten.pauze.tijd);
+    })();
   });
 </script>
 
 <div class="scherm">
   <div class="kaart">
     <p class="lana">Goed gedaan, Lana!</p>
-    <h2 class="goudtekst">Concert gewonnen!</h2>
+    <h2 class="goudtekst">{titel}</h2>
 
     <div class="sterren">
       {#each [1, 2, 3] as s}
@@ -61,14 +74,24 @@
     </div>
 
     <div class="noten">+{noten} gouden noten</div>
+    {#if melding}
+      <div class="omhoog">{melding}</div>
+    {/if}
     {#if omhoog}
       <div class="omhoog">🎉 Level omhoog! Jij wordt steeds sterker!</div>
     {/if}
 
-    <div class="knoppen">
-      <button class="knop-goud ander" onclick={opTerug}>Andere heldin</button>
-      <button class="knop-goud" onclick={opNogEens}>Nog een keer! ✨</button>
-    </div>
+    {#if pauze}
+      <div class="pauze">☕ Tijd voor een pauze!</div>
+      <div class="knoppen">
+        <button class="knop-goud" onclick={opPauze}>Klaar voor vandaag 👋</button>
+      </div>
+    {:else}
+      <div class="knoppen">
+        <button class="knop-goud ander" onclick={opTerug}>Andere heldin</button>
+        <button class="knop-goud" onclick={opNogEens}>Nog een keer! ✨</button>
+      </div>
+    {/if}
   </div>
 </div>
 
@@ -132,6 +155,13 @@
     font-size: 26px;
     font-weight: 600;
     animation: pop-in 0.6s ease-out 1s backwards;
+  }
+  .pauze {
+    font-size: 30px;
+    font-weight: 700;
+    color: #a5f3fc;
+    text-shadow: 0 0 14px rgba(6, 182, 212, 0.8);
+    animation: pop-in 0.6s ease-out 1.2s backwards;
   }
   .knoppen {
     display: flex;

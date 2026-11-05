@@ -7,8 +7,6 @@
   import {
     FLITS_MAX,
     FLITS_MIN,
-    LEES_NIVEAUS,
-    maakFlitsOpgaven,
     nieuweFlitstijd,
     type FlitsOpgave,
   } from '../engine/generator-lezen';
@@ -16,14 +14,16 @@
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
   import { vg } from '../store/voortgang.svelte';
+  import type { Gepland, Resultaat } from '../engine/sessie';
   import { teksten, compliment, bijna, wacht } from './teksten';
   import type { SpelProps } from './types';
 
-  let { opNoten, opVoortgang, opKlaar, intro }: SpelProps = $props();
+  let { opNoten, opVoortgang, opKlaar, intro, opgaven = [], auditie = false }: SpelProps<FlitsOpgave> = $props();
 
-  const niveau = LEES_NIVEAUS[Math.min(vg.vaardigheden.flits.niveau, LEES_NIVEAUS.length - 1)];
-  let rij: FlitsOpgave[] = $state(maakFlitsOpgaven(niveau, vg.instellingen.opgavenPerSessie));
-  const resultaten: boolean[] = [];
+  // svelte-ignore state_referenced_locally
+  let rij: Gepland<FlitsOpgave>[] = $state([...opgaven]);
+  const resultaten: Resultaat[] = [];
+  let eersteFout: string | undefined;
   const opnieuw = new Set<number>();
 
   let index = $state(0);
@@ -33,12 +33,14 @@
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
   let podiumEl: HTMLElement | undefined = $state();
 
-  let opgave = $derived(rij[index]);
+  let item = $derived(rij[index]);
+  let opgave = $derived(item.opgave);
   let bliksems = $derived(Math.max(1, Math.ceil(((FLITS_MAX - vg.flitstijd) / (FLITS_MAX - FLITS_MIN)) * 5)));
 
   onMount(() => {
     (async () => {
       if (intro) await spreek(intro);
+      if (auditie) await spreek(teksten.auditie.start);
       await spreek(teksten.flits.start);
     })();
     return stopSpreken;
@@ -61,7 +63,7 @@
       glitterOp(podiumEl ?? null);
       stemming = 'juich';
       if (!opnieuw.has(index)) {
-        resultaten.push(pogingen === 0);
+        resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: pogingen === 0, gekozen: eersteFout });
         if (pogingen === 0) vg.flitstijd = nieuweFlitstijd(vg.flitstijd, true);
       }
       opNoten(pogingen === 0 ? 2 : 1, podiumEl);
@@ -71,6 +73,7 @@
       volgende();
     } else {
       speelBijna();
+      if (pogingen === 0 && !opnieuw.has(index)) eersteFout = woord;
       fout = [...fout, woord];
       pogingen++;
       stemming = 'denk';
@@ -78,8 +81,8 @@
       if (pogingen >= 2) {
         fase = 'onthuld';
         if (!opnieuw.has(index)) {
-          resultaten.push(false);
-          rij = [...rij, { ...opgave }];
+          resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: false, gekozen: eersteFout });
+          rij = [...rij, { ...item }];
           opnieuw.add(rij.length - 1);
         }
         await spreek(teksten.hetIs);
@@ -103,6 +106,7 @@
     }
     index = klaar;
     pogingen = 0;
+    eersteFout = undefined;
     fout = [];
     stemming = 'rust';
     fase = 'klaar';

@@ -1,28 +1,41 @@
 /**
  * Niveau-aanpassing per vaardigheid (PLAN.md §3.4).
- * Na een sessie: >85% goed = stapje omhoog, <60% goed = stapje omlaag.
+ *
+ * Alleen opgaven op het eigen niveau tellen mee. Zodra er 8 zijn (ook over
+ * meerdere concerten heen) kijkt de site naar de laatste 10:
+ * >85% goed = stapje omhoog, <60% goed = stapje omlaag, daartussen blijven.
+ * Na een niveauwissel begint de telling opnieuw.
  */
 export type Vaardigheid = {
   niveau: number;
-  /** Laatste antwoorden (true = goed bij eerste poging), maximaal 20. */
+  /** Laatste antwoorden op het eigen niveau (true = goed bij eerste poging), maximaal 20. Voor het overzicht. */
   recent: boolean[];
+  /** Antwoorden sinds de laatste niveauwissel (maximaal 10). */
+  opNiveau?: boolean[];
 };
 
 export const OMHOOG = 0.85;
 export const OMLAAG = 0.6;
-export const MIN_OPGAVEN = 6;
+/** Na zoveel opgaven op een niveau wordt er gekeken of het omhoog of omlaag moet. */
+export const VENSTER = 8;
+const GEHEUGEN = 10;
 
 export function verwerkSessie(v: Vaardigheid, resultaten: boolean[], maxNiveau: number): Vaardigheid {
   const recent = [...v.recent, ...resultaten].slice(-20);
-  if (resultaten.length < MIN_OPGAVEN) return { niveau: v.niveau, recent };
-  const score = resultaten.filter(Boolean).length / resultaten.length;
-  let niveau = v.niveau;
-  if (score > OMHOOG) niveau = Math.min(maxNiveau, niveau + 1);
-  else if (score < OMLAAG) niveau = Math.max(0, niveau - 1);
-  return { niveau, recent };
+  const reeks = [...(v.opNiveau ?? []), ...resultaten].slice(-GEHEUGEN);
+  if (reeks.length < VENSTER) return { niveau: v.niveau, recent, opNiveau: reeks };
+  const score = reeks.filter(Boolean).length / reeks.length;
+  if (score > OMHOOG && v.niveau < maxNiveau) return { niveau: v.niveau + 1, recent, opNiveau: [] };
+  if (score < OMLAAG && v.niveau > 0) return { niveau: v.niveau - 1, recent, opNiveau: [] };
+  return { niveau: v.niveau, recent, opNiveau: reeks };
 }
 
 export function percentage(v: Vaardigheid): number | null {
   if (v.recent.length === 0) return null;
   return Math.round((v.recent.filter(Boolean).length / v.recent.length) * 100);
+}
+
+/** Zet een niveau met de hand (ouderhoek); de telling begint opnieuw. */
+export function zetNiveau(v: Vaardigheid, niveau: number): Vaardigheid {
+  return { niveau, recent: v.recent, opNiveau: [] };
 }

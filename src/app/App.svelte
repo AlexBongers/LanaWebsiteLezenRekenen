@@ -7,17 +7,25 @@
   import HeldinKeuze from './HeldinKeuze.svelte';
   import Level from './Level.svelte';
   import Ouderhoek from './Ouderhoek.svelte';
+  import Einde from './Einde.svelte';
   import characters from '../../content/characters.json';
   import teksten from '../../content/teksten.json';
   import { laadVoortgang, vg, type HeldinId } from '../store/voortgang.svelte';
   import { laadStemManifest, spreek, stopSpreken, zetApparaatStem } from '../audio/stem';
   import { ontgrendelGeluid, zetEffectenAan } from '../audio/geluid';
 
-  type Scherm = 'start' | 'keuze' | 'level' | 'ouder';
+  type Scherm = 'start' | 'keuze' | 'level' | 'ouder' | 'einde';
   let scherm = $state<Scherm>('start');
   let heldin = $state<HeldinId>('rumi');
   let vraagStop = $state(false);
   let wakeLock: WakeLockSentinel | null = null;
+  /** Begin van deze speelbeurt (voor de pauze na 10, 15 of 20 minuten). */
+  let speelStart = $state(Date.now());
+
+  function pauzeNodig() {
+    const min = vg.instellingen.sessieMinuten;
+    return min > 0 && Date.now() - speelStart >= min * 60_000;
+  }
 
   let accent = $derived(scherm === 'level' ? characters[heldin].kleur : '#8b5cf6');
 
@@ -35,11 +43,12 @@
       history.pushState({ app: true }, '');
       if (scherm === 'level') vraagStop = true;
       else if (scherm === 'ouder') scherm = 'keuze';
+      else if (scherm === 'einde') scherm = 'start';
     };
     addEventListener('popstate', opTerugknop);
 
     const opZichtbaar = () => {
-      if (document.visibilityState === 'visible' && scherm !== 'start') void houdSchermAan();
+      if (document.visibilityState === 'visible' && scherm !== 'start' && scherm !== 'einde') void houdSchermAan();
       if (document.visibilityState === 'hidden') stopSpreken();
     };
     document.addEventListener('visibilitychange', opZichtbaar);
@@ -69,6 +78,7 @@
       // Volledig scherm of draaien vastzetten mag niet overal; geen probleem.
     }
     void houdSchermAan();
+    speelStart = Date.now();
     scherm = 'keuze';
     void spreek(teksten.welkom);
   }
@@ -76,6 +86,13 @@
   function kies(h: HeldinId) {
     heldin = h;
     scherm = 'level';
+  }
+
+  function naarEinde() {
+    stopSpreken();
+    wakeLock?.release().catch(() => {});
+    wakeLock = null;
+    scherm = 'einde';
   }
 
   function naarKeuze() {
@@ -94,7 +111,9 @@
     {:else if scherm === 'keuze'}
       <HeldinKeuze opKies={kies} opOuder={() => (scherm = 'ouder')} />
     {:else if scherm === 'level'}
-      <Level {heldin} opTerug={naarKeuze} opStop={() => (vraagStop = true)} />
+      <Level {heldin} opTerug={naarKeuze} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+    {:else if scherm === 'einde'}
+      <Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />
     {:else if scherm === 'ouder'}
       <Ouderhoek opSluit={() => (scherm = 'keuze')} />
     {/if}

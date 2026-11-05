@@ -6,22 +6,19 @@
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
-  import { maakSommen, REKEN_NIVEAUS, type Som } from '../engine/generator-rekenen';
+  import type { Som } from '../engine/generator-rekenen';
+  import type { Gepland, Resultaat } from '../engine/sessie';
   import { spreek, somDelen, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelPoef } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
-  import { vg } from '../store/voortgang.svelte';
   import { teksten, compliment, bijna, wacht } from './teksten';
   import type { SpelProps } from './types';
 
-  let { opNoten, opVoortgang, opKlaar, intro }: SpelProps = $props();
+  let { opNoten, opVoortgang, opKlaar, intro, opgaven = [], auditie = false }: SpelProps<Som> = $props();
 
-  const niveau = REKEN_NIVEAUS[Math.min(vg.vaardigheden.rekenen.niveau, REKEN_NIVEAUS.length - 1)];
-  const aantal = vg.instellingen.opgavenPerSessie;
-  let rij: Som[] = $state(
-    maakSommen(niveau, aantal, { verhaalKans: vg.instellingen.verhaaltjesSommen ? 0.25 : 0 }),
-  );
-  const resultaten: boolean[] = [];
+  // svelte-ignore state_referenced_locally
+  let rij: Gepland<Som>[] = $state([...opgaven]);
+  const resultaten: Resultaat[] = [];
   let index = $state(0);
   let pogingen = $state(0);
   let fout: number[] = $state([]);
@@ -32,8 +29,10 @@
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('dans');
   let demonEls: HTMLElement[] = $state([]);
   let opnieuw = new Set<number>();
+  let eersteFout: number | null = null;
 
-  let som = $derived(rij[index]);
+  let item = $derived(rij[index]);
+  let som = $derived(item.opgave);
   let toonHint = $derived(pogingen >= 1);
 
   function zegSom() {
@@ -46,7 +45,7 @@
   onMount(() => {
     (async () => {
       if (intro) await spreek(intro);
-      await spreek(teksten.sommen.start);
+      await spreek(auditie ? teksten.auditie.start : teksten.sommen.start);
       await zegSom();
     })();
     return stopSpreken;
@@ -61,13 +60,14 @@
       speelPoef();
       glitterOp(demonEls[i]);
       stemming = 'juich';
-      if (!opnieuw.has(index)) resultaten.push(pogingen === 0);
+      if (!opnieuw.has(index)) resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: pogingen === 0 });
       opNoten(pogingen === 0 ? 2 : 1, demonEls[i]);
       await spreek(compliment());
       await wacht(300);
       volgende();
     } else {
       speelBijna();
+      if (pogingen === 0 && !opnieuw.has(index)) eersteFout = keuze;
       fout = [...fout, keuze];
       lacht = i;
       setTimeout(() => (lacht = lacht === i ? null : lacht), 1300);
@@ -75,10 +75,12 @@
       stemming = 'denk';
       if (pogingen >= 2) {
         onthuld = true;
-        if (!opnieuw.has(index)) resultaten.push(false);
+        if (!opnieuw.has(index)) {
+          resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: false, gekozen: String(eersteFout) });
+        }
         // Deze som komt aan het eind nog een keer terug.
         if (!opnieuw.has(index)) {
-          rij = [...rij, { ...som }];
+          rij = [...rij, { ...item }];
           opnieuw.add(rij.length - 1);
         }
         await spreek(somDelen(som.a, som.op, som.b, som.antwoord), 'getal');
@@ -99,6 +101,7 @@
     }
     index = klaar;
     pogingen = 0;
+    eersteFout = null;
     fout = [];
     weg = null;
     lacht = null;

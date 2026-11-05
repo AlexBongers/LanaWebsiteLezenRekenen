@@ -34,5 +34,13 @@
     "start": "Lees het verhaal. Tik op een zin als je hulp nodig hebt.",
     "klaar": "Tik op klaar als je het verhaal hebt gelezen.",
     "zoek": "Zoek het antwoord in het verhaal."
+  },
+  "auditie": {
+    "start": "Eerst doen we een auditie! Laat maar zien wat je al kunt. Het wordt steeds een beetje moeilijker. Fouten maken mag.",
+    "klaar": "Wat een auditie! Nu weet ik precies waar we gaan beginnen."
+  },
+  "pauze": {
+    "tijd": "Je hebt zo goed geoefend! Nu is het tijd voor een pauze.",
+    "tot": "Tot de volgende keer, Lana!"
   }
 }

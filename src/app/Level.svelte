@@ -6,17 +6,39 @@
   import NotenTeller from '../ui/NotenTeller.svelte';
   import Beloning from './Beloning.svelte';
   import characters from '../../content/characters.json';
-  import { REKEN_NIVEAUS } from '../engine/generator-rekenen';
-  import { LEES_NIVEAUS } from '../engine/generator-lezen';
+  import { maakSommen, REKEN_NIVEAUS, somId, somUitId, type Som } from '../engine/generator-rekenen';
+  import {
+    flitsUitId,
+    groepSleutel,
+    LEES_NIVEAUS,
+    maakFlitsOpgaven,
+    woordId,
+    type FlitsOpgave,
+  } from '../engine/generator-lezen';
   import { verwerkSessie } from '../engine/adaptief';
+  import { aanDeBeurt, verwerkAntwoord } from '../engine/herhaling';
+  import { AUDITIE, auditieUitslag, planAuditie, planSessie, type Gepland, type Resultaat } from '../engine/sessie';
+  import { werkStatsBij } from '../engine/overzicht';
   import { bewaar, vg, type HeldinId } from '../store/voortgang.svelte';
   import { stopSpreken } from '../audio/stem';
   import { speelCombo } from '../audio/geluid';
   import { vliegNoten } from '../ui/vlieg';
 
-  let { heldin, opTerug, opStop }: { heldin: HeldinId; opTerug: () => void; opStop: () => void } = $props();
+  let {
+    heldin,
+    opTerug,
+    opStop,
+    pauzeNodig = () => false,
+    opPauze = opTerug,
+  }: {
+    heldin: HeldinId;
+    opTerug: () => void;
+    opStop: () => void;
+    /** Is de speeltijd om? Dan volgt na dit concert een pauze. */
+    pauzeNodig?: () => boolean;
+    opPauze?: () => void;
+  } = $props();
 
-  const SPEL = { mira: DansSommen, rumi: FlitsPodium, zoey: Verhaal };
   const VAARDIGHEID = { mira: 'rekenen', rumi: 'flits', zoey: 'verhaal' } as const;
   const MAX = { mira: REKEN_NIVEAUS.length - 1, rumi: LEES_NIVEAUS.length - 1, zoey: 0 };
 
@@ -25,10 +47,61 @@
   let verdiend = $state(0);
   let eerste = $state(true);
   let start = Date.now();
-  let uitslag: { goed: number; totaal: number; omhoog: boolean } | null = $state(null);
+  let uitslag: {
+    goed: number;
+    totaal: number;
+    omhoog: boolean;
+    titel?: string;
+    melding?: string;
+    pauze: boolean;
+  } | null = $state(null);
 
-  let Spel = $derived(SPEL[heldin]);
+  // ---------- Het concert plannen ----------
+  let auditie = $state(false);
+  let sommen: Gepland<Som>[] = $state([]);
+  let woorden: Gepland<FlitsOpgave>[] = $state([]);
 
+  const maakReken = (niveau: number, n: number) =>
+    maakSommen(REKEN_NIVEAUS[niveau], n, { verhaalKans: !auditie && vg.instellingen.verhaaltjesSommen ? 0.25 : 0 });
+  const maakFlits = (niveau: number, n: number) => maakFlitsOpgaven(LEES_NIVEAUS[niveau], n);
+
+  function planRonde() {
+    const aantal = vg.instellingen.opgavenPerSessie;
+    const nu = Date.now();
+    if (heldin === 'mira') {
+      auditie = !vg.auditie.rekenen;
+      sommen = auditie
+        ? planAuditie(AUDITIE.rekenen, maakReken, somId)
+        : planSessie({
+            aantal,
+            niveau: vg.vaardigheden.rekenen.niveau,
+            maxNiveau: MAX.mira,
+            herhaling: aanDeBeurt(vg.herhaling, 'som.', nu),
+            maak: maakReken,
+            herbouw: (id) => somUitId(id),
+            id: somId,
+          });
+    } else if (heldin === 'rumi') {
+      auditie = !vg.auditie.flits;
+      woorden = auditie
+        ? planAuditie(AUDITIE.flits, maakFlits, (o) => woordId(o.woord))
+        : planSessie({
+            aantal,
+            niveau: vg.vaardigheden.flits.niveau,
+            maxNiveau: MAX.rumi,
+            herhaling: aanDeBeurt(vg.herhaling, 'woord.', nu),
+            maak: maakFlits,
+            herbouw: (id) => flitsUitId(id),
+            id: (o) => woordId(o.woord),
+            sleutel: groepSleutel,
+          });
+    } else {
+      auditie = false;
+    }
+  }
+  planRonde();
+
+  // ---------- Noten en combo's ----------
   let tellerEl: HTMLElement | undefined = $state();
   let reeks = 0;
   let combo: number | null = $state(null);
@@ -56,14 +129,43 @@
     }
   }
 
-  function opKlaar(resultaten: boolean[]) {
+  // ---------- Concert klaar ----------
+  let afgerond = false;
+
+  function opKlaar(resultaten: Resultaat[]) {
+    // Snel dubbel tikken aan het eind mag het concert niet twee keer tellen.
+    if (afgerond) return;
+    afgerond = true;
+    const nu = Date.now();
     const sleutel = VAARDIGHEID[heldin];
     const voor = vg.vaardigheden[sleutel].niveau;
-    vg.vaardigheden[sleutel] = verwerkSessie(vg.vaardigheden[sleutel], resultaten, MAX[heldin]);
+
+    // Herhalingsdoosjes (niet voor verhaalvragen) en overzicht voor de ouderhoek.
+    let h = vg.herhaling;
+    for (const r of resultaten) {
+      if (!r.id.startsWith('verhaal.')) h = verwerkAntwoord(h, r.id, r.goed, r.niveau, nu);
+    }
+    vg.herhaling = h;
+    vg.stats = werkStatsBij(vg.stats, resultaten);
+
+    let titel: string | undefined;
+    let melding: string | undefined;
+    if (auditie && sleutel !== 'verhaal') {
+      const niveau = auditieUitslag(resultaten, MAX[heldin]);
+      vg.vaardigheden[sleutel] = { niveau, recent: vg.vaardigheden[sleutel].recent, opNiveau: [] };
+      vg.auditie[sleutel] = true;
+      titel = 'Auditie gehaald!';
+      melding = `⭐ Jij begint op level ${niveau + 1}!`;
+    } else {
+      // Alleen opgaven op haar eigen niveau tellen mee voor omhoog of omlaag.
+      const eigen = resultaten.filter((r) => r.niveau === voor).map((r) => r.goed);
+      vg.vaardigheden[sleutel] = verwerkSessie(vg.vaardigheden[sleutel], eigen, MAX[heldin]);
+    }
+
     const bonus = 5;
     vg.noten += bonus;
     verdiend += bonus;
-    const goed = resultaten.filter(Boolean).length;
+    const goed = resultaten.filter((r) => r.goed).length;
     vg.sessies = [
       ...vg.sessies.slice(-199),
       {
@@ -72,25 +174,32 @@
         goed,
         totaal: resultaten.length,
         noten: verdiend,
-        seconden: Math.round((Date.now() - start) / 1000),
+        seconden: Math.round((nu - start) / 1000),
+        auditie,
       },
     ];
     void bewaar();
     voortgang = 1;
+    const omhoog = !auditie && vg.vaardigheden[sleutel].niveau > voor;
+    const pauze = pauzeNodig();
     setTimeout(() => {
-      uitslag = { goed, totaal: resultaten.length, omhoog: vg.vaardigheden[sleutel].niveau > voor };
+      uitslag = { goed, totaal: resultaten.length, omhoog, titel, melding, pauze };
     }, 700);
   }
 
   function nogEens() {
+    afgerond = false;
     uitslag = null;
     reeks = 0;
     voortgang = 0;
     verdiend = 0;
     eerste = false;
     start = Date.now();
+    planRonde();
     ronde++;
   }
+
+  let intro = $derived(eerste ? characters[heldin].intro : undefined);
 
   function terug() {
     stopSpreken();
@@ -107,6 +216,7 @@
       </svg>
     </button>
     <div class="schild"><SchildBalk waarde={voortgang} /></div>
+    {#if auditie}<div class="auditie" style="--kleur:{characters[heldin].kleur}">🎤 Auditie</div>{/if}
     <div bind:this={tellerEl}><NotenTeller aantal={vg.noten} /></div>
   </header>
 
@@ -122,17 +232,18 @@
 
   <main>
     {#key ronde}
-      <Spel
-        {opNoten}
-        opVoortgang={(f: number) => (voortgang = f)}
-        {opKlaar}
-        intro={eerste ? characters[heldin].intro : undefined}
-      />
+      {#if heldin === 'mira'}
+        <DansSommen {opNoten} opVoortgang={(f: number) => (voortgang = f)} {opKlaar} {intro} opgaven={sommen} {auditie} />
+      {:else if heldin === 'rumi'}
+        <FlitsPodium {opNoten} opVoortgang={(f: number) => (voortgang = f)} {opKlaar} {intro} opgaven={woorden} {auditie} />
+      {:else}
+        <Verhaal {opNoten} opVoortgang={(f: number) => (voortgang = f)} {opKlaar} {intro} />
+      {/if}
     {/key}
   </main>
 
   {#if uitslag}
-    <Beloning {heldin} {...uitslag} noten={verdiend} opNogEens={nogEens} opTerug={opTerug} />
+    <Beloning {heldin} {...uitslag} noten={verdiend} opNogEens={nogEens} {opTerug} {opPauze} />
   {/if}
 </div>
 
@@ -152,6 +263,15 @@
   }
   .schild {
     flex: 1;
+  }
+  .auditie {
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--kleur), #f59e0b);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+    animation: pop-in 0.5s ease-out;
   }
   main {
     position: relative;
