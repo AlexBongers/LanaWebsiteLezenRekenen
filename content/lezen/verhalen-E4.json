@@ -1,0 +1,193 @@
+[
+  {
+    "id": "nieuw-lid",
+    "titel": "Een nieuw lid",
+    "zinnen": [
+      "Rumi, Mira en Zoey zitten in de studio.",
+      "\"Ons schild is sterk,\" zegt Rumi.",
+      "\"Maar de demonen worden steeds slimmer.\"",
+      "Mira denkt na.",
+      "\"We hebben een vierde lid nodig,\" zegt ze.",
+      "\"Iemand die goed kan lezen en rekenen.\"",
+      "Zoey springt op van de bank.",
+      "\"Ik weet wie! Lana!\"",
+      "Ze bellen Lana meteen op.",
+      "Lana is net klaar met haar huiswerk.",
+      "\"Wil jij bij onze groep?\" vraagt Rumi.",
+      "Lana kan het bijna niet geloven.",
+      "Ze roept: \"Ja, natuurlijk!\"",
+      "De volgende dag krijgt ze een glimmend paars jasje.",
+      "Op de rug staat haar naam in gouden letters."
+    ],
+    "vragen": [
+      {
+        "vraag": "Waarom heeft de groep een vierde lid nodig?",
+        "keuzes": ["De demonen worden slimmer.", "Mira is ziek.", "Ze willen een taart bakken."],
+        "goed": 0
+      },
+      {
+        "vraag": "Wie bedenkt dat Lana het nieuwe lid moet worden?",
+        "keuzes": ["Rumi", "Zoey", "Mira"],
+        "goed": 1
+      },
+      {
+        "vraag": "Wat krijgt Lana de volgende dag?",
+        "keuzes": ["Een gouden schoen", "Een nieuwe fiets", "Een paars jasje"],
+        "goed": 2
+      }
+    ]
+  },
+  {
+    "id": "gouden-schild",
+    "titel": "Het gouden schild",
+    "zinnen": [
+      "Rumi, Mira en Zoey staan op het podium in Seoel.",
+      "De zaal is vol.",
+      "Iedereen zwaait met een lichtstok.",
+      "Dan wordt het opeens koud.",
+      "Het licht gaat flikkeren.",
+      "\"Demonen!\" roept Zoey.",
+      "Achter het podium kruipen drie kleine demonen naar voren.",
+      "Ze hebben blauwe hoorns en gele ogen.",
+      "Rumi pakt haar microfoon.",
+      "\"We zingen het schild sterk,\" zegt ze.",
+      "Mira knikt en begint te dansen.",
+      "De muziek gaat harder en harder.",
+      "Boven de zaal verschijnt een gouden schild.",
+      "De demonen houden hun handen voor hun oren.",
+      "\"Wat een herrie!\" piepen ze.",
+      "Dan rennen ze snel weg.",
+      "Het publiek juicht."
+    ],
+    "vragen": [
+      {
+        "vraag": "In welke stad staan de drie meiden op het podium?",
+        "keuzes": ["In Tokio", "In Seoel", "In Amsterdam"],
+        "goed": 1
+      },
+      {
+        "vraag": "Welke kleur hebben de hoorns van de demonen?",
+        "keuzes": ["Blauw", "Geel", "Rood"],
+        "goed": 0
+      },
+      {
+        "vraag": "Waarom rennen de demonen weg?",
+        "keuzes": ["Ze hebben honger.", "Het is te koud.", "De muziek is te hard."],
+        "goed": 2
+      }
+    ]
+  },
+  {
+    "id": "zoey-schrijft",
+    "titel": "Zoey schrijft een lied",
+    "zinnen": [
+      "Zoey zit op haar bed met een schrift.",
+      "Ze wil een nieuw lied schrijven.",
+      "Maar ze weet niet hoe het lied moet beginnen.",
+      "Ze kauwt op haar pen.",
+      "Dan kijkt ze uit het raam.",
+      "De maan schijnt en de sterren twinkelen.",
+      "\"Dat is het!\" roept ze.",
+      "Ze schrijft snel: Wij zijn de sterren in de nacht.",
+      "Dan rent ze naar de kamer van Rumi.",
+      "Rumi slaapt al bijna.",
+      "\"Luister!\" zegt Zoey.",
+      "Ze rapt de eerste regel.",
+      "Rumi gaat rechtop zitten en lacht.",
+      "\"Dat is prachtig,\" zegt ze.",
+      "\"Morgen gaan we het samen oefenen.\""
+    ],
+    "vragen": [
+      {
+        "vraag": "Wat wil Zoey maken?",
+        "keuzes": ["Een tekening", "Een nieuw lied", "Een taart"],
+        "goed": 1
+      },
+      {
+        "vraag": "Wat ziet Zoey als ze uit het raam kijkt?",
+        "keuzes": ["De maan en de sterren", "De zon", "Een demon"],
+        "goed": 0
+      },
+      {
+        "vraag": "Wat doet Rumi als ze de regel hoort?",
+        "keuzes": ["Ze gaat weer slapen.", "Ze huilt.", "Ze lacht."],
+        "goed": 2
+      }
+    ]
+  },
+  {
+    "id": "verloren-schoen",
+    "titel": "Mira en de verloren schoen",
+    "zinnen": [
+      "Het is bijna tijd voor het concert.",
+      "Mira zoekt haar dansschoen.",
+      "Ze heeft er maar één.",
+      "\"Waar is mijn andere schoen?\" roept ze.",
+      "Ze kijkt onder de tafel.",
+      "Ze kijkt achter de kast.",
+      "Niks!",
+      "Rumi en Zoey helpen zoeken.",
+      "Dan hoort Zoey een raar geluid.",
+      "Het klinkt als gesnurk.",
+      "Ze doet de kast open.",
+      "Daar ligt een kleine demon te slapen.",
+      "Hij gebruikt de schoen als kussen!",
+      "Mira trekt de schoen voorzichtig weg.",
+      "De demon wordt wakker en schrikt.",
+      "Met een plof verdwijnt hij in een wolkje paarse rook."
+    ],
+    "vragen": [
+      {
+        "vraag": "Wat zoekt Mira?",
+        "keuzes": ["Haar microfoon", "Haar jas", "Haar dansschoen"],
+        "goed": 2
+      },
+      {
+        "vraag": "Wie hoort het rare geluid?",
+        "keuzes": ["Zoey", "Rumi", "Mira"],
+        "goed": 0
+      },
+      {
+        "vraag": "Waar gebruikt de demon de schoen voor?",
+        "keuzes": ["Als hoed", "Als kussen", "Als boot"],
+        "goed": 1
+      }
+    ]
+  },
+  {
+    "id": "amsterdam",
+    "titel": "Het concert in Amsterdam",
+    "zinnen": [
+      "Vandaag geven de meiden een concert in Amsterdam.",
+      "Eerst varen ze met een boot door de grachten.",
+      "Mira zwaait naar de mensen op de brug.",
+      "Zoey maakt foto's van de oude huizen.",
+      "Rumi oefent zachtjes haar lied.",
+      "Die avond is de zaal helemaal vol.",
+      "Er zijn wel duizend kinderen.",
+      "Een meisje op de eerste rij heeft een bord gemaakt.",
+      "Daarop staat in grote gouden letters: IK WIL OOK EEN HUNTER ZIJN!",
+      "Rumi ziet het bord.",
+      "Ze geeft het meisje een knipoog.",
+      "Na het concert mag het meisje op het podium komen.",
+      "Ze krijgt een echte gouden microfoon."
+    ],
+    "vragen": [
+      {
+        "vraag": "Hoe gaan de meiden door Amsterdam?",
+        "keuzes": ["Met de fiets", "Met de trein", "Met een boot"],
+        "goed": 2
+      },
+      {
+        "vraag": "Wat staat er op het bord van het meisje?",
+        "keuzes": ["Ik wil ook een hunter zijn!", "Ik hou van katten!", "Welkom in Amsterdam!"],
+        "goed": 0
+      },
+      {
+        "vraag": "Wat krijgt het meisje na het concert?",
+        "keuzes": ["Een taart", "Een gouden microfoon", "Een boot"],
+        "goed": 1
+      }
+    ]
+  }
+]

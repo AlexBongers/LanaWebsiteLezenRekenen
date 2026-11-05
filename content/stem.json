@@ -1,0 +1,18 @@
+{
+  "provider": "azure",
+  "stem": "nl-NL-FennaNeural",
+  "taal": "nl-NL",
+  "tempo": {
+    "instructie": "-5%",
+    "woord": "-15%",
+    "zin": "-10%",
+    "getal": "-5%"
+  },
+  "proefstemmen": [
+    { "id": "nl-NL-FennaNeural", "naam": "Fenna" },
+    { "id": "nl-NL-ColetteNeural", "naam": "Colette" },
+    { "id": "de-DE-SeraphinaMultilingualNeural", "naam": "Seraphina" },
+    { "id": "en-US-AvaMultilingualNeural", "naam": "Ava" }
+  ],
+  "proefzin": "Hoi Lana! Ik ben de stem van de groep. Zullen we samen het gouden schild sterk maken?"
+}

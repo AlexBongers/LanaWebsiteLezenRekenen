@@ -1,0 +1,140 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import Heldin from '../art/Heldin.svelte';
+  import { spreek } from '../audio/stem';
+  import { speelFanfare } from '../audio/geluid';
+  import { grootFeest } from '../ui/feest';
+  import teksten from '../../content/teksten.json';
+  import type { HeldinId } from '../store/voortgang.svelte';
+
+  let {
+    heldin,
+    goed,
+    totaal,
+    noten,
+    omhoog,
+    opNogEens,
+    opTerug,
+  }: {
+    heldin: HeldinId;
+    goed: number;
+    totaal: number;
+    noten: number;
+    omhoog: boolean;
+    opNogEens: () => void;
+    opTerug: () => void;
+  } = $props();
+
+  let sterren = $derived(totaal === 0 ? 3 : goed / totaal >= 0.85 ? 3 : goed / totaal >= 0.6 ? 2 : 1);
+  const anderen = (['rumi', 'mira', 'zoey'] as HeldinId[]).filter((h) => h !== heldin);
+
+  onMount(() => {
+    speelFanfare();
+    grootFeest();
+    void spreek(teksten.beloning);
+  });
+</script>
+
+<div class="scherm">
+  <div class="kaart">
+    <h2 class="goudtekst">Concert gewonnen!</h2>
+
+    <div class="sterren">
+      {#each [1, 2, 3] as s}
+        <svg viewBox="0 0 100 100" class:aan={s <= sterren} style="animation-delay:{0.3 + s * 0.25}s" aria-hidden="true">
+          <path
+            d="M50 5 l13 27 30 4 -22 21 5 30 -26 -14 -26 14 5 -30 -22 -21 30 -4z"
+            fill={s <= sterren ? '#fbbf24' : 'rgba(255,255,255,0.15)'}
+            stroke={s <= sterren ? '#fff7c2' : 'rgba(255,255,255,0.3)'}
+            stroke-width="4"
+            stroke-linejoin="round"
+          />
+        </svg>
+      {/each}
+    </div>
+
+    <div class="groep">
+      <Heldin wie={anderen[0]} stemming="juich" hoogte={200} />
+      <Heldin wie={heldin} stemming="juich" hoogte={240} />
+      <Heldin wie={anderen[1]} stemming="juich" hoogte={200} />
+    </div>
+
+    <div class="noten">+{noten} gouden noten</div>
+    {#if omhoog}
+      <div class="omhoog">🎉 Level omhoog! Jij wordt steeds sterker!</div>
+    {/if}
+
+    <div class="knoppen">
+      <button class="knop-goud ander" onclick={opTerug}>Andere heldin</button>
+      <button class="knop-goud" onclick={opNogEens}>Nog een keer! ✨</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .scherm {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle, rgba(46, 16, 101, 0.85), rgba(10, 2, 30, 0.92));
+    animation: fade 0.4s ease-out;
+  }
+  .kaart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 20px 60px 30px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 80px;
+    animation: pop-in 0.6s ease-out;
+  }
+  .sterren {
+    display: flex;
+    gap: 18px;
+  }
+  .sterren svg {
+    width: 84px;
+    height: 84px;
+    animation: pop-in 0.5s ease-out backwards;
+  }
+  .sterren svg.aan {
+    filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.9));
+  }
+  .groep {
+    display: flex;
+    align-items: end;
+    gap: 22px;
+  }
+  .noten {
+    font-size: 36px;
+    font-weight: 700;
+    color: #fde68a;
+    text-shadow: 0 0 16px rgba(251, 191, 36, 0.8);
+  }
+  .omhoog {
+    padding: 6px 22px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    font-size: 26px;
+    font-weight: 600;
+    animation: pop-in 0.6s ease-out 1s backwards;
+  }
+  .knoppen {
+    display: flex;
+    gap: 26px;
+    margin-top: 14px;
+  }
+  .ander {
+    background: linear-gradient(180deg, #f5f3ff, #c4b5fd);
+    box-shadow: 0 6px 0 #6d28d9;
+    color: #2e1065;
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+  }
+</style>

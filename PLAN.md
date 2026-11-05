@@ -2,6 +2,8 @@
 
 Een tablet-website waarop Lana (7 jaar, groep 4) spelenderwijs beter leert **lezen** en **rekenen**, met de drie demon hunters uit *KPop Demon Hunters* (de groep van het nummer "Golden") als rode draad.
 
+> **Stand van zaken:** fase 0 en fase 1 zijn gebouwd (zie [README.md](README.md)). De drie spellen werken, er is basis-niveau-aanpassing (deel van fase 2) en een eerste ouderhoek. Het stemscript voor Azure is klaar; zodra er een sleutel is, wordt de mooie stem ingesproken. Tot die tijd spreekt de tablet zelf.
+
 Dit document is de bouwopzet: concept, didactiek, spellen, stem, techniek, en een bouwvolgorde in fases. Het is zo geschreven dat iemand (of Claude) het daarna stap voor stap kan bouwen.
 
 ---

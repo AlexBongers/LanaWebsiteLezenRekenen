@@ -1,0 +1,38 @@
+{
+  "welkom": "Hoi Lana! Kies met wie je wilt oefenen.",
+  "complimenten": [
+    "Goed zo!",
+    "Super!",
+    "Wauw, knap gedaan!",
+    "Het schild wordt sterker!",
+    "Yes! Weggezongen!",
+    "Top, Lana!",
+    "Precies goed!",
+    "Wat een ster ben jij!"
+  ],
+  "bijna": [
+    "Bijna! Probeer het nog eens.",
+    "Oei, net niet. Kijk nog eens goed.",
+    "Bijna! Jij kunt dit!"
+  ],
+  "hetIs": "Het goede antwoord is",
+  "verder": "Tik op verder.",
+  "stoppen": "Wil je stoppen met dit concert?",
+  "beloning": "Het concert is gewonnen! Het schild is weer helemaal sterk!",
+  "draaien": "Draai je tablet een kwartslag.",
+  "sommen": {
+    "start": "Welke demon heeft het goede antwoord? Tik hem weg!",
+    "hint": "Kijk naar de sprongen op de getallenlijn.",
+    "verhaal": "Lees de som goed. Welke demon heeft het antwoord?"
+  },
+  "flits": {
+    "start": "Kijk goed naar de spotlight. Tik op de ster als je klaar bent.",
+    "vraag": "Welk woord zag je?",
+    "nogEens": "Kijk nog eens goed. Hier komt het woord weer."
+  },
+  "verhaal": {
+    "start": "Lees het verhaal. Tik op een zin als je hulp nodig hebt.",
+    "klaar": "Tik op klaar als je het verhaal hebt gelezen.",
+    "zoek": "Zoek het antwoord in het verhaal."
+  }
+}
