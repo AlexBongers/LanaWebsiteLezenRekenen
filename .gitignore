@@ -4,3 +4,5 @@ dev-dist
 .env
 *.log
 .wrangler
+# Local secrets written by `elevenlabs onboard`
+/.env.local

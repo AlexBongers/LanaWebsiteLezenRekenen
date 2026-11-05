@@ -14,6 +14,11 @@ export function ontgrendelGeluid() {
   if (ctx.state === 'suspended') void ctx.resume();
 }
 
+/** De gedeelde AudioContext (pas beschikbaar na de eerste tik). */
+export function audioContext(): AudioContext | null {
+  return ctx;
+}
+
 function toon(freq: number, start: number, duur: number, type: OscillatorType = 'sine', volume = 0.18) {
   if (!ctx || !muziekAan) return;
   const t0 = ctx.currentTime + start;

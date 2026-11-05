@@ -1,7 +1,7 @@
 {
-  "_uitleg": "provider: 'google', 'elevenlabs' of 'azure'. stem: de id van de gekozen stem. Na het wijzigen: npm run audio",
-  "provider": "google",
-  "stem": "nl-NL-Chirp3-HD-Aoede",
+  "_uitleg": "provider: 'google', 'elevenlabs' of 'azure'. stem: de id van de gekozen stem. tempo: 1.0 = normaal, hoger = vlotter (ElevenLabs: 0.7 tot 1.2). Na het wijzigen van de stem: npm run audio. Na het wijzigen van alleen het tempo: npm run audio -- --opnieuw",
+  "provider": "elevenlabs",
+  "stem": "7qdUFMklKPaaAVMsBTBt",
   "google": {
     "tempo": {
       "instructie": 1.0,
@@ -12,15 +12,15 @@
   },
   "elevenlabs": {
     "modelZinnen": "eleven_multilingual_v2",
-    "modelWoorden": "eleven_turbo_v2_5",
+    "modelWoorden": "eleven_flash_v2_5",
     "stabiliteit": 0.5,
     "gelijkenis": 0.75,
-    "stijl": 0.35,
+    "stijl": 0.25,
     "tempo": {
-      "instructie": 1.0,
-      "woord": 0.85,
-      "zin": 0.92,
-      "getal": 0.95
+      "instructie": 1.15,
+      "woord": 0.95,
+      "zin": 1.05,
+      "getal": 1.1
     }
   },
   "azure": {
@@ -32,6 +32,26 @@
     }
   },
   "proefstemmen": [
+    {
+      "provider": "elevenlabs",
+      "id": "7qdUFMklKPaaAVMsBTBt",
+      "naam": "Roos (jong, vrolijk)"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "yO6w2xlECAQRFP6pX7Hw",
+      "naam": "Ruth (kinderverhalen)"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "OlBRrVAItyi00MuGMbna",
+      "naam": "Emma (rustig, helder)"
+    },
+    {
+      "provider": "elevenlabs",
+      "id": "SXBL9NbvTrjsJQYay2kT",
+      "naam": "Melanie (verteller)"
+    },
     {
       "provider": "google",
       "id": "nl-NL-Chirp3-HD-Aoede",
@@ -63,31 +83,6 @@
       "naam": "Sulafat"
     },
     {
-      "provider": "elevenlabs",
-      "id": "XrExE9yKIg1WjnnlVkGX",
-      "naam": "Matilda"
-    },
-    {
-      "provider": "elevenlabs",
-      "id": "EXAVITQu4vr4xnSDxMaL",
-      "naam": "Sarah"
-    },
-    {
-      "provider": "elevenlabs",
-      "id": "FGY2WhTYpPnrIDTdsKH5",
-      "naam": "Laura"
-    },
-    {
-      "provider": "elevenlabs",
-      "id": "pFZP5JQG7iQjIQuC4Bku",
-      "naam": "Lily"
-    },
-    {
-      "provider": "elevenlabs",
-      "id": "cgSgspJ2msm6clMCkdW9",
-      "naam": "Jessica"
-    },
-    {
       "provider": "azure",
       "id": "nl-NL-FennaNeural",
       "naam": "Fenna (Azure)"
@@ -98,5 +93,6 @@
       "naam": "Colette (Azure)"
     }
   ],
-  "proefzin": "Hoi Lana! Ik ben de stem van de groep. Zullen we samen het gouden schild sterk maken?"
+  "proefzin": "Hoi Lana! Ik ben de stem van de groep. Zullen we samen het gouden schild sterk maken?",
+  "stemNaam": "Roos"
 }

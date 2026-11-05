@@ -209,9 +209,9 @@
     <section>
       <h2>Stem</h2>
       {#if aantalStemBestanden() > 0}
-        <p>✅ {aantalStemBestanden()} teksten zijn ingesproken door de stemgenerator ({stemInfo.stem}).</p>
+        <p>✅ {aantalStemBestanden()} teksten zijn ingesproken door ElevenLabs (stem {stemInfo.stemNaam ?? stemInfo.stem}).</p>
       {:else}
-        <p class="uitleg">De stemgenerator (ElevenLabs of Azure) is nog niet gebruikt. Tot die tijd spreekt de tablet zelf. Kies hieronder de mooiste Nederlandse stem van deze tablet.</p>
+        <p class="uitleg">De stemgenerator (ElevenLabs) is nog niet gebruikt. Tot die tijd spreekt de tablet zelf. Kies hieronder de mooiste Nederlandse stem van deze tablet.</p>
       {/if}
       {#if proefstemmen.length}
         <h3>Proefstemmen (laat Lana kiezen!)</h3>

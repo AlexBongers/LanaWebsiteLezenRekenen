@@ -1,10 +1,11 @@
 /**
  * De stem van de site.
- * 1. Eerst kijken of er een vooraf gemaakt mp3-bestand is (Azure-stem, zie tools/maak-audio.ts).
+ * 1. Eerst kijken of er een vooraf gemaakt mp3-bestand is (ElevenLabs-stem, zie tools/maak-audio.ts).
  * 2. Zo niet: de ingebouwde stem van de tablet (Web Speech API).
  */
 import stemInstellingen from '../../content/stem.json';
 import { audioSleutel, normaliseer, type Spreeksoort } from './hash';
+import { audioContext } from './geluid';
 
 type Manifest = { stem: string; bestanden: string[] };
 
@@ -12,6 +13,7 @@ let manifest: Manifest = { stem: stemInstellingen.stem, bestanden: [] };
 let beschikbaar = new Set<string>();
 let apparaatStemUri: string | null = null;
 let huidigeAudio: HTMLAudioElement | null = null;
+let huidigeBron: AudioBufferSourceNode | null = null;
 let beurt = 0;
 
 const TEMPO: Record<Spreeksoort, number> = { instructie: 0.95, woord: 0.8, zin: 0.9, getal: 0.95 };
@@ -80,6 +82,61 @@ function spreekMetApparaat(tekst: string, soort: Spreeksoort, mijnBeurt: number)
 
 // ---------- mp3 ----------
 
+/**
+ * Stemfragmenten via Web Audio: stilte aan begin en eind wordt weggeknipt,
+ * zodat Lana niet hoeft te wachten en de stukjes van een som direct op elkaar aansluiten.
+ */
+type Fragment = { buffer: AudioBuffer; start: number; duur: number };
+const fragmenten = new Map<string, Promise<Fragment | null>>();
+const DREMPEL = 0.012;
+
+function knipStilte(buffer: AudioBuffer): Fragment {
+  const data = buffer.getChannelData(0);
+  let begin = 0;
+  while (begin < data.length && Math.abs(data[begin]) < DREMPEL) begin++;
+  let eind = data.length - 1;
+  while (eind > begin && Math.abs(data[eind]) < DREMPEL) eind--;
+  if (eind <= begin) return { buffer, start: 0, duur: buffer.duration };
+  const marge = Math.floor(buffer.sampleRate * 0.03);
+  const van = Math.max(0, begin - marge);
+  const tot = Math.min(data.length - 1, eind + marge * 2);
+  return { buffer, start: van / buffer.sampleRate, duur: (tot - van) / buffer.sampleRate };
+}
+
+function laadFragment(url: string): Promise<Fragment | null> {
+  const ctx = audioContext();
+  if (!ctx) return Promise.resolve(null);
+  let f = fragmenten.get(url);
+  if (!f) {
+    f = fetch(url)
+      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(String(r.status)))))
+      .then((data) => ctx.decodeAudioData(data))
+      .then(knipStilte)
+      .catch(() => null);
+    fragmenten.set(url, f);
+    // Niet eindeloos onthouden.
+    if (fragmenten.size > 400) fragmenten.delete(fragmenten.keys().next().value!);
+  }
+  return f;
+}
+
+function speelFragment(f: Fragment, mijnBeurt: number): Promise<void> {
+  return new Promise((klaar) => {
+    const ctx = audioContext();
+    if (!ctx || mijnBeurt !== beurt) return klaar();
+    if (ctx.state === 'suspended') void ctx.resume();
+    const bron = ctx.createBufferSource();
+    bron.buffer = f.buffer;
+    bron.connect(ctx.destination);
+    huidigeBron = bron;
+    bron.onended = () => {
+      if (huidigeBron === bron) huidigeBron = null;
+      klaar();
+    };
+    bron.start(0, f.start, f.duur);
+  });
+}
+
 function speelBestand(url: string, mijnBeurt: number): Promise<void> {
   return new Promise((klaar) => {
     if (mijnBeurt !== beurt) return klaar();
@@ -113,6 +170,14 @@ export function stopSpreken() {
     huidigeAudio.pause();
     huidigeAudio = null;
   }
+  if (huidigeBron) {
+    try {
+      huidigeBron.stop();
+    } catch {
+      // al gestopt
+    }
+    huidigeBron = null;
+  }
   if ('speechSynthesis' in window) speechSynthesis.cancel();
 }
 
@@ -128,9 +193,14 @@ export async function spreek(tekst: string | string[], soort: Spreeksoort = 'ins
   const bestanden = delen.map((d) => bestandVoor(d, soort));
   meld(delen.join(' '), soort);
   if (bestanden.every((b): b is string => b !== null)) {
-    for (const b of bestanden) {
+    // Alle stukjes alvast tegelijk laden, dan zonder pauze achter elkaar afspelen.
+    const geladen = bestanden.map(laadFragment);
+    for (let i = 0; i < bestanden.length; i++) {
       if (mijnBeurt !== beurt) return;
-      await speelBestand(b, mijnBeurt);
+      const f = await geladen[i];
+      if (mijnBeurt !== beurt) return;
+      if (f) await speelFragment(f, mijnBeurt);
+      else await speelBestand(bestanden[i], mijnBeurt);
     }
   } else {
     await spreekMetApparaat(delen.join(' '), soort, mijnBeurt);

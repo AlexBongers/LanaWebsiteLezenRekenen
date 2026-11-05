@@ -51,29 +51,20 @@ De app staat dan op `https://lanas-gouden-missie.<jouw-subdomein>.workers.dev`. 
 
 ## De stem
 
-Tot de stemgenerator is gebruikt, spreekt de **tablet zelf** (kies de mooiste stem in de ouderhoek). Het script `npm run audio` ondersteunt drie diensten; kies in `content/stem.json` bij `provider`:
+Alle vaste teksten (instructies, complimenten, flitswoorden, verhaaltjes en de getallen 0 tot 100) zijn ingesproken met **ElevenLabs**, stem **Roos**: een jonge, vrolijke Nederlandse stem. De bestanden staan in `public/audio/tts/` en werken ook offline. Verhaaltjessommen worden steeds anders gemaakt; die leest de tabletstem voor.
 
-| Dienst | Kwaliteit Nederlands | Gratis per maand | Opmerking |
-|---|---|---|---|
-| **Google Cloud TTS** (Chirp 3 HD), aanbevolen | Zeer natuurlijk, echte Nederlandse stemmen | 1 miljoen tekens | Factureringsaccount (creditcard) nodig. Bereikbaar vanuit de Claude-omgeving zonder extra netwerkinstelling. |
-| ElevenLabs | Meest expressief | 10.000 tekens | Geen creditcard. Losse woorden klinken soms minder Nederlands. |
-| Microsoft Azure | Zeer goed (Fenna, Colette) | 500.000 tekens | Azure-account met creditcard. |
+- **Vlot tempo:** instructies op 1,15, zinnen op 1,05 en getallen op 1,1 (instelbaar in `content/stem.json`). De app knipt bovendien de stilte aan begin en eind van elk fragment weg, zodat de stukjes van een som direct op elkaar aansluiten.
+- **Modellen:** `eleven_multilingual_v2` voor zinnen (ondersteunt tempo), `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden en getallen.
+- **Verbruik:** alles inspreken kostte ongeveer 2.300 credits.
+- **Andere stem kiezen:** in de ouderhoek staan proefstemmen (Roos, Ruth, Emma, Melanie). Zet de id van de gekozen stem in `content/stem.json` en draai `npm run audio`.
 
-Dit project gebruikt ongeveer 5.600 tekens.
+**Opnieuw inspreken** (bijv. na nieuwe woorden of verhalen):
+1. Eenmalig per computer: `npx -y @elevenlabs/cli@latest onboard init` (logt in en zet de sleutel in `.env.local`).
+2. `npm run audio:proef` laat zien hoeveel tekens het kost (gratis).
+3. `npm run audio` spreekt alleen de nieuwe teksten in. Na een tempowijziging: `npm run audio -- --opnieuw`.
+4. Overige opties: `npm run audio -- --stemmen` (Nederlandse vrouwenstemmen zoeken) en `npm run audio -- --proef` (proefstemmen maken).
 
-**Google-sleutel maken:**
-1. <https://console.cloud.google.com> → nieuw project `gouden-missie`.
-2. ☰ → **Facturering** → factureringsaccount koppelen (tip: stel een budget van €1 met e-mailmelding in).
-3. Zet de [Cloud Text-to-Speech API](https://console.cloud.google.com/apis/library/texttospeech.googleapis.com) aan (**Inschakelen**).
-4. ☰ → **API's en services** → **Inloggegevens** → **Inloggegevens maken** → **API-sleutel**. Beperk de sleutel tot *Cloud Text-to-Speech API*.
-5. Zet hem als omgevingsvariabele `GOOGLE_TTS_API_KEY` (of in `.env`, zie `.env.example`).
-
-**Inspreken:**
-1. `npm run audio -- --proef` maakt proefstemmen. Laat Lana kiezen in Ouderhoek → Stem.
-2. Zet de gekozen stem in `content/stem.json` bij `stem`.
-3. `npm run audio` spreekt alles in. Daarna `npm run deploy`.
-
-Verhaaltjessommen worden steeds anders gemaakt; die worden voorgelezen door de tabletstem.
+Google Cloud TTS en Azure worden nog steeds ondersteund via `provider` in `content/stem.json`.
 
 ## Inhoud aanpassen
 

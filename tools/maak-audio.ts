@@ -5,13 +5,17 @@
  *   npm run audio -- --proef       maakt proefstemmen in public/audio/proef/ (laat Lana kiezen!)
  *   npm run audio -- --stemmen     zoekt Nederlandse vrouwenstemmen in de ElevenLabs-bibliotheek
  *   npm run audio                  maakt alle ontbrekende bestanden + audio-manifest.json
+ *   npm run audio -- --opnieuw     spreekt alles opnieuw in (na het wijzigen van het tempo)
  *
  * Sleutels: GOOGLE_TTS_API_KEY, ELEVENLABS_API_KEY of AZURE_SPEECH_KEY (+ AZURE_SPEECH_REGION),
- * als omgevingsvariabele of in een .env-bestand (zie .env.example).
+ * als omgevingsvariabele of in .env.local / .env (zie .env.example).
+ * ElevenLabs koppelen: npx -y @elevenlabs/cli@latest onboard init
  * Provider, stem en tempo staan in content/stem.json.
  */
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { Readable } from 'node:stream';
+import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
 import stemInfo from '../content/stem.json';
 import { alleTeksten } from '../src/audio/alle-teksten';
 import { audioSleutel, normaliseer, type Spreeksoort } from '../src/audio/hash';
@@ -20,10 +24,12 @@ const MAP = join(import.meta.dirname, '..', 'public', 'audio');
 const TTS = join(MAP, 'tts');
 const PROEF = join(MAP, 'proef');
 
-try {
-  process.loadEnvFile(join(import.meta.dirname, '..', '.env'));
-} catch {
-  // geen .env; de variabelen staan misschien al in de omgeving
+for (const bestand of ['.env.local', '.env']) {
+  try {
+    process.loadEnvFile(join(import.meta.dirname, '..', bestand));
+  } catch {
+    // bestand bestaat niet; de variabelen staan misschien al in de omgeving
+  }
 }
 
 type Provider = 'google' | 'elevenlabs' | 'azure';
@@ -84,53 +90,68 @@ async function google(tekst: string, stem: string, soort: Spreeksoort): Promise<
 }
 
 // ---------- ElevenLabs ----------
-function elevenSleutel() {
-  const k = process.env.ELEVENLABS_API_KEY;
-  if (!k) throw new Error('ELEVENLABS_API_KEY ontbreekt (zie .env.example).');
-  return k;
+// De SDK leest ELEVENLABS_API_KEY uit de omgeving (geladen uit .env.local of .env).
+let elevenClient: ElevenLabsClient | null = null;
+function eleven() {
+  if (!process.env.ELEVENLABS_API_KEY) {
+    throw new Error('ELEVENLABS_API_KEY ontbreekt: draai `npx -y @elevenlabs/cli@latest onboard init`.');
+  }
+  return (elevenClient ??= new ElevenLabsClient());
+}
+
+async function streamNaarBuffer(stream: ReadableStream<Uint8Array>): Promise<Buffer> {
+  const delen: Buffer[] = [];
+  for await (const deel of Readable.fromWeb(stream as import('node:stream/web').ReadableStream<Uint8Array>)) {
+    delen.push(Buffer.from(deel));
+  }
+  return Buffer.concat(delen);
 }
 
 async function elevenlabs(tekst: string, stem: string, soort: Spreeksoort): Promise<Buffer> {
   const e = stemInfo.elevenlabs;
-  // Losse woorden en getallen: model dat Nederlands kan afdwingen (anders klinkt "maan" soms Engels).
+  // Losse woorden en getallen: Flash-model met Nederlands afgedwongen (anders klinkt "maan" soms Engels).
   const kort = soort === 'woord' || soort === 'getal';
-  const model = kort ? e.modelWoorden : e.modelZinnen;
-  const body: Record<string, unknown> = {
-    text: normaliseer(tekst),
-    model_id: model,
-    voice_settings: {
-      stability: e.stabiliteit,
-      similarity_boost: e.gelijkenis,
-      style: e.stijl,
-      use_speaker_boost: true,
-      speed: e.tempo[soort],
-    },
-  };
-  if (/turbo_v2_5|flash_v2_5/.test(model)) body.language_code = 'nl';
-  return metHerhaling(() =>
-    fetch(`https://api.elevenlabs.io/v1/text-to-speech/${stem}?output_format=mp3_44100_64`, {
-      method: 'POST',
-      headers: { 'xi-api-key': elevenSleutel(), 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-      body: JSON.stringify(body),
-    }),
-  );
+  const modelId = kort ? e.modelWoorden : e.modelZinnen;
+  for (let poging = 1; poging <= 5; poging++) {
+    try {
+      const audio = await eleven().textToSpeech.convert(stem, {
+        text: normaliseer(tekst),
+        modelId,
+        outputFormat: 'mp3_44100_64',
+        ...(kort ? { languageCode: 'nl' } : {}),
+        voiceSettings: {
+          stability: e.stabiliteit,
+          similarityBoost: e.gelijkenis,
+          style: e.stijl,
+          useSpeakerBoost: true,
+          speed: e.tempo[soort],
+        },
+      });
+      return await streamNaarBuffer(audio);
+    } catch (err) {
+      const status = (err as { statusCode?: number }).statusCode ?? 0;
+      if ((status === 429 || status >= 500) && poging < 5) {
+        await new Promise((res) => setTimeout(res, 1000 * 2 ** poging));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error('ElevenLabs blijft "te druk" zeggen; probeer het later nog eens.');
 }
 
 async function zoekNederlandseStemmen() {
-  const r = await fetch('https://api.elevenlabs.io/v1/shared-voices?language=nl&gender=female&page_size=30', {
-    headers: { 'xi-api-key': elevenSleutel() },
+  const { voices } = await eleven().voices.getShared({
+    language: 'nl',
+    gender: 'female',
+    pageSize: 40,
+    sort: 'usage_character_count_1y',
   });
-  if (!r.ok) throw new Error(`fout ${r.status}: ${await r.text()}`);
-  const data = (await r.json()) as {
-    voices: { name: string; voice_id: string; public_owner_id: string; accent?: string; age?: string; description?: string; preview_url?: string }[];
-  };
-  for (const v of data.voices) {
-    console.log(`${v.name}  [${v.accent ?? '?'}, ${v.age ?? '?'}]  voice_id=${v.voice_id}  owner=${v.public_owner_id}`);
-    if (v.description) console.log(`   ${v.description.slice(0, 120)}`);
-    if (v.preview_url) console.log(`   voorbeeld: ${v.preview_url}`);
+  for (const v of voices) {
+    console.log(`${v.name}  [${v.accent}, ${v.age}, ${v.descriptive}, ${v.useCase}]  gebruikt door ${v.clonedByCount}`);
+    console.log(`   voice_id=${v.voiceId}  owner=${v.publicOwnerId}`);
+    if (v.description) console.log(`   ${v.description.replace(/\s+/g, ' ').slice(0, 160)}`);
   }
-  console.log('\nEen stem uit de bibliotheek gebruiken? Voeg hem toe aan "My Voices" op elevenlabs.io, of via:');
-  console.log('POST https://api.elevenlabs.io/v1/voices/add/{owner}/{voice_id}  (body: {"new_name": "..."})');
 }
 
 // ---------- Azure ----------
@@ -192,7 +213,8 @@ async function maakAlles(droog: boolean) {
   const provider = stemInfo.provider as Provider;
   const stem = stemInfo.stem;
   const taken = alleTeksten().map((t) => ({ ...t, sleutel: audioSleutel(t.tekst, t.soort, stem) }));
-  const nieuw = taken.filter((t) => !existsSync(join(TTS, `${t.sleutel}.mp3`)));
+  // --opnieuw: alles opnieuw inspreken (bijv. na het wijzigen van alleen het tempo).
+  const nieuw = args.has('--opnieuw') ? taken : taken.filter((t) => !existsSync(join(TTS, `${t.sleutel}.mp3`)));
   const tekens = nieuw.reduce((n, t) => n + t.tekst.length, 0);
 
   console.log(`Provider: ${provider}, stem: ${stem}`);
