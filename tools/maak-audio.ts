@@ -6,6 +6,7 @@
  *   npm run audio -- --stemmen     zoekt Nederlandse vrouwenstemmen in de ElevenLabs-bibliotheek
  *   npm run audio                  maakt alle ontbrekende bestanden + audio-manifest.json
  *   npm run audio -- --opnieuw     spreekt alles opnieuw in (na het wijzigen van het tempo)
+ *   npm run audio -- --afdwingen   spreekt de teksten uit 'nederlandsAfdwingen' (stem.json) opnieuw in
  *
  * Sleutels: GOOGLE_TTS_API_KEY, ELEVENLABS_API_KEY of AZURE_SPEECH_KEY (+ AZURE_SPEECH_REGION),
  * als omgevingsvariabele of in .env.local / .env (zie .env.example).
@@ -113,7 +114,9 @@ async function elevenlabs(tekst: string, stem: string, soort: Spreeksoort): Prom
   // Losse woorden: Flash-model met Nederlands afgedwongen (anders klinkt "maan" soms Engels).
   // Getallen: als woord uitgeschreven via het zinnenmodel (het Flash-model fluisterde ze soms).
   const kort = soort === 'woord';
-  const modelId = kort ? e.modelWoorden : e.modelZinnen;
+  const forceer = e.nederlandsAfdwingen?.teksten.includes(normaliseer(tekst)) ?? false;
+  const modelId = forceer ? e.nederlandsAfdwingen.model : kort ? e.modelWoorden : e.modelZinnen;
+  const v4 = /eleven_v4/.test(modelId);
   if (soort === 'getal' && /^\d+$/.test(tekst.trim())) tekst = getalInWoorden(Number(tekst));
   for (let poging = 1; poging <= 5; poging++) {
     try {
@@ -121,14 +124,17 @@ async function elevenlabs(tekst: string, stem: string, soort: Spreeksoort): Prom
         text: normaliseer(tekst),
         modelId,
         outputFormat: 'mp3_44100_64',
-        ...(kort ? { languageCode: 'nl' } : {}),
-        voiceSettings: {
-          stability: e.stabiliteit,
-          similarityBoost: e.gelijkenis,
-          style: e.stijl,
-          useSpeakerBoost: true,
-          speed: e.tempo[soort],
-        },
+        ...(kort || forceer ? { languageCode: 'nl' } : {}),
+        // Eleven v4 kent alleen stabiliteit en gelijkenis (geen stijl of tempo).
+        voiceSettings: v4
+          ? { stability: e.stabiliteit, similarityBoost: e.gelijkenis }
+          : {
+              stability: e.stabiliteit,
+              similarityBoost: e.gelijkenis,
+              style: e.stijl,
+              useSpeakerBoost: true,
+              speed: e.tempo[soort],
+            },
       });
       return await streamNaarBuffer(audio);
     } catch (err) {
@@ -218,7 +224,11 @@ async function maakAlles(droog: boolean) {
   const sleutelStem = stemSleutel(stemInfo);
   const taken = alleTeksten().map((t) => ({ ...t, sleutel: audioSleutel(t.tekst, t.soort, sleutelStem) }));
   // --opnieuw: alles opnieuw inspreken (bijv. na het wijzigen van alleen het tempo).
-  const nieuw = args.has('--opnieuw') ? taken : taken.filter((t) => !existsSync(join(TTS, `${t.sleutel}.mp3`)));
+  // --afdwingen: de teksten uit nederlandsAfdwingen opnieuw inspreken.
+  const afdwingen = new Set(args.has('--afdwingen') ? (stemInfo.elevenlabs.nederlandsAfdwingen?.teksten ?? []) : []);
+  const nieuw = args.has('--opnieuw')
+    ? taken
+    : taken.filter((t) => afdwingen.has(normaliseer(t.tekst)) || !existsSync(join(TTS, `${t.sleutel}.mp3`)));
   const tekens = nieuw.reduce((n, t) => n + t.tekst.length, 0);
 
   console.log(`Provider: ${provider}, stem: ${stem}`);

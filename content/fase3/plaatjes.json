@@ -1,0 +1,20 @@
+{
+  "_uitleg": "Woord bij plaatje: woord en emoji. Korte woorden (tot 4 letters) komen op niveau 1, alle woorden op niveau 2.",
+  "woorden": [
+    ["maan", "🌙"], ["zon", "☀️"], ["ster", "⭐"], ["wolk", "☁️"], ["boom", "🌳"], ["bloem", "🌷"],
+    ["huis", "🏠"], ["kasteel", "🏰"], ["tent", "⛺"], ["berg", "⛰️"], ["vuur", "🔥"], ["hart", "❤️"],
+    ["ballon", "🎈"], ["cadeau", "🎁"], ["kroon", "👑"], ["ring", "💍"], ["hoed", "🎩"], ["schoen", "👟"],
+    ["sok", "🧦"], ["jas", "🧥"], ["bril", "👓"], ["lamp", "💡"], ["bed", "🛏️"], ["deur", "🚪"],
+    ["sleutel", "🔑"], ["schaar", "✂️"], ["potlood", "✏️"], ["boek", "📖"], ["bel", "🔔"], ["gitaar", "🎸"],
+    ["trommel", "🥁"], ["raket", "🚀"], ["vliegtuig", "✈️"], ["boot", "⛵"], ["bus", "🚌"], ["trein", "🚆"],
+    ["fiets", "🚲"], ["auto", "🚗"], ["appel", "🍎"], ["peer", "🍐"], ["banaan", "🍌"], ["druif", "🍇"],
+    ["aardbei", "🍓"], ["wortel", "🥕"], ["kaas", "🧀"], ["brood", "🍞"], ["taart", "🎂"], ["ijsje", "🍦"],
+    ["pizza", "🍕"], ["ei", "🥚"], ["melk", "🥛"], ["vis", "🐟"], ["kat", "🐱"], ["hond", "🐶"],
+    ["muis", "🐭"], ["uil", "🦉"], ["eend", "🦆"], ["kip", "🐔"], ["koe", "🐮"], ["paard", "🐴"],
+    ["schaap", "🐑"], ["varken", "🐷"], ["beer", "🐻"], ["vos", "🦊"], ["leeuw", "🦁"], ["aap", "🐵"],
+    ["olifant", "🐘"], ["giraf", "🦒"], ["zebra", "🦓"], ["krokodil", "🐊"], ["schildpad", "🐢"], ["vlinder", "🦋"],
+    ["bij", "🐝"], ["spin", "🕷️"], ["slak", "🐌"], ["kikker", "🐸"], ["walvis", "🐋"], ["haai", "🦈"],
+    ["krab", "🦀"], ["slang", "🐍"], ["draak", "🐉"], ["eenhoorn", "🦄"], ["sneeuwpop", "⛄"], ["paraplu", "☂️"],
+    ["klok", "⏰"], ["tand", "🦷"], ["voet", "🦶"], ["hand", "✋"], ["oor", "👂"], ["neus", "👃"]
+  ]
+}

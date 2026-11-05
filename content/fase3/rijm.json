@@ -1,0 +1,19 @@
+{
+  "_uitleg": "Rijm-rap: [woord, rijmwoord, afleider, afleider]. De afleiders lijken op het woord maar rijmen niet.",
+  "niveau1": [
+    ["maan", "baan", "maak", "been"], ["boom", "room", "boot", "beer"], ["vis", "mis", "vos", "vies"],
+    ["kat", "mat", "kam", "kip"], ["bal", "val", "bel", "bad"], ["huis", "muis", "hout", "haas"],
+    ["pet", "net", "pit", "pen"], ["zon", "ton", "zin", "zak"], ["kip", "lip", "kop", "kist"],
+    ["beer", "peer", "boer", "been"], ["hond", "mond", "hand", "hoed"], ["bos", "vos", "bus", "bes"],
+    ["raam", "naam", "rook", "ruim"], ["kaas", "baas", "kaal", "kies"], ["vuur", "muur", "vier", "voer"],
+    ["rok", "sok", "rek", "rug"], ["zee", "thee", "zeep", "zes"], ["pan", "kan", "pen", "pak"]
+  ],
+  "niveau2": [
+    ["trein", "klein", "tram", "tien"], ["ster", "ver", "stem", "steen"], ["bloem", "zoem", "blij", "boom"],
+    ["spin", "kin", "spook", "span"], ["vlag", "zag", "vlek", "vlug"], ["slang", "wang", "sling", "slank"],
+    ["groot", "boot", "graag", "grond"], ["zwaard", "paard", "zwaan", "zwart"], ["lucht", "zucht", "licht", "lacht"],
+    ["strand", "hand", "straat", "streng"], ["schaap", "slaap", "schoen", "schep"], ["draak", "maak", "drop", "droog"],
+    ["kroon", "boon", "kraan", "kreeg"], ["snoep", "groep", "snel", "sneeuw"], ["fiets", "niets", "feest", "fles"],
+    ["sterk", "werk", "stok", "streep"], ["klok", "stok", "klap", "kluis"], ["plant", "kant", "plons", "plat"]
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "_uitleg": "Karaoke-podium: korte liedjes. Ronde 1 zingt de stem voor, ronde 2 en 3 leest Lana zelf hardop.",
+  "liedjes": [
+    {
+      "id": "gouden-schild",
+      "titel": "Het gouden schild",
+      "regels": [
+        "Wij zijn de groep met het gouden licht.",
+        "We zingen hard met een blij gezicht.",
+        "Komt er een demon, dan zijn we niet bang.",
+        "Ons lied is sterk en heel erg lang."
+      ]
+    },
+    {
+      "id": "lana-doet-mee",
+      "titel": "Lana doet mee",
+      "regels": [
+        "Lana leest en Lana telt.",
+        "Ze is de snelste van het veld.",
+        "Met een ster op haar paarse jas,",
+        "danst ze mee op de maat van de bas."
+      ]
+    },
+    {
+      "id": "nacht-in-de-stad",
+      "titel": "Nacht in de stad",
+      "regels": [
+        "De maan is rond, de stad is stil.",
+        "Een demon doet wat hij maar wil.",
+        "Maar Rumi zingt een hoge toon,",
+        "en alles wordt weer heel gewoon."
+      ]
+    },
+    {
+      "id": "regen-op-het-dak",
+      "titel": "Regen op het dak",
+      "regels": [
+        "Tik tik tik, de regen valt.",
+        "Het is een lied dat door de straat schalt.",
+        "Mira danst in een plas van goud,",
+        "ook al is het buiten koud."
+      ]
+    },
+    {
+      "id": "samen-sterk",
+      "titel": "Samen sterk",
+      "regels": [
+        "Alleen ben je klein, maar samen zijn we groot.",
+        "We delen ons brood en we helpen in nood.",
+        "Zoey rapt een rijm, Mira springt heel hoog,",
+        "en Lana leest het lied van de regenboog."
+      ]
+    }
+  ]
+}

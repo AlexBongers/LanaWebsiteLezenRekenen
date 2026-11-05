@@ -7,6 +7,11 @@ import characters from '../../content/characters.json';
 import woorden from '../../content/lezen/woorden-flits.json';
 import verhalen from '../../content/lezen/verhalen-E4.json';
 import verhaalSommen from '../../content/verhaaltjessommen.json';
+import plaatjes from '../../content/fase3/plaatjes.json';
+import rijm from '../../content/fase3/rijm.json';
+import klank from '../../content/fase3/klankgroepen.json';
+import zinnen from '../../content/fase3/zinnen.json';
+import karaoke from '../../content/fase3/karaoke.json';
 import type { Spreeksoort } from './hash';
 
 export type TeSpreken = { tekst: string; soort: Spreeksoort };
@@ -46,6 +51,16 @@ export function alleTeksten(): TeSpreken[] {
     if (sleutel.startsWith('_') || !Array.isArray(lijst)) continue;
     for (const v of lijst) voeg(v.tekst, 'zin');
   }
+
+  // Fase 3
+  for (const [woord] of plaatjes.woorden) voeg(woord, 'woord');
+  for (const [woord, rijmwoord] of [...rijm.niveau1, ...rijm.niveau2]) {
+    voeg(woord, 'woord');
+    voeg(rijmwoord, 'woord');
+  }
+  for (const w of [...klank.niveau1, ...klank.niveau2]) voeg(w.replace(/\|/g, ''), 'woord');
+  for (const groep of zinnen.groepen) for (const [zin] of groep) voeg(zin, 'zin');
+  for (const l of karaoke.liedjes) l.regels.forEach((r) => voeg(r, 'zin'));
 
   for (let n = 0; n <= 100; n++) voeg(String(n), 'getal');
   SOM_WOORDEN.forEach((w) => voeg(w, 'getal'));

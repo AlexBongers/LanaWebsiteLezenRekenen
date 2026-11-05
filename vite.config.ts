@@ -10,7 +10,7 @@ export default defineConfig({
     svelte(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/*.svg', 'icons/*.png', 'audio/**/*'],
+      includeAssets: ['icons/*.svg', 'icons/*.png'],
       manifest: {
         name: "Lana's Gouden Missie",
         short_name: 'Gouden Missie',

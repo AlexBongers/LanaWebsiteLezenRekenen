@@ -21,6 +21,13 @@
       "woord": 0.9,
       "zin": 0.95,
       "getal": 0.95
+    },
+    "nederlandsAfdwingen": {
+      "_uitleg": "Teksten die het model anders soms Engels uitspreekt. Die worden ingesproken met een model waarbij Nederlands wordt afgedwongen.",
+      "model": "eleven_v4",
+      "teksten": [
+        "Top, Lana!"
+      ]
     }
   },
   "azure": {

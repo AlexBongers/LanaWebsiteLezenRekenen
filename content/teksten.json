@@ -43,5 +43,50 @@
     "tijd": "Je hebt zo goed geoefend! Nu is het tijd voor een pauze.",
     "tot": "Tot de volgende keer, Lana!"
   },
-  "afsluiten": "Wil je stoppen met spelen?"
+  "afsluiten": "Wil je stoppen met spelen?",
+  "spelkeuze": "Welk spel wil je spelen?",
+  "plaatje": {
+    "start": "Lees het woord. Tik op het goede plaatje."
+  },
+  "zwaard": {
+    "start": "Hak het woord in klankgroepen. Tik tussen de letters en dan op hakken.",
+    "hint": "Kijk goed. Zo hak je het woord in stukjes.",
+    "nogEens": "Bijna! Probeer het nog eens."
+  },
+  "karaoke": {
+    "ronde1": "Karaoke! Ik zing eerst voor. Lees goed mee.",
+    "zelf": "Nu jij! Lees de regels hardop. Tik op volgende als een regel klaar is.",
+    "sneller": "Wauw, je was sneller dan de vorige keer!",
+    "klaar": "Wat een mooi optreden!"
+  },
+  "rijm": {
+    "start": "Zoey rapt een woord. Welk woord rijmt erop?",
+    "vraag": "Welk woord rijmt op"
+  },
+  "zinnen": {
+    "start": "Lees de zin. Welk plaatje hoort erbij?"
+  },
+  "springen": {
+    "start": "Help Mira springen op de getallenlijn.",
+    "waar": "Waar staat",
+    "sprong": "Spring eerst naar het hele tiental. Dan naar het antwoord.",
+    "naarTiental": "Goed! En nu verder springen."
+  },
+  "dozen": {
+    "bouw": "Maak dit getal met dozen van tien en losse lichtstokken.",
+    "tel": "Hoeveel lichtstokken zijn het samen?",
+    "teVeel": "Dat zijn er te veel. Haal er een paar weg.",
+    "teWeinig": "Er moeten er nog een paar bij."
+  },
+  "tafels": {
+    "start": "Luister naar de beat. Welk getal komt hierna?",
+    "tafel": {
+      "1": "De tafel van één",
+      "2": "De tafel van twee",
+      "3": "De tafel van drie",
+      "4": "De tafel van vier",
+      "5": "De tafel van vijf",
+      "10": "De tafel van tien"
+    }
+  }
 }

@@ -61,7 +61,7 @@ function kiesApparaatStem(): SpeechSynthesisVoice | undefined {
   );
 }
 
-function spreekMetApparaat(tekst: string, soort: Spreeksoort, mijnBeurt: number): Promise<void> {
+function spreekMetApparaat(tekst: string, soort: Spreeksoort, mijnBeurt: number, opVoortgang?: Voortgang): Promise<void> {
   return new Promise((klaar) => {
     if (!('speechSynthesis' in window) || mijnBeurt !== beurt) return klaar();
     const u = new SpeechSynthesisUtterance(tekst);
@@ -69,6 +69,7 @@ function spreekMetApparaat(tekst: string, soort: Spreeksoort, mijnBeurt: number)
     const stem = kiesApparaatStem();
     if (stem) u.voice = stem;
     u.rate = TEMPO[soort];
+    if (opVoortgang) u.onboundary = (e) => opVoortgang(e.charIndex / Math.max(1, tekst.length));
     u.pitch = 1.1;
     // Chrome vergeet soms "onend"; daarom ook een veiligheidstimer.
     const timer = setTimeout(klaar, 1500 + tekst.length * 120);
@@ -125,7 +126,10 @@ function laadFragment(url: string): Promise<Fragment | null> {
   return f;
 }
 
-function speelFragment(f: Fragment, mijnBeurt: number): Promise<void> {
+/** Meldt hoe ver het afspelen is (0 tot 1), bijv. om woorden mee te laten lichten. */
+export type Voortgang = (fractie: number) => void;
+
+function speelFragment(f: Fragment, mijnBeurt: number, opVoortgang?: Voortgang): Promise<void> {
   return new Promise((klaar) => {
     const ctx = audioContext();
     if (!ctx || mijnBeurt !== beurt) return klaar();
@@ -136,20 +140,41 @@ function speelFragment(f: Fragment, mijnBeurt: number): Promise<void> {
     volume.gain.value = f.versterking;
     bron.connect(volume).connect(ctx.destination);
     huidigeBron = bron;
-    bron.onended = () => {
+    let loopt = true;
+    const einde = () => {
+      if (!loopt) return;
+      loopt = false;
+      clearTimeout(vangnet);
       if (huidigeBron === bron) huidigeBron = null;
+      opVoortgang?.(1);
       klaar();
     };
+    bron.onended = einde;
+    // Vangnet: als het geluid stilstaat (scherm uit, tabblad op de achtergrond) blijft het spel niet hangen.
+    const vangnet = setTimeout(einde, f.duur * 1000 + 1500);
+    const t0 = ctx.currentTime;
     bron.start(0, f.start, f.duur);
+    if (opVoortgang) {
+      // Gewone timer (geen animatieframes): loopt ook door als het scherm even niet tekent.
+      const tik = setInterval(() => {
+        if (!loopt) return clearInterval(tik);
+        opVoortgang(Math.min(1, (ctx.currentTime - t0) / f.duur));
+      }, 60);
+    }
   });
 }
 
-function speelBestand(url: string, mijnBeurt: number): Promise<void> {
+function speelBestand(url: string, mijnBeurt: number, opVoortgang?: Voortgang): Promise<void> {
   return new Promise((klaar) => {
     if (mijnBeurt !== beurt) return klaar();
     const audio = new Audio(url);
     huidigeAudio = audio;
-    audio.onended = audio.onerror = () => klaar();
+    if (opVoortgang) audio.ontimeupdate = () => audio.duration && opVoortgang(audio.currentTime / audio.duration);
+    const vangnet = setTimeout(() => klaar(), 15000);
+    audio.onended = audio.onerror = () => {
+      clearTimeout(vangnet);
+      klaar();
+    };
     audio.play().catch(() => klaar());
   });
 }
@@ -193,7 +218,7 @@ export function stopSpreken() {
  * (bijv. ["47", "plus", "8"]) als alle stukjes als bestand bestaan;
  * anders wordt de hele zin in één keer door de tabletstem gezegd.
  */
-export async function spreek(tekst: string | string[], soort: Spreeksoort = 'instructie'): Promise<void> {
+export async function spreek(tekst: string | string[], soort: Spreeksoort = 'instructie', opVoortgang?: Voortgang): Promise<void> {
   stopSpreken();
   const mijnBeurt = beurt;
   const delen = (Array.isArray(tekst) ? tekst : [tekst]).map(normaliseer).filter(Boolean);
@@ -206,11 +231,12 @@ export async function spreek(tekst: string | string[], soort: Spreeksoort = 'ins
       if (mijnBeurt !== beurt) return;
       const f = await geladen[i];
       if (mijnBeurt !== beurt) return;
-      if (f) await speelFragment(f, mijnBeurt);
-      else await speelBestand(bestanden[i], mijnBeurt);
+      const deel: Voortgang | undefined = opVoortgang && ((x) => opVoortgang((i + x) / bestanden.length));
+      if (f) await speelFragment(f, mijnBeurt, deel);
+      else await speelBestand(bestanden[i], mijnBeurt, deel);
     }
   } else {
-    await spreekMetApparaat(delen.join(' '), soort, mijnBeurt);
+    await spreekMetApparaat(delen.join(' '), soort, mijnBeurt, opVoortgang);
   }
   if (mijnBeurt === beurt) meld(null, soort);
 }

@@ -12,9 +12,27 @@ import { FLITS_START } from '../engine/generator-lezen';
 
 export type HeldinId = 'rumi' | 'mira' | 'zoey';
 
+/** Alle vaardigheden die apart een niveau bijhouden (één per spel, rekenen = Dans-sommen). */
+export type VaardigheidId =
+  | 'rekenen'
+  | 'flits'
+  | 'verhaal'
+  | 'plaatje'
+  | 'zwaard'
+  | 'karaoke'
+  | 'rijm'
+  | 'zinnen'
+  | 'springen'
+  | 'dozen'
+  | 'tafels';
+
+export type Leestempo = { datum: string; liedje: string; ronde: number; seconden: number; woorden: number };
+
 export type Sessie = {
   datum: string;
   heldin: HeldinId;
+  /** Welk spel (sinds fase 3). */
+  spel?: string;
   goed: number;
   totaal: number;
   noten: number;
@@ -29,11 +47,11 @@ export type Voortgang = {
   /** Met hoeveel rekenniveaus deze voortgang is opgebouwd. */
   rekenStappen?: number;
   noten: number;
-  vaardigheden: {
-    rekenen: Vaardigheid;
-    flits: Vaardigheid;
-    verhaal: Vaardigheid;
-  };
+  vaardigheden: Record<VaardigheidId, Vaardigheid>;
+  /** Karaoke: gemeten leestempo per ronde (voor de grafiek in de ouderhoek). */
+  leestempo: Leestempo[];
+  /** Karaoke-liedjes in de volgorde waarin ze gezongen zijn (oudste eerst). */
+  gezongen: string[];
   flitstijd: number;
   gelezenVerhalen: string[];
   sessies: Sessie[];
@@ -70,7 +88,17 @@ export function standaardVoortgang(): Voortgang {
       rekenen: { niveau: 0, recent: [] },
       flits: { niveau: 1, recent: [] },
       verhaal: { niveau: 0, recent: [] },
+      plaatje: { niveau: 0, recent: [] },
+      zwaard: { niveau: 0, recent: [] },
+      karaoke: { niveau: 0, recent: [] },
+      rijm: { niveau: 0, recent: [] },
+      zinnen: { niveau: 0, recent: [] },
+      springen: { niveau: 0, recent: [] },
+      dozen: { niveau: 0, recent: [] },
+      tafels: { niveau: 0, recent: [] },
     },
+    leestempo: [],
+    gezongen: [],
     flitstijd: FLITS_START,
     gelezenVerhalen: [],
     sessies: [],

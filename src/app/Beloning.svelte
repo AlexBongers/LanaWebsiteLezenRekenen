@@ -88,7 +88,7 @@
       </div>
     {:else}
       <div class="knoppen">
-        <button class="knop-goud ander" onclick={opTerug}>Andere heldin</button>
+        <button class="knop-goud ander" onclick={opTerug}>Ander spel</button>
         <button class="knop-goud" onclick={opNogEens}>Nog een keer! ✨</button>
       </div>
     {/if}

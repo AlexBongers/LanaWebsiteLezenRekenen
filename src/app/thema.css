@@ -118,3 +118,91 @@ button {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* ---------- Gedeelde opmaak voor de spellen ---------- */
+.spelvlak {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 290px 1fr;
+}
+.heldin-plek {
+  position: relative;
+  align-self: end;
+  justify-self: center;
+  padding-bottom: 16px;
+}
+.speelveld {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 8px 32px 28px 0;
+}
+.opdrachtkaart {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 48px;
+  border-radius: 32px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+  border: 3px solid rgba(253, 230, 138, 0.55);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  animation: pop-in 0.45s ease-out;
+}
+.leeswoord {
+  font-family: var(--font-lees);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.5);
+}
+.keuzerij {
+  display: flex;
+  gap: 26px;
+  justify-content: center;
+  max-width: 100%;
+}
+.keuzeknop {
+  display: grid;
+  place-items: center;
+  min-width: 180px;
+  min-height: 150px;
+  padding: 14px 24px;
+  border-radius: 28px;
+  font-family: var(--font-lees);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--inkt);
+  background: linear-gradient(180deg, #ffffff, #ede9fe);
+  border: 4px solid #fff;
+  box-shadow: 0 7px 0 #7c3aed, 0 12px 24px rgba(0, 0, 0, 0.35);
+  animation: pop-in 0.4s ease-out backwards;
+  transition: transform 0.1s, filter 0.3s, opacity 0.3s;
+}
+.keuzeknop:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 #7c3aed;
+}
+.keuzeknop.fout {
+  animation: schud 0.5s ease-in-out;
+  filter: grayscale(0.85) brightness(0.7);
+  opacity: 0.5;
+}
+.keuzeknop.goed {
+  background: linear-gradient(180deg, #dcfce7, #86efac);
+  box-shadow: 0 7px 0 #15803d, 0 0 30px rgba(134, 239, 172, 0.9);
+}
+.verder-knop {
+  animation: pop-in 0.4s ease-out;
+}
+.hint-goud {
+  color: #fbbf24;
+  text-shadow: 0 0 18px rgba(251, 191, 36, 0.9);
+}

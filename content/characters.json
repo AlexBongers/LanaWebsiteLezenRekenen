@@ -2,24 +2,24 @@
   "rumi": {
     "naam": "Rumi",
     "rol": "leider en zangeres",
-    "vak": "Flits-podium",
-    "uitleg": "Woorden flitsen",
+    "vak": "Lezen",
+    "uitleg": "Flitsen, plaatjes, zwaard en karaoke",
     "kleur": "#8b5cf6",
     "intro": "Hoi! Ik ben Rumi. Kom je met mij flitslezen?"
   },
   "mira": {
     "naam": "Mira",
     "rol": "danseres",
-    "vak": "Dans-sommen",
-    "uitleg": "Rekenen tot 100",
+    "vak": "Rekenen",
+    "uitleg": "Sommen, tafels, springen en dozen",
     "kleur": "#ec4899",
     "intro": "Hoi! Ik ben Mira. Zullen we samen sommen dansen?"
   },
   "zoey": {
     "naam": "Zoey",
     "rol": "rapper en tekstschrijver",
-    "vak": "Songtekst-verhaal",
-    "uitleg": "Verhaaltjes lezen",
+    "vak": "Lezen en begrijpen",
+    "uitleg": "Rijmen, zinnen en verhalen",
     "kleur": "#06b6d4",
     "intro": "Hoi! Ik ben Zoey. Lees jij mijn nieuwe verhaal?"
   }

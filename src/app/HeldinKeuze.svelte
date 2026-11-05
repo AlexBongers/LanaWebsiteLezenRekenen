@@ -13,7 +13,6 @@
   }: { opKies: (h: HeldinId) => void; opOuder: () => void; opStoppen: () => void } = $props();
 
   const volgorde: HeldinId[] = ['rumi', 'mira', 'zoey'];
-  const vaardigheid = { rumi: 'flits', mira: 'rekenen', zoey: 'verhaal' } as const;
   let gekozen: HeldinId | null = $state(null);
 
   function kies(h: HeldinId) {
@@ -56,7 +55,7 @@
         <div class="naambord">
           <span class="naam">{c.naam}</span>
           <span class="vak">{c.vak}</span>
-          <span class="uitleg">{c.uitleg} · level {vg.vaardigheden[vaardigheid[h]].niveau + 1}</span>
+          <span class="uitleg">{c.uitleg}</span>
         </div>
       </button>
     {/each}

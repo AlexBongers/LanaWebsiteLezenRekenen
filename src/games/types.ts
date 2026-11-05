@@ -13,4 +13,8 @@ export type SpelProps<T = never> = {
   opgaven?: Gepland<T>[];
   /** Auditie: rustiger opbouw, geen verhaaltjessommen. */
   auditie?: boolean;
+  /** Niveau van dit concert (spellen die zelf hun opgaven maken). */
+  niveau?: number;
+  /** Aantal opgaven per concert. */
+  aantal?: number;
 };

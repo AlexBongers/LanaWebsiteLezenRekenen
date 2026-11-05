@@ -8,6 +8,8 @@
   import { aantalStemBestanden, nederlandseStemmen, spreek, zetApparaatStem } from '../audio/stem';
   import { zetEffectenAan } from '../audio/geluid';
   import stemInfo from '../../content/stem.json';
+  import { SPELLEN } from '../games/spellen';
+  import characters from '../../content/characters.json';
 
   let { opSluit }: { opSluit: () => void } = $props();
 
@@ -52,6 +54,14 @@
   }
 
   const lastig = $derived(lastigsteSommen(vg.stats).slice(0, 5));
+
+  // Fase 3: overige spellen en het leestempo van de karaoke.
+  const OVERIGE = SPELLEN.filter((s) => !['flits', 'sommen', 'verhaal'].includes(s.id));
+  const gespeeld = (id: string) => vg.sessies.filter((x) => x.spel === id).length;
+  const tempo = $derived(
+    vg.leestempo.slice(-16).map((t) => ({ ...t, wpm: Math.round((t.woorden / t.seconden) * 60) })),
+  );
+  const tempoMax = $derived(Math.max(60, ...tempo.map((t) => t.wpm)) * 1.15);
   const verwisseld = $derived(vaakVerwisseld(vg.stats));
   const doosSommen = $derived(inDoosjes(vg.herhaling, 'som.'));
   const doosWoorden = $derived(inDoosjes(vg.herhaling, 'woord.'));
@@ -120,8 +130,41 @@
           <tr><th>Rekenen (Mira)</th><td>{REKENEN[vg.vaardigheden.rekenen.niveau]}</td><td>{pct(vg.vaardigheden.rekenen)}</td></tr>
           <tr><th>Flitslezen (Rumi)</th><td>{FLITS[vg.vaardigheden.flits.niveau]}<br /><small>flitstijd nu {(vg.flitstijd / 1000).toFixed(2)} s</small></td><td>{pct(vg.vaardigheden.flits)}</td></tr>
           <tr><th>Verhalen (Zoey)</th><td>{vg.gelezenVerhalen.length} van 5 verhalen gelezen (AVI E4)</td><td>{pct(vg.vaardigheden.verhaal)}</td></tr>
+          {#each OVERIGE as sp}
+            <tr>
+              <th>{sp.naam} <small>({characters[sp.heldin].naam})</small></th>
+              <td>{sp.maxNiveau > 0 ? `level ${vg.vaardigheden[sp.vaardigheid].niveau + 1} van ${sp.maxNiveau + 1}` : '–'} · {gespeeld(sp.id)}× gespeeld</td>
+              <td>{pct(vg.vaardigheden[sp.vaardigheid])}</td>
+            </tr>
+          {/each}
         </tbody>
       </table>
+
+      <h3>Leestempo (Karaoke-podium)</h3>
+      {#if tempo.length === 0}
+        <p class="uitleg">Nog geen metingen. Bij het Karaoke-podium leest Lana een liedje twee keer zelf hardop; hier zie je hoeveel woorden per minuut dat was.</p>
+      {:else}
+        <svg class="grafiek" viewBox="0 0 420 170" role="img" aria-label="Leestempo in woorden per minuut">
+          {#each [0.25, 0.5, 0.75, 1] as f}
+            <line x1="34" x2="414" y1={150 - f * 130} y2={150 - f * 130} stroke="#e2e8f0" />
+            <text x="30" y={154 - f * 130} text-anchor="end" font-size="10" fill="#64748b">{Math.round(f * tempoMax)}</text>
+          {/each}
+          <polyline
+            fill="none"
+            stroke="#7c3aed"
+            stroke-width="2.5"
+            points={tempo.map((t, i) => `${40 + (i * 370) / Math.max(1, tempo.length - 1)},${150 - (t.wpm / tempoMax) * 130}`).join(' ')}
+          />
+          {#each tempo as t, i}
+            <circle cx={40 + (i * 370) / Math.max(1, tempo.length - 1)} cy={150 - (t.wpm / tempoMax) * 130} r="4" fill={t.ronde === 3 ? '#a21caf' : '#7c3aed'}>
+              <title>{new Date(t.datum).toLocaleDateString('nl-NL')} · {t.liedje} · ronde {t.ronde}: {t.wpm} woorden per minuut</title>
+            </circle>
+          {/each}
+          <text x="40" y="166" font-size="10" fill="#64748b">oudste</text>
+          <text x="414" y="166" font-size="10" fill="#64748b" text-anchor="end">nieuwste</text>
+        </svg>
+        <p class="uitleg">Woorden per minuut bij het zelf hardop lezen (laatste {tempo.length} metingen). Ronde 3 is meestal sneller dan ronde 2: herhaald lezen werkt!</p>
+      {/if}
       <h3>Wat is lastig?</h3>
       {#if lastig.length === 0 && verwisseld.length === 0}
         <p class="uitleg">Na een paar concerten zie je hier welke sommen en woorden lastig zijn.</p>
@@ -158,7 +201,7 @@
           {#each vg.sessies.slice(-6).reverse() as s}
             <li>
               {new Date(s.datum).toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' })}
-              · {s.heldin}{s.auditie ? ' (auditie)' : ''} · {s.goed}/{s.totaal} meteen goed · {Math.round(s.seconden / 60)} min
+              · {s.spel ? (SPELLEN.find((x) => x.id === s.spel)?.naam ?? s.spel) : s.heldin}{s.auditie ? ' (auditie)' : ''} · {s.goed}/{s.totaal} meteen goed · {Math.round(s.seconden / 60)} min
             </li>
           {/each}
         </ul>
@@ -319,6 +362,13 @@
   }
   tr.groen td {
     color: #15803d;
+  }
+  .grafiek {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
   }
   .doosjes {
     display: flex;

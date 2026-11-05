@@ -2,6 +2,15 @@
   import DansSommen from '../games/DansSommen.svelte';
   import FlitsPodium from '../games/FlitsPodium.svelte';
   import Verhaal from '../games/Verhaal.svelte';
+  import WoordPlaatje from '../games/WoordPlaatje.svelte';
+  import Zwaard from '../games/Zwaard.svelte';
+  import Karaoke from '../games/Karaoke.svelte';
+  import RijmRap from '../games/RijmRap.svelte';
+  import ZinnenShow from '../games/ZinnenShow.svelte';
+  import GetallenSpring from '../games/GetallenSpring.svelte';
+  import Dozen from '../games/Dozen.svelte';
+  import TafelRitme from '../games/TafelRitme.svelte';
+  import { SPEL, type SpelId } from '../games/spellen';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
   import Beloning from './Beloning.svelte';
@@ -25,13 +34,13 @@
   import { vliegNoten } from '../ui/vlieg';
 
   let {
-    heldin,
+    spel,
     opTerug,
     opStop,
     pauzeNodig = () => false,
     opPauze = opTerug,
   }: {
-    heldin: HeldinId;
+    spel: SpelId;
     opTerug: () => void;
     opStop: () => void;
     /** Is de speeltijd om? Dan volgt na dit concert een pauze. */
@@ -39,8 +48,11 @@
     opPauze?: () => void;
   } = $props();
 
-  const VAARDIGHEID = { mira: 'rekenen', rumi: 'flits', zoey: 'verhaal' } as const;
-  const MAX = { mira: REKEN_NIVEAUS.length - 1, rumi: LEES_NIVEAUS.length - 1, zoey: 0 };
+  // svelte-ignore state_referenced_locally
+  const def = SPEL[spel];
+  const heldin: HeldinId = def.heldin;
+  /** Het niveau waarop dit concert gespeeld wordt (voor de spellen die zelf hun opgaven maken). */
+  let niveau = $state(0);
 
   let ronde = $state(0);
   let voortgang = $state(0);
@@ -56,6 +68,17 @@
     pauze: boolean;
   } | null = $state(null);
 
+  const NIEUW = {
+    plaatje: WoordPlaatje,
+    zwaard: Zwaard,
+    karaoke: Karaoke,
+    rijm: RijmRap,
+    zinnen: ZinnenShow,
+    springen: GetallenSpring,
+    dozen: Dozen,
+    tafels: TafelRitme,
+  } as const;
+
   // ---------- Het concert plannen ----------
   let auditie = $state(false);
   let sommen: Gepland<Som>[] = $state([]);
@@ -68,14 +91,15 @@
   function planRonde() {
     const aantal = vg.instellingen.opgavenPerSessie;
     const nu = Date.now();
-    if (heldin === 'mira') {
+    niveau = vg.vaardigheden[def.vaardigheid].niveau;
+    if (spel === 'sommen') {
       auditie = !vg.auditie.rekenen;
       sommen = auditie
         ? planAuditie(AUDITIE.rekenen, maakReken, somId)
         : planSessie({
             aantal,
             niveau: vg.vaardigheden.rekenen.niveau,
-            maxNiveau: MAX.mira,
+            maxNiveau: def.maxNiveau,
             herhaling: aanDeBeurt(vg.herhaling, 'som.', nu),
             maak: maakReken,
             herbouw: (id) => somUitId(id),
@@ -84,14 +108,14 @@
             uitdaging: false,
             makkelijk: 0.3,
           });
-    } else if (heldin === 'rumi') {
+    } else if (spel === 'flits') {
       auditie = !vg.auditie.flits;
       woorden = auditie
         ? planAuditie(AUDITIE.flits, maakFlits, (o) => woordId(o.woord))
         : planSessie({
             aantal,
             niveau: vg.vaardigheden.flits.niveau,
-            maxNiveau: MAX.rumi,
+            maxNiveau: def.maxNiveau,
             herhaling: aanDeBeurt(vg.herhaling, 'woord.', nu),
             maak: maakFlits,
             herbouw: (id) => flitsUitId(id),
@@ -140,25 +164,26 @@
     if (afgerond) return;
     afgerond = true;
     const nu = Date.now();
-    const sleutel = VAARDIGHEID[heldin];
+    const sleutel = def.vaardigheid;
     const voor = vg.vaardigheden[sleutel].niveau;
 
     // Herhalingsdoosjes (niet voor verhaalvragen) en overzicht voor de ouderhoek.
     let h = vg.herhaling;
+    // Alleen sommen en flitswoorden komen terug via de doosjes (die spellen plannen herhaling).
     for (const r of resultaten) {
-      if (!r.id.startsWith('verhaal.')) h = verwerkAntwoord(h, r.id, r.goed, r.niveau, nu);
+      if (r.id.startsWith('som.') || r.id.startsWith('woord.')) h = verwerkAntwoord(h, r.id, r.goed, r.niveau, nu);
     }
     vg.herhaling = h;
     vg.stats = werkStatsBij(vg.stats, resultaten);
 
     let titel: string | undefined;
     let melding: string | undefined;
-    if (auditie && sleutel !== 'verhaal') {
+    if (auditie && (sleutel === 'rekenen' || sleutel === 'flits')) {
       // Rekenen: alleen een niveau verder als alles op dat niveau meteen goed was.
       const niveau =
-        heldin === 'mira'
+        spel === 'sommen'
           ? auditieUitslag(resultaten, Math.max(...AUDITIE.rekenen), 1)
-          : auditieUitslag(resultaten, MAX[heldin]);
+          : auditieUitslag(resultaten, def.maxNiveau);
       vg.vaardigheden[sleutel] = { niveau, recent: vg.vaardigheden[sleutel].recent, opNiveau: [] };
       vg.auditie[sleutel] = true;
       titel = 'Auditie gehaald!';
@@ -169,8 +194,8 @@
       vg.vaardigheden[sleutel] = verwerkSessie(
         vg.vaardigheden[sleutel],
         eigen,
-        MAX[heldin],
-        heldin === 'mira' ? REKEN_REGELS : undefined,
+        def.maxNiveau,
+        def.rekenen ? REKEN_REGELS : undefined,
       );
     }
 
@@ -183,6 +208,7 @@
       {
         datum: new Date().toISOString(),
         heldin,
+        spel,
         goed,
         totaal: resultaten.length,
         noten: verdiend,
@@ -211,7 +237,10 @@
     ronde++;
   }
 
-  let intro = $derived(eerste ? characters[heldin].intro : undefined);
+  // De heldin heeft in het spelmenu al gegroet: geen extra wachttijd.
+  const intro = undefined;
+
+  const zetVoortgang = (f: number) => (voortgang = f);
 
   function terug() {
     stopSpreken();
@@ -244,12 +273,15 @@
 
   <main>
     {#key ronde}
-      {#if heldin === 'mira'}
-        <DansSommen {opNoten} opVoortgang={(f: number) => (voortgang = f)} {opKlaar} {intro} opgaven={sommen} {auditie} />
-      {:else if heldin === 'rumi'}
-        <FlitsPodium {opNoten} opVoortgang={(f: number) => (voortgang = f)} {opKlaar} {intro} opgaven={woorden} {auditie} />
+      {#if spel === 'sommen'}
+        <DansSommen {opNoten} opVoortgang={zetVoortgang} {opKlaar} {intro} opgaven={sommen} {auditie} />
+      {:else if spel === 'flits'}
+        <FlitsPodium {opNoten} opVoortgang={zetVoortgang} {opKlaar} {intro} opgaven={woorden} {auditie} />
+      {:else if spel === 'verhaal'}
+        <Verhaal {opNoten} opVoortgang={zetVoortgang} {opKlaar} {intro} />
       {:else}
-        <Verhaal {opNoten} opVoortgang={(f: number) => (voortgang = f)} {opKlaar} {intro} />
+        {@const Spel = NIEUW[spel]}
+        <Spel {opNoten} opVoortgang={zetVoortgang} {opKlaar} {niveau} aantal={vg.instellingen.opgavenPerSessie} />
       {/if}
     {/key}
   </main>

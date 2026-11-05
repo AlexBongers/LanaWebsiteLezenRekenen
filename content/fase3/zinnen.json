@@ -1,0 +1,21 @@
+{
+  "_uitleg": "Zinnen-show: groepjes van 3 zinnen die op elkaar lijken, elk met een plaatje (emoji). Lana leest één zin en kiest het goede plaatje.",
+  "groepen": [
+    [["De kat slaapt op het bed.", "🐱🛏️"], ["De hond slaapt op het bed.", "🐶🛏️"], ["De kat zit in de boom.", "🐱🌳"]],
+    [["Het meisje eet een appel.", "👧🍎"], ["Het meisje eet een banaan.", "👧🍌"], ["De jongen eet een appel.", "👦🍎"]],
+    [["De vis zwemt in de zee.", "🐟🌊"], ["De eend zwemt in de zee.", "🦆🌊"], ["De vis ligt op het bord.", "🐟🍽️"]],
+    [["Er staan drie bomen.", "🌳🌳🌳"], ["Er staat één boom.", "🌳"], ["Er staan drie bloemen.", "🌷🌷🌷"]],
+    [["De zon schijnt boven de berg.", "☀️⛰️"], ["De maan schijnt boven de berg.", "🌙⛰️"], ["De zon schijnt boven de zee.", "☀️🌊"]],
+    [["De muis zit op de kaas.", "🐭🧀"], ["De muis zit op de taart.", "🐭🎂"], ["De kat zit op de kaas.", "🐱🧀"]],
+    [["Het regent en het is koud.", "🌧️🥶"], ["De zon schijnt en het is warm.", "☀️🥵"], ["Het sneeuwt en het is koud.", "❄️🥶"]],
+    [["Het meisje speelt gitaar.", "👧🎸"], ["Het meisje speelt trommel.", "👧🥁"], ["De jongen speelt gitaar.", "👦🎸"]],
+    [["De raket vliegt naar de maan.", "🚀🌙"], ["De raket vliegt naar de ster.", "🚀⭐"], ["De vogel vliegt naar de maan.", "🐦🌙"]],
+    [["Twee eenden zwemmen.", "🦆🦆"], ["Drie eenden zwemmen.", "🦆🦆🦆"], ["Twee vissen zwemmen.", "🐟🐟"]],
+    [["De hond draagt een hoed.", "🐶🎩"], ["De hond draagt een bril.", "🐶👓"], ["De beer draagt een hoed.", "🐻🎩"]],
+    [["De trein rijdt naar het kasteel.", "🚆🏰"], ["De bus rijdt naar het kasteel.", "🚌🏰"], ["De trein rijdt naar de berg.", "🚆⛰️"]],
+    [["Het meisje lacht.", "👧😄"], ["Het meisje huilt.", "👧😢"], ["De jongen lacht.", "👦😄"]],
+    [["De slak eet een blad.", "🐌🍃"], ["De rups eet een blad.", "🐛🍃"], ["De slak eet een aardbei.", "🐌🍓"]],
+    [["Oma krijgt een cadeau.", "👵🎁"], ["Opa krijgt een cadeau.", "👴🎁"], ["Oma krijgt een taart.", "👵🎂"]],
+    [["De kip legt een ei.", "🐔🥚"], ["De eend legt een ei.", "🦆🥚"], ["De kip eet een worm.", "🐔🪱"]]
+  ]
+}

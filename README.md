@@ -4,13 +4,23 @@
 
 Een tablet-app (website) waarmee Lana spelenderwijs beter leert **lezen** en **rekenen**, samen met de drie demon hunters. Zie [PLAN.md](PLAN.md) voor het volledige plan.
 
-## Wat zit er nu in (fase 0 en 1)
+## Wat zit er nu in (fase 0 tot en met 3)
+
+Na het kiezen van een heldin kiest Lana een spel. De snelle spellen staan bovenaan.
 
 | Heldin | Spel | Wat oefent het |
 |---|---|---|
-| **Rumi** | Flits-podium | Een woord flitst in de spotlight; welk woord zag je? Lastige klanken (ei/ij, au/ou, ng/nk …) en woorden van groep 4. De flitstijd wordt vanzelf korter als het goed gaat. |
-| **Mira** | Dans-sommen | Plus en min tot 20 en tot 100, met en zonder overschrijding, soms als verhaaltjessom. Bij een fout verschijnt een getallenlijn met sprongen (47 → 50 → 55). |
-| **Zoey** | Songtekst-verhaal | Een verhaaltje op AVI E4-niveau zelf lezen (tik op een zin voor hulp), daarna 3 vragen. |
+| **Rumi** | ⚡ Flits-podium | Een woord flitst; welk woord zag je? De flitstijd wordt korter als het goed gaat. |
+| | 🖼️ Woord bij plaatje | Lees het woord (niet voorgelezen) en tik het plaatje. Niveau 2: plaatjes van woorden die erop lijken. |
+| | 🗡️ Klankgroepen-zwaard | Tik tussen de letters om een woord in klankgroepen te hakken (ra\|men, zon\|ne\|bril). |
+| | 🎤 Karaoke-podium | Herhaald lezen: de stem zingt voor (woorden lichten op), daarna leest Lana twee keer zelf. De tijd wordt gemeten. |
+| **Mira** | 💃 Dans-sommen | Plus en min tot 100 in vijf rustige stapjes, met getallenlijn-hint. |
+| | 🥁 Tafel-ritme | Op een beat: 2, 4, 6, … welk getal komt hierna? Tafels van 1, 2, 10, dan 5, dan 3 en 4. |
+| | 🦘 Getallen-spring | Tik op de getallenlijn waar een getal staat; later sommen via het hele tiental (47 + 8: eerst naar 50). |
+| | 📦 Lightstick-dozen | Maak een getal met dozen van 10 en losse lichtstokken, of tel hoeveel het er zijn. |
+| **Zoey** | 🎧 Rijm-rap | Zoey rapt een woord; welk geschreven woord rijmt erop? |
+| | 🎬 Zinnen-show | Lees een zin en kies het plaatje dat erbij past (de plaatjes lijken op elkaar). |
+| | 📖 Songtekst-verhaal | Een verhaaltje in korte stukjes lezen, daarna 3 vragen. |
 
 Verder:
 - Gouden noten die naar de teller vliegen, een gouden schild dat groeit, "3 op rij!"-combo's, sterren en confetti.
@@ -25,7 +35,7 @@ Verder:
 - **Herhalingsdoosjes:** wat niet meteen goed ging, komt het volgende concert terug, en daarna na 1, 3, 7 en 14 dagen tot het gekend is.
 - **Pauze:** na 10, 15 of 20 minuten (instelbaar) eindigt het na het lopende concert met een pauzescherm.
 - Een fout antwoord geeft eerst een hint. Bij een tweede fout wordt het antwoord rustig uitgelegd en komt de opgave later terug.
-- **Ouderhoek:** houd het slotje linksboven 3 seconden vast en reken de keersom uit. Hier vind je het overzicht (welke sommen lastig zijn, welke woorden ze verwisselt, wat er in de doosjes zit), kun je het niveau zelf zetten, de stem kiezen en een back-up maken.
+- **Ouderhoek:** houd het slotje linksboven 3 seconden vast en reken de keersom uit. Hier vind je het overzicht (niveau per spel, leestempo-grafiek van de karaoke, welke sommen lastig zijn, welke woorden ze verwisselt, wat er in de doosjes zit), kun je het niveau zelf zetten, de stem kiezen en een back-up maken.
 - Werkt offline, als app op het startscherm, liggend en schermvullend. De Android-terugknop vraagt eerst "wil je stoppen?".
 
 ## Online zetten op Cloudflare (Worker)
