@@ -23,13 +23,13 @@
   <p class="sub">Het schild is weer super sterk. Rust maar lekker uit.</p>
 
   <div class="groep">
-    <Heldin wie="rumi" stemming="juich" hoogte={300} />
-    <Heldin wie="mira" stemming="dans" hoogte={330} />
-    <Heldin wie="zoey" stemming="juich" hoogte={300} />
+    <Heldin wie="rumi" stemming="juich" hoogte={340} />
+    <Heldin wie="mira" stemming="dans" hoogte={370} />
+    <Heldin wie="zoey" stemming="juich" hoogte={340} />
   </div>
 
   <div class="tellers">
-    <div><strong>{vandaag.length}</strong><span>concerten</span></div>
+    <div><strong>{vandaag.length}</strong><span>{vandaag.length === 1 ? 'concert' : 'concerten'}</span></div>
     <div><strong>{goed}</strong><span>meteen goed</span></div>
     <div><strong>+{noten}</strong><span>gouden noten</span></div>
   </div>

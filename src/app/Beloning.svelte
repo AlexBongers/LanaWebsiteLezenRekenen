@@ -68,9 +68,9 @@
     </div>
 
     <div class="groep">
-      <Heldin wie={anderen[0]} stemming="dans" hoogte={230} />
-      <Heldin wie={heldin} stemming="juich" hoogte={280} />
-      <Heldin wie={anderen[1]} stemming="dans" hoogte={230} />
+      <Heldin wie={anderen[0]} stemming="dans" hoogte={265} />
+      <Heldin wie={heldin} stemming="juich" hoogte={315} />
+      <Heldin wie={anderen[1]} stemming="dans" hoogte={265} />
     </div>
 
     <div class="noten">+{noten} gouden noten</div>
