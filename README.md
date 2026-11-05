@@ -1,5 +1,7 @@
 # Lana's Gouden Missie ✨
 
+**Spelen:** https://lanas-gouden-missie.exl999.workers.dev (op de tablet installeren: zie hieronder)
+
 Een tablet-app (website) waarmee Lana spelenderwijs beter leert **lezen** en **rekenen**, samen met de drie demon hunters. Zie [PLAN.md](PLAN.md) voor het volledige plan.
 
 ## Wat zit er nu in (fase 0 en 1)
@@ -40,7 +42,7 @@ De app draait als **Cloudflare Worker met Static Assets** (`wrangler.jsonc`). Da
 npm run deploy
 ```
 
-De app staat dan op `https://lanas-gouden-missie.<jouw-subdomein>.workers.dev`. Lokaal kan dit ook: `npx wrangler login` en dan `npm run deploy`.
+De app staat op **https://lanas-gouden-missie.exl999.workers.dev**. Lokaal kan dit ook: `npx wrangler login` en dan `npm run deploy`.
 
 ## Op de Samsung-tablet zetten
 

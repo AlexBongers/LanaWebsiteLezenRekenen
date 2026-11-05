@@ -69,14 +69,18 @@
 
   async function begin() {
     ontgrendelGeluid();
-    try {
-      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+    // Volledig scherm en liggend vastzetten op de achtergrond: nooit wachten,
+    // want op sommige apparaten komt er geen antwoord en dan zou de app blijven hangen.
+    void (async () => {
+      try {
+        if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+        }
+        await (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock?.('landscape');
+      } catch {
+        // Volledig scherm of draaien vastzetten mag niet overal; geen probleem.
       }
-      await (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock?.('landscape');
-    } catch {
-      // Volledig scherm of draaien vastzetten mag niet overal; geen probleem.
-    }
+    })();
     void houdSchermAan();
     speelStart = Date.now();
     scherm = 'keuze';
