@@ -53,3 +53,13 @@ describe('verhalen', () => {
     expect(plekken.size).toBe(3);
   });
 });
+
+describe('leesteksten', () => {
+  it('bevatten geen aanhalingstekens (verwarrend voor Lana)', () => {
+    for (const v of verhalen) {
+      for (const t of [v.titel, ...v.zinnen, ...v.vragen.flatMap((q) => [q.vraag, ...q.keuzes])]) {
+        expect(t).not.toMatch(/["“”„«»]/);
+      }
+    }
+  });
+});
