@@ -16,9 +16,9 @@
   <p class="sub">Lezen en rekenen met de demon hunters</p>
 
   <div class="groep">
-    <div class="d1 plek" style="--kleur:#8b5cf6"><Heldin wie="rumi" stemming="dans" hoogte={340} /></div>
-    <div class="d2 plek" style="--kleur:#ec4899"><Heldin wie="mira" stemming="dans" hoogte={340} /></div>
-    <div class="d3 plek" style="--kleur:#06b6d4"><Heldin wie="zoey" stemming="dans" hoogte={340} /></div>
+    <div class="d1 plek" style="--kleur:#8b5cf6"><Heldin wie="rumi" stemming="dans" hoogte={380} /></div>
+    <div class="d2 plek" style="--kleur:#ec4899"><Heldin wie="mira" stemming="dans" hoogte={380} /></div>
+    <div class="d3 plek" style="--kleur:#06b6d4"><Heldin wie="zoey" stemming="dans" hoogte={380} /></div>
   </div>
 
   <button class="knop-goud begin" onclick={opStart}>✨ Tik om te beginnen ✨</button>

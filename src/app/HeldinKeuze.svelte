@@ -38,7 +38,7 @@
         onclick={() => kies(h)}
       >
         <div class="figuur">
-          <Heldin wie={h} stemming={gekozen === h ? 'juich' : 'rust'} hoogte={400} />
+          <Heldin wie={h} stemming={gekozen === h ? 'juich' : 'rust'} hoogte={450} />
         </div>
         <div class="naambord">
           <span class="naam">{c.naam}</span>
