@@ -14,7 +14,14 @@
   let x = $derived((n: number) => MARGE + ((n - laag) / (hoog - laag)) * (B - 2 * MARGE));
   let stap = $derived(hoog - laag > 40 ? 5 : 1);
   let streepjes = $derived(Array.from({ length: Math.floor((hoog - laag) / stap) + 1 }, (_, i) => laag + i * stap));
-  let labels = $derived(new Set([laag, hoog, ...punten, ...streepjes.filter((n) => n % 10 === 0)]));
+  // Tientallen en randen krijgen een label, behalve als ze te dicht bij een sprongpunt liggen.
+  let labels = $derived.by(() => {
+    const ruimte = (hoog - laag) / 22;
+    const extra = [laag, hoog, ...streepjes.filter((n) => n % 10 === 0)].filter(
+      (n) => !punten.some((p) => p !== n && Math.abs(p - n) < ruimte),
+    );
+    return new Set([...punten, ...extra]);
+  });
 </script>
 
 <svg viewBox="0 0 {B} {H}" class="lijn" aria-label="Getallenlijn">
