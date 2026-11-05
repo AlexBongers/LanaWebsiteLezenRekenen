@@ -6,7 +6,11 @@
   import { vg, type HeldinId } from '../store/voortgang.svelte';
   import { speelTik } from '../audio/geluid';
 
-  let { opKies, opOuder }: { opKies: (h: HeldinId) => void; opOuder: () => void } = $props();
+  let {
+    opKies,
+    opOuder,
+    opStoppen,
+  }: { opKies: (h: HeldinId) => void; opOuder: () => void; opStoppen: () => void } = $props();
 
   const volgorde: HeldinId[] = ['rumi', 'mira', 'zoey'];
   const vaardigheid = { rumi: 'flits', mira: 'rekenen', zoey: 'verhaal' } as const;
@@ -24,7 +28,16 @@
   <header>
     <OuderSlot opOpen={opOuder} />
     <h1>Met wie ga je oefenen?</h1>
-    <NotenTeller aantal={vg.noten} />
+    <div class="rechts">
+      <NotenTeller aantal={vg.noten} />
+      <button class="stoppen" onclick={opStoppen} aria-label="Stoppen met spelen">
+        <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+          <path d="M12 3 v8" stroke="#fff" stroke-width="2.8" stroke-linecap="round" />
+          <path d="M6.3 6.8 a8 8 0 1 0 11.4 0" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" />
+        </svg>
+        <span>Stoppen</span>
+      </button>
+    </div>
   </header>
 
   <div class="kaarten">
@@ -63,6 +76,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .rechts {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .stoppen {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 60px;
+    padding: 0 20px 0 14px;
+    border-radius: 999px;
+    font-size: 22px;
+    font-weight: 700;
+    background: rgba(239, 68, 68, 0.75);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
   }
   h1 {
     margin: 0;

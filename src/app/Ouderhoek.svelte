@@ -11,7 +11,13 @@
 
   let { opSluit }: { opSluit: () => void } = $props();
 
-  const REKENEN = ['R1 · plus en min tot 20 (herhaling)', 'R3 · tot 100 zonder overschrijding', 'R4 · tot 100 met overschrijding'];
+  const REKENEN = [
+    '1 · plus en min tot 20 (herhaling)',
+    '2 · tot 100 makkelijk (30 + 40, 34 + 5)',
+    '3 · tot 100 zonder overschrijding (34 + 25)',
+    '4 · over het tiental met één getal (47 + 8)',
+    '5 · tot 100 met overschrijding (38 + 27)',
+  ];
   const FLITS = ['L1 · lastige klanken (ei/ij, au/ou, ng/nk …)', 'L2 · woorden van groep 4 (lucht, straat, vrolijk …)'];
 
   let stemmen: SpeechSynthesisVoice[] = $state([]);
@@ -195,6 +201,10 @@
           <option value={20}>20 minuten</option>
           <option value={0}>geen pauze</option>
         </select>
+      </label>
+      <label class="vink">
+        <input type="checkbox" bind:checked={vg.instellingen.volledigScherm} onchange={bewaar} />
+        Volledig scherm bij het starten (verbergt de knoppen van de tablet)
       </label>
       <label class="vink">
         <input type="checkbox" bind:checked={vg.instellingen.effecten} onchange={() => { zetEffectenAan(vg.instellingen.effecten); bewaar(); }} />

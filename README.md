@@ -17,6 +17,10 @@ Verder:
 - Een tekstballon bij de heldin laat zien wat de stem zegt, zodat Lana kan meelezen.
 - **Auditie:** de eerste keer bij Mira en Rumi 8 opgaven die steeds moeilijker worden. Daarmee kiest de site het startniveau.
 - Het niveau past zich vanzelf aan: na 8 opgaven op haar niveau gaat het bij meer dan 85% goed een stapje moeilijker, onder 60% een stapje makkelijker.
+- **Rekenen gaat rustiger:** vijf kleine stapjes (tot 20 → tot 100 makkelijk → zonder overschrijding → over het tiental met één getal → met twee getallen). Pas omhoog bij 9 van de 10 goed, al terug onder 70%, geen uitdagingssommen en 30% makkelijke sommen.
+- **Verhaal in kleine stukjes:** hooguit 3 zinnen per bladzijde, grote letters, elke zin op een eigen regel.
+- **Past op elk scherm:** de app schaalt mee (ontworpen voor 1280 × 800, zoals de Galaxy Tab A9+).
+- **Stoppen:** rode knop op het keuzescherm, of de terugknop van de tablet. Volledig scherm staat standaard uit (aan te zetten in de ouderhoek).
 - **Mix per concert:** ongeveer 70% op haar niveau, 20% iets makkelijker (altijd beginnen met een opwarmer) en 10% een uitdaging.
 - **Herhalingsdoosjes:** wat niet meteen goed ging, komt het volgende concert terug, en daarna na 1, 3, 7 en 14 dagen tot het gekend is.
 - **Pauze:** na 10, 15 of 20 minuten (instelbaar) eindigt het na het lopende concert met een pauzescherm.
@@ -55,9 +59,9 @@ De app staat op **https://lanas-gouden-missie.exl999.workers.dev**. Lokaal kan d
 
 Alle vaste teksten (instructies, complimenten, flitswoorden, verhaaltjes en de getallen 0 tot 100) zijn ingesproken met **ElevenLabs**, stem **Roos**: een jonge, vrolijke Nederlandse stem. De bestanden staan in `public/audio/tts/` en werken ook offline. Ook de verhaaltjessommen: die komen uit een vaste verzameling van 72 (24 per niveau, `content/verhaaltjessommen.json`), zodat alles vooraf is ingesproken en de tabletstem niet meer nodig is. Een test bewaakt dat elke gesproken som en elk verhaaltje een bestand heeft. Nieuwe verzameling maken: `npm run verhaalsommen` en dan `npm run audio`.
 
-- **Vlot tempo:** instructies op 1,15, zinnen op 1,05 en getallen op 1,1 (instelbaar in `content/stem.json`). De app knipt bovendien de stilte aan begin en eind van elk fragment weg, zodat de stukjes van een som direct op elkaar aansluiten.
-- **Modellen:** `eleven_multilingual_v2` voor zinnen (ondersteunt tempo), `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden en getallen.
-- **Verbruik:** alles inspreken kostte ongeveer 4.500 credits.
+- **Tempo:** instructies op 1,0, zinnen en getallen op 0,95, losse woorden op 0,9 (instelbaar in `content/stem.json`; verhoog daar `versie` als je het tempo wijzigt). De app knipt de stilte aan begin en eind van elk fragment weg en maakt alle fragmenten even hard, zodat de stukjes van een som duidelijk en direct op elkaar aansluiten.
+- **Modellen:** `eleven_multilingual_v2` voor zinnen en getallen (getallen uitgeschreven, bijv. zevenenveertig), `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden.
+- **Verbruik:** alles inspreken kost ongeveer 5.000 credits.
 - **Andere stem kiezen:** in de ouderhoek staan proefstemmen (Roos, Ruth, Emma, Melanie). Zet de id van de gekozen stem in `content/stem.json` en draai `npm run audio`.
 
 **Opnieuw inspreken** (bijv. na nieuwe woorden of verhalen):

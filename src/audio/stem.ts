@@ -4,12 +4,12 @@
  * 2. Zo niet: de ingebouwde stem van de tablet (Web Speech API).
  */
 import stemInstellingen from '../../content/stem.json';
-import { audioSleutel, normaliseer, type Spreeksoort } from './hash';
+import { audioSleutel, normaliseer, stemSleutel, type Spreeksoort } from './hash';
 import { audioContext } from './geluid';
 
 type Manifest = { stem: string; bestanden: string[] };
 
-let manifest: Manifest = { stem: stemInstellingen.stem, bestanden: [] };
+let manifest: Manifest = { stem: stemSleutel(stemInstellingen), bestanden: [] };
 let beschikbaar = new Set<string>();
 let apparaatStemUri: string | null = null;
 let huidigeAudio: HTMLAudioElement | null = null;
@@ -86,9 +86,10 @@ function spreekMetApparaat(tekst: string, soort: Spreeksoort, mijnBeurt: number)
  * Stemfragmenten via Web Audio: stilte aan begin en eind wordt weggeknipt,
  * zodat Lana niet hoeft te wachten en de stukjes van een som direct op elkaar aansluiten.
  */
-type Fragment = { buffer: AudioBuffer; start: number; duur: number };
+type Fragment = { buffer: AudioBuffer; start: number; duur: number; versterking: number };
 const fragmenten = new Map<string, Promise<Fragment | null>>();
 const DREMPEL = 0.012;
+const DOEL_PIEK = 0.8;
 
 function knipStilte(buffer: AudioBuffer): Fragment {
   const data = buffer.getChannelData(0);
@@ -96,11 +97,15 @@ function knipStilte(buffer: AudioBuffer): Fragment {
   while (begin < data.length && Math.abs(data[begin]) < DREMPEL) begin++;
   let eind = data.length - 1;
   while (eind > begin && Math.abs(data[eind]) < DREMPEL) eind--;
-  if (eind <= begin) return { buffer, start: 0, duur: buffer.duration };
+  // Even hard maken: zachte opnames (bijv. een gefluisterd getal) worden versterkt.
+  let piek = 0;
+  for (let i = begin; i <= eind; i++) piek = Math.max(piek, Math.abs(data[i]));
+  const versterking = piek > 0 ? Math.min(8, Math.max(1, DOEL_PIEK / piek)) : 1;
+  if (eind <= begin) return { buffer, start: 0, duur: buffer.duration, versterking };
   const marge = Math.floor(buffer.sampleRate * 0.03);
   const van = Math.max(0, begin - marge);
   const tot = Math.min(data.length - 1, eind + marge * 2);
-  return { buffer, start: van / buffer.sampleRate, duur: (tot - van) / buffer.sampleRate };
+  return { buffer, start: van / buffer.sampleRate, duur: (tot - van) / buffer.sampleRate, versterking };
 }
 
 function laadFragment(url: string): Promise<Fragment | null> {
@@ -127,7 +132,9 @@ function speelFragment(f: Fragment, mijnBeurt: number): Promise<void> {
     if (ctx.state === 'suspended') void ctx.resume();
     const bron = ctx.createBufferSource();
     bron.buffer = f.buffer;
-    bron.connect(ctx.destination);
+    const volume = ctx.createGain();
+    volume.gain.value = f.versterking;
+    bron.connect(volume).connect(ctx.destination);
     huidigeBron = bron;
     bron.onended = () => {
       if (huidigeBron === bron) huidigeBron = null;

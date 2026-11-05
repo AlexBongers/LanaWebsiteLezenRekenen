@@ -27,6 +27,17 @@
     return min > 0 && Date.now() - speelStart >= min * 60_000;
   }
 
+  /** Alles staat op een vast podium van 1280 x 800 dat meeschaalt met het scherm. */
+  const BREED = 1280;
+  const HOOG = 800;
+  let schaal = $state(1);
+  function meet() {
+    const w = window.visualViewport?.width ?? innerWidth;
+    const h = window.visualViewport?.height ?? innerHeight;
+    schaal = Math.min(w / BREED, h / HOOG);
+  }
+  let vraagAfsluiten = $state(false);
+
   let accent = $derived(scherm === 'level' ? characters[heldin].kleur : '#8b5cf6');
 
   onMount(() => {
@@ -36,14 +47,23 @@
     });
     void laadStemManifest();
 
-    // Android-terugknop: niet de app sluiten, maar netjes terug.
+    meet();
+    addEventListener('resize', meet);
+    window.visualViewport?.addEventListener('resize', meet);
+
+    // Android-terugknop: tijdens het spelen netjes terug; op het startscherm de app uit.
     history.replaceState({ basis: true }, '');
     history.pushState({ app: true }, '');
     const opTerugknop = () => {
+      if (scherm === 'start' || scherm === 'einde') {
+        // Nog een stap terug: dan sluit Android de app.
+        history.back();
+        return;
+      }
       history.pushState({ app: true }, '');
       if (scherm === 'level') vraagStop = true;
       else if (scherm === 'ouder') scherm = 'keuze';
-      else if (scherm === 'einde') scherm = 'start';
+      else if (scherm === 'keuze') vraagAfsluiten = true;
     };
     addEventListener('popstate', opTerugknop);
 
@@ -55,6 +75,8 @@
 
     return () => {
       removeEventListener('popstate', opTerugknop);
+      removeEventListener('resize', meet);
+      window.visualViewport?.removeEventListener('resize', meet);
       document.removeEventListener('visibilitychange', opZichtbaar);
     };
   });
@@ -73,6 +95,7 @@
     // want op sommige apparaten komt er geen antwoord en dan zou de app blijven hangen.
     void (async () => {
       try {
+        if (!vg.instellingen.volledigScherm) return;
         if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
           await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
         }
@@ -92,6 +115,16 @@
     scherm = 'level';
   }
 
+  /** Stoppen met spelen: uit volledig scherm, scherm mag weer uit, naar het eindscherm. */
+  function afsluiten() {
+    vraagAfsluiten = false;
+    stopSpreken();
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    wakeLock?.release().catch(() => {});
+    wakeLock = null;
+    scherm = vg.sessies.some((s) => new Date(s.datum).getTime() >= speelStart) ? 'einde' : 'start';
+  }
+
   function naarEinde() {
     stopSpreken();
     wakeLock?.release().catch(() => {});
@@ -108,24 +141,32 @@
 
 <Achtergrond {accent} />
 
-{#key scherm + (scherm === 'level' ? heldin : '')}
-  <div class="laag" in:scale={{ start: 0.96, duration: 420, delay: 120 }} out:fade={{ duration: 180 }}>
-    {#if scherm === 'start'}
-      <Start opStart={begin} />
-    {:else if scherm === 'keuze'}
-      <HeldinKeuze opKies={kies} opOuder={() => (scherm = 'ouder')} />
-    {:else if scherm === 'level'}
-      <Level {heldin} opTerug={naarKeuze} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
-    {:else if scherm === 'einde'}
-      <Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />
-    {:else if scherm === 'ouder'}
-      <Ouderhoek opSluit={() => (scherm = 'keuze')} />
-    {/if}
-  </div>
-{/key}
+<div class="buhne" style="transform: translate(-50%, -50%) scale({schaal})">
+  {#key scherm + (scherm === 'level' ? heldin : '')}
+    <div class="laag" in:scale={{ start: 0.96, duration: 420, delay: 120 }} out:fade={{ duration: 180 }}>
+      {#if scherm === 'start'}
+        <Start opStart={begin} />
+      {:else if scherm === 'keuze'}
+        <HeldinKeuze opKies={kies} opOuder={() => (scherm = 'ouder')} opStoppen={() => (vraagAfsluiten = true)} />
+      {:else if scherm === 'level'}
+        <Level {heldin} opTerug={naarKeuze} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+      {:else if scherm === 'einde'}
+        <Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />
+      {/if}
+    </div>
+  {/key}
 
-{#if vraagStop}
-  <Bevestig vraag={teksten.stoppen} ja="Ja, stoppen" nee="Nee, verder!" opJa={naarKeuze} opNee={() => (vraagStop = false)} />
+  {#if vraagStop}
+    <Bevestig vraag={teksten.stoppen} ja="Ja, stoppen" nee="Nee, verder!" opJa={naarKeuze} opNee={() => (vraagStop = false)} />
+  {/if}
+  {#if vraagAfsluiten}
+    <Bevestig vraag={teksten.afsluiten} ja="Ja, stoppen" nee="Nee, verder!" opJa={afsluiten} opNee={() => (vraagAfsluiten = false)} />
+  {/if}
+</div>
+
+<!-- De ouderhoek gebruikt het hele scherm en mag scrollen -->
+{#if scherm === 'ouder'}
+  <Ouderhoek opSluit={() => (scherm = 'keuze')} />
 {/if}
 
 <div class="draai" aria-hidden={true}>
@@ -134,6 +175,14 @@
 </div>
 
 <style>
+  .buhne {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 1280px;
+    height: 800px;
+    transform-origin: center;
+  }
   .laag {
     position: absolute;
     inset: 0;

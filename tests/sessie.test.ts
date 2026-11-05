@@ -88,6 +88,7 @@ describe('concert plannen', () => {
     expect(verdeling(8, true, true, 5)).toEqual({ niveau: 3, makkelijk: 2, uitdaging: 1, herhaling: 2 });
     expect(verdeling(8, false, true, 0)).toEqual({ niveau: 7, makkelijk: 0, uitdaging: 1, herhaling: 0 });
     expect(verdeling(8, true, false, 0)).toEqual({ niveau: 6, makkelijk: 2, uitdaging: 0, herhaling: 0 });
+    expect(verdeling(10, true, false, 0, 0.3)).toEqual({ niveau: 7, makkelijk: 3, uitdaging: 0, herhaling: 0 });
   });
 
   const rekenPlan = (niveau: number, herhaling: { id: string; niveau: number }[] = [], zaad = 1) => {
@@ -154,7 +155,7 @@ describe('concert plannen', () => {
 describe('auditie', () => {
   it('loopt op in moeilijkheid', () => {
     const plan = planAuditie(AUDITIE.rekenen, (n, aantal) => maakSommen(REKEN_NIVEAUS[n], aantal), somId);
-    expect(plan.map((p) => p.niveau)).toEqual([0, 0, 1, 1, 1, 2, 2, 2]);
+    expect(plan.map((p) => p.niveau)).toEqual([0, 0, 1, 1, 2, 2, 3, 3]);
     expect(plan.every((p) => p.bron === 'auditie')).toBe(true);
   });
 
@@ -169,6 +170,29 @@ describe('auditie', () => {
     expect(auditieUitslag([r(0, true), r(0, true), r(1, true), r(1, true), r(1, false), r(2, true), r(2, false), r(2, false)], 2)).toBe(2);
     // Alles goed: hoogste niveau
     expect(auditieUitslag([r(0, true), r(1, true), r(2, true)], 2)).toBe(2);
+  });
+
+  it('rekenen is strenger: één fout op een niveau = daar beginnen', () => {
+    expect(auditieUitslag([r(0, true), r(0, true), r(1, true), r(1, false), r(2, true), r(2, true)], 3, 1)).toBe(1);
+    expect(auditieUitslag([r(0, true), r(0, true), r(1, true), r(1, true), r(2, true), r(2, true), r(3, true), r(3, true)], 3, 1)).toBe(3);
+  });
+
+  it('rekenen krijgt geen uitdaging en meer makkelijke sommen', () => {
+    const rnd = zaadRnd(21);
+    const plan = planSessie({
+      aantal: 10,
+      niveau: 2,
+      maxNiveau: REKEN_NIVEAUS.length - 1,
+      herhaling: [],
+      maak: (n, aantal) => maakSommen(REKEN_NIVEAUS[n], aantal, { rnd, verhaalKans: 0 }),
+      herbouw: (id) => somUitId(id, rnd),
+      id: somId,
+      uitdaging: false,
+      makkelijk: 0.3,
+      rnd,
+    });
+    expect(plan.filter((p) => p.bron === 'uitdaging')).toHaveLength(0);
+    expect(plan.filter((p) => p.bron === 'makkelijk')).toHaveLength(3);
   });
 });
 
@@ -206,7 +230,7 @@ describe('alles wordt door de ingesproken stem gezegd', () => {
     const { verhaalPool } = await import('../src/engine/generator-rekenen');
     for (const niveau of REKEN_NIVEAUS) {
       const pool = verhaalPool(niveau);
-      expect(pool.length).toBeGreaterThanOrEqual(20);
+      expect(pool.length).toBeGreaterThanOrEqual(12);
       for (const v of pool) {
         expect(v.tekst).toContain(String(v.a));
         expect(v.tekst).toContain(String(v.b));

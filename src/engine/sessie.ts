@@ -26,9 +26,15 @@ export type Resultaat = {
 
 export type Verdeling = { niveau: number; makkelijk: number; uitdaging: number; herhaling: number };
 
-export function verdeling(aantal: number, kanOmlaag: boolean, kanOmhoog: boolean, beschikbareHerhaling: number): Verdeling {
+export function verdeling(
+  aantal: number,
+  kanOmlaag: boolean,
+  kanOmhoog: boolean,
+  beschikbareHerhaling: number,
+  makkelijkDeel = 0.2,
+): Verdeling {
   const uitdaging = kanOmhoog ? Math.max(1, Math.round(aantal * 0.1)) : 0;
-  const makkelijk = kanOmlaag ? Math.round(aantal * 0.2) : 0;
+  const makkelijk = kanOmlaag ? Math.round(aantal * makkelijkDeel) : 0;
   const herhaling = Math.min(beschikbareHerhaling, Math.round(aantal * 0.25));
   return { niveau: aantal - uitdaging - makkelijk - herhaling, makkelijk, uitdaging, herhaling };
 }
@@ -46,6 +52,10 @@ export type PlanOpties<T> = {
   id: (t: T) => string;
   /** Om dubbele te voorkomen (bijv. twee woorden uit hetzelfde groepje). */
   sleutel?: (t: T) => string;
+  /** Een opgave van een niveau hoger erbij (standaard ja). */
+  uitdaging?: boolean;
+  /** Deel opgaven van een niveau lager (standaard 0,2). */
+  makkelijk?: number;
   rnd?: Rnd;
 };
 
@@ -68,7 +78,7 @@ export function planSessie<T>(o: PlanOpties<T>): Gepland<T>[] {
     if (g) herhaling.push(g);
   }
 
-  const v = verdeling(o.aantal, o.niveau > 0, o.niveau < o.maxNiveau, herhaling.length);
+  const v = verdeling(o.aantal, o.niveau > 0, (o.uitdaging ?? true) && o.niveau < o.maxNiveau, herhaling.length, o.makkelijk);
   const vul = (niveau: number, n: number, bron: Bron): Gepland<T>[] => {
     const uit: Gepland<T>[] = [];
     if (n <= 0) return uit;
@@ -94,7 +104,8 @@ export function planSessie<T>(o: PlanOpties<T>): Gepland<T>[] {
 
 /** Auditie: per opgave het niveau, oplopend. */
 export const AUDITIE = {
-  rekenen: [0, 0, 1, 1, 1, 2, 2, 2],
+  // Rekenen: alleen de eerste vier stapjes; het vijfde niveau verdient ze zelf.
+  rekenen: [0, 0, 1, 1, 2, 2, 3, 3],
   flits: [0, 0, 0, 0, 1, 1, 1, 1],
 } as const;
 
@@ -112,14 +123,14 @@ export function planAuditie<T>(
 }
 
 /**
- * Startniveau na de auditie: het eerste niveau waar minder dan 2 van de 3
- * meteen goed was. Gaat alles goed, dan het hoogste niveau.
+ * Startniveau na de auditie: het eerste niveau waar minder dan `drempel`
+ * meteen goed was (standaard 2 van de 3). Gaat alles goed, dan het hoogste niveau.
  */
-export function auditieUitslag(resultaten: Pick<Resultaat, 'niveau' | 'goed'>[], maxNiveau: number): number {
+export function auditieUitslag(resultaten: Pick<Resultaat, 'niveau' | 'goed'>[], maxNiveau: number, drempel = 2 / 3): number {
   for (let n = 0; n <= maxNiveau; n++) {
     const op = resultaten.filter((r) => r.niveau === n);
     if (op.length === 0) continue;
-    if (op.filter((r) => r.goed).length / op.length < 2 / 3) return n;
+    if (op.filter((r) => r.goed).length / op.length < drempel - 1e-9) return n;
   }
   return maxNiveau;
 }

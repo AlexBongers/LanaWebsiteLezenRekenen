@@ -15,7 +15,7 @@
     woordId,
     type FlitsOpgave,
   } from '../engine/generator-lezen';
-  import { verwerkSessie } from '../engine/adaptief';
+  import { REKEN_REGELS, verwerkSessie } from '../engine/adaptief';
   import { aanDeBeurt, verwerkAntwoord } from '../engine/herhaling';
   import { AUDITIE, auditieUitslag, planAuditie, planSessie, type Gepland, type Resultaat } from '../engine/sessie';
   import { werkStatsBij } from '../engine/overzicht';
@@ -80,6 +80,9 @@
             maak: maakReken,
             herbouw: (id) => somUitId(id),
             id: somId,
+            // Rekenen niet te snel moeilijk: geen uitdaging, meer makkelijke sommen.
+            uitdaging: false,
+            makkelijk: 0.3,
           });
     } else if (heldin === 'rumi') {
       auditie = !vg.auditie.flits;
@@ -151,7 +154,11 @@
     let titel: string | undefined;
     let melding: string | undefined;
     if (auditie && sleutel !== 'verhaal') {
-      const niveau = auditieUitslag(resultaten, MAX[heldin]);
+      // Rekenen: alleen een niveau verder als alles op dat niveau meteen goed was.
+      const niveau =
+        heldin === 'mira'
+          ? auditieUitslag(resultaten, Math.max(...AUDITIE.rekenen), 1)
+          : auditieUitslag(resultaten, MAX[heldin]);
       vg.vaardigheden[sleutel] = { niveau, recent: vg.vaardigheden[sleutel].recent, opNiveau: [] };
       vg.auditie[sleutel] = true;
       titel = 'Auditie gehaald!';
@@ -159,7 +166,12 @@
     } else {
       // Alleen opgaven op haar eigen niveau tellen mee voor omhoog of omlaag.
       const eigen = resultaten.filter((r) => r.niveau === voor).map((r) => r.goed);
-      vg.vaardigheden[sleutel] = verwerkSessie(vg.vaardigheden[sleutel], eigen, MAX[heldin]);
+      vg.vaardigheden[sleutel] = verwerkSessie(
+        vg.vaardigheden[sleutel],
+        eigen,
+        MAX[heldin],
+        heldin === 'mira' ? REKEN_REGELS : undefined,
+      );
     }
 
     const bonus = 5;

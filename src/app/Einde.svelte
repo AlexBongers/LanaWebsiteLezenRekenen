@@ -34,6 +34,7 @@
     <div><strong>+{noten}</strong><span>gouden noten</span></div>
   </div>
 
+  <p class="sluit">Je kunt de app nu sluiten met de knop van de tablet.</p>
   <button class="opnieuw" onclick={opOpnieuw}>Naar het begin</button>
 </div>
 
@@ -84,6 +85,11 @@
   .tellers span {
     font-size: 20px;
     color: #ddd6fe;
+  }
+  .sluit {
+    margin: 4px 0 0;
+    font-size: 20px;
+    color: #c4b5fd;
   }
   .opnieuw {
     margin-top: 8px;

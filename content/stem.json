@@ -1,5 +1,5 @@
 {
-  "_uitleg": "provider: 'google', 'elevenlabs' of 'azure'. stem: de id van de gekozen stem. tempo: 1.0 = normaal, hoger = vlotter (ElevenLabs: 0.7 tot 1.2). Na het wijzigen van de stem: npm run audio. Na het wijzigen van alleen het tempo: npm run audio -- --opnieuw",
+  "_uitleg": "provider: 'google', 'elevenlabs' of 'azure'. stem: de id van de gekozen stem. tempo: 1.0 = normaal, hoger = vlotter (ElevenLabs: 0.7 tot 1.2). versie: verhoog dit getal als je het tempo of de instellingen wijzigt; dan krijgen alle opnames nieuwe bestandsnamen. Daarna: npm run audio",
   "provider": "elevenlabs",
   "stem": "7qdUFMklKPaaAVMsBTBt",
   "google": {
@@ -17,10 +17,10 @@
     "gelijkenis": 0.75,
     "stijl": 0.25,
     "tempo": {
-      "instructie": 1.15,
-      "woord": 0.95,
-      "zin": 1.05,
-      "getal": 1.1
+      "instructie": 1.0,
+      "woord": 0.9,
+      "zin": 0.95,
+      "getal": 0.95
     }
   },
   "azure": {
@@ -94,5 +94,6 @@
     }
   ],
   "proefzin": "Hoi Lana! Ik ben de stem van de groep. Zullen we samen het gouden schild sterk maken?",
-  "stemNaam": "Roos"
+  "stemNaam": "Roos",
+  "versie": 2
 }

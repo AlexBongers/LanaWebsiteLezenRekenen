@@ -2,12 +2,14 @@ import pool from '../../content/verhaaltjessommen.json';
 import { getal, kies, schud, standaardRnd, type Rnd } from './toeval';
 
 /**
- * Rekenniveaus (zie PLAN.md §3.3):
+ * Rekenniveaus, in kleine stapjes (zodat het niet te snel moeilijk wordt):
  *  R1  plus en min tot 20, ook over het tiental
- *  R3  plus en min tot 100 zonder overschrijding
- *  R4  plus en min tot 100 met overschrijding
+ *  R2  tot 100, makkelijk: hele tientallen (30 + 40) en een getal erbij of eraf (34 + 5)
+ *  R3  tot 100 zonder overschrijding, ook met twee getallen (34 + 25)
+ *  R4  over het tiental met één getal (47 + 8, 52 − 7)
+ *  R5  tot 100 met overschrijding, ook met twee getallen (38 + 27)
  */
-export const REKEN_NIVEAUS = ['R1', 'R3', 'R4'] as const;
+export const REKEN_NIVEAUS = ['R1', 'R2', 'R3', 'R4', 'R5'] as const;
 export type RekenNiveau = (typeof REKEN_NIVEAUS)[number];
 
 export type Sprong = { van: number; naar: number };
@@ -112,8 +114,10 @@ const r4MinTETE: SomType = (r) => {
 /** Per niveau de somtypes met een gewicht (vaker = belangrijker). */
 const TYPES: Record<RekenNiveau, [SomType, number][]> = {
   R1: [[r1PlusZonder, 1], [r1PlusOver, 2], [r1MinZonder, 1], [r1MinOver, 2]],
-  R3: [[r3Tientallen, 1], [r3PlusTEE, 2], [r3MinTEE, 2], [r3PlusTETE, 2], [r3MinTETE, 2]],
-  R4: [[r4PlusTEE, 3], [r4MinTEE, 3], [r4PlusTETE, 2], [r4MinTETE, 2]],
+  R2: [[r3Tientallen, 1], [r3PlusTEE, 2], [r3MinTEE, 2]],
+  R3: [[r3PlusTEE, 1], [r3MinTEE, 1], [r3PlusTETE, 2], [r3MinTETE, 2]],
+  R4: [[r4PlusTEE, 1], [r4MinTEE, 1]],
+  R5: [[r4PlusTEE, 1], [r4MinTEE, 1], [r4PlusTETE, 2], [r4MinTETE, 2]],
 };
 
 function kiesGewogen(lijst: [SomType, number][], rnd: Rnd): SomType {
@@ -199,6 +203,15 @@ export function somUitId(id: string, rnd: Rnd = standaardRnd): Som | null {
   const m = /^som\.(\d+)([+-])(\d+)$/.exec(id);
   if (!m) return null;
   return somUit(Number(m[1]), m[2] as '+' | '-', Number(m[3]), rnd);
+}
+
+/** Bij welk niveau hoort deze som? (index in REKEN_NIVEAUS) */
+export function somNiveau(a: number, op: '+' | '-', b: number): number {
+  const uitkomst = op === '+' ? a + b : a - b;
+  if (Math.max(a, uitkomst) <= 20) return 0;
+  const over = op === '+' ? (a % 10) + (b % 10) >= 10 : a % 10 < b % 10;
+  if (!over) return b >= 10 && b % 10 !== 0 ? 2 : 1;
+  return b >= 10 ? 4 : 3;
 }
 
 /** Soort som voor het overzicht in de ouderhoek, bijv. "min tot 100 met overschrijding". */

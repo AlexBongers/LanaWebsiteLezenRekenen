@@ -22,6 +22,11 @@ export function cyrb53(str: string, seed = 0): string {
   return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16).padStart(14, '0');
 }
 
+/** Naam van de stem in de bestandsnamen, inclusief versie (nieuwe versie = nieuwe opnames). */
+export function stemSleutel(info: { stem: string; versie?: number }): string {
+  return info.versie ? `${info.stem}@v${info.versie}` : info.stem;
+}
+
 export function audioSleutel(tekst: string, soort: Spreeksoort, stem: string): string {
   return cyrb53(`${stem}|${soort}|${normaliseer(tekst)}`);
 }

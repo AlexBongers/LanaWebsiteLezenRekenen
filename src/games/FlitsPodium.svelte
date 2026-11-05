@@ -35,6 +35,10 @@
 
   let item = $derived(rij[index]);
   let opgave = $derived(item.opgave);
+  // Lange woorden: kleinere letters, zodat de drie knoppen altijd naast elkaar passen.
+  let letters = $derived(opgave.keuzes.reduce((n, k) => n + k.length, 0));
+  let keuzeMaat = $derived(Math.min(54, Math.floor(1200 / Math.max(letters, 1))));
+  let woordMaat = $derived(Math.min(124, Math.floor(900 / Math.max(opgave.woord.length, 1))));
   let bliksems = $derived(Math.max(1, Math.ceil(((FLITS_MAX - vg.flitstijd) / (FLITS_MAX - FLITS_MIN)) * 5)));
 
   onMount(() => {
@@ -152,7 +156,7 @@
           </button>
         {/key}
       {:else if fase === 'flits' || fase === 'goed' || fase === 'onthuld'}
-        <div class="woord" class:goed={fase === 'goed'} class:onthuld={fase === 'onthuld'}>{opgave.woord}</div>
+        <div class="woord" class:goed={fase === 'goed'} class:onthuld={fase === 'onthuld'} style="font-size:{woordMaat}px">{opgave.woord}</div>
         {#if fase === 'onthuld'}
           <div class="luid"><Luidspreker opTik={() => spreek(opgave.woord, 'woord')} /></div>
         {/if}
@@ -167,7 +171,7 @@
           class="keuze"
           class:fout={fout.includes(k)}
           class:goed={(fase === 'goed' || fase === 'onthuld') && k === opgave.woord}
-          style="animation-delay:{i * 0.1}s"
+          style="animation-delay:{i * 0.1}s; font-size:{keuzeMaat}px"
           onclick={() => kies(k)}
           disabled={fase !== 'kiezen'}>{k}</button
         >
@@ -307,7 +311,8 @@
   }
   .keuzes {
     display: flex;
-    gap: 28px;
+    gap: 24px;
+    max-width: 100%;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;
@@ -317,8 +322,11 @@
     pointer-events: auto;
   }
   .keuze {
-    min-width: 220px;
-    padding: 18px 30px;
+    flex: 0 1 auto;
+    min-width: 200px;
+    max-width: 320px;
+    white-space: nowrap;
+    padding: 18px 22px;
     border-radius: 26px;
     font-family: var(--font-lees);
     font-size: 54px;

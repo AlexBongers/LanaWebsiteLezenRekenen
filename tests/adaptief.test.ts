@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { percentage, verwerkSessie } from '../src/engine/adaptief';
+import { percentage, REKEN_REGELS, verwerkSessie } from '../src/engine/adaptief';
 import { audioSleutel, cyrb53 } from '../src/audio/hash';
 
 const reeks = (goed: number, totaal: number) => Array.from({ length: totaal }, (_, i) => i < goed);
@@ -39,6 +39,12 @@ describe('niveau-aanpassing', () => {
     expect(v.opNiveau).toHaveLength(10);
     v = verwerkSessie(v, reeks(5, 5), 2); // laatste 10: 9 goed = 90%, omhoog
     expect(v.niveau).toBe(2);
+  });
+  it('rekenen: pas omhoog bij 9 van de 10, al omlaag onder 70%', () => {
+    expect(verwerkSessie({ niveau: 1, recent: [] }, reeks(8, 8), 4, REKEN_REGELS).niveau).toBe(1); // nog maar 8
+    expect(verwerkSessie({ niveau: 1, recent: [] }, reeks(8, 10), 4, REKEN_REGELS).niveau).toBe(1); // 80%: blijven
+    expect(verwerkSessie({ niveau: 1, recent: [] }, reeks(9, 10), 4, REKEN_REGELS).niveau).toBe(2); // 90%: omhoog
+    expect(verwerkSessie({ niveau: 1, recent: [] }, reeks(6, 10), 4, REKEN_REGELS).niveau).toBe(0); // 60%: omlaag
   });
   it('onthoudt maximaal 20 antwoorden', () => {
     const v = verwerkSessie({ niveau: 0, recent: reeks(15, 15) }, reeks(0, 10), 2);

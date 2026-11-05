@@ -20,13 +20,18 @@ export const OMLAAG = 0.6;
 export const VENSTER = 8;
 const GEHEUGEN = 10;
 
-export function verwerkSessie(v: Vaardigheid, resultaten: boolean[], maxNiveau: number): Vaardigheid {
+export type Regels = { omhoog: number; omlaag: number; venster: number };
+export const STANDAARD: Regels = { omhoog: OMHOOG, omlaag: OMLAAG, venster: VENSTER };
+/** Rekenen: pas omhoog bij 90% goed over 10 sommen, sneller een stapje terug. */
+export const REKEN_REGELS: Regels = { omhoog: 0.89, omlaag: 0.7, venster: 10 };
+
+export function verwerkSessie(v: Vaardigheid, resultaten: boolean[], maxNiveau: number, regels: Regels = STANDAARD): Vaardigheid {
   const recent = [...v.recent, ...resultaten].slice(-20);
-  const reeks = [...(v.opNiveau ?? []), ...resultaten].slice(-GEHEUGEN);
-  if (reeks.length < VENSTER) return { niveau: v.niveau, recent, opNiveau: reeks };
+  const reeks = [...(v.opNiveau ?? []), ...resultaten].slice(-Math.max(GEHEUGEN, regels.venster));
+  if (reeks.length < regels.venster) return { niveau: v.niveau, recent, opNiveau: reeks };
   const score = reeks.filter(Boolean).length / reeks.length;
-  if (score > OMHOOG && v.niveau < maxNiveau) return { niveau: v.niveau + 1, recent, opNiveau: [] };
-  if (score < OMLAAG && v.niveau > 0) return { niveau: v.niveau - 1, recent, opNiveau: [] };
+  if (score > regels.omhoog && v.niveau < maxNiveau) return { niveau: v.niveau + 1, recent, opNiveau: [] };
+  if (score < regels.omlaag && v.niveau > 0) return { niveau: v.niveau - 1, recent, opNiveau: [] };
   return { niveau: v.niveau, recent, opNiveau: reeks };
 }
 

@@ -12,13 +12,14 @@
  * ElevenLabs koppelen: npx -y @elevenlabs/cli@latest onboard init
  * Provider, stem en tempo staan in content/stem.json.
  */
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Readable } from 'node:stream';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
 import stemInfo from '../content/stem.json';
 import { alleTeksten } from '../src/audio/alle-teksten';
-import { audioSleutel, normaliseer, type Spreeksoort } from '../src/audio/hash';
+import { audioSleutel, normaliseer, stemSleutel, type Spreeksoort } from '../src/audio/hash';
+import { getalInWoorden } from '../src/audio/getallen';
 
 const MAP = join(import.meta.dirname, '..', 'public', 'audio');
 const TTS = join(MAP, 'tts');
@@ -109,9 +110,11 @@ async function streamNaarBuffer(stream: ReadableStream<Uint8Array>): Promise<Buf
 
 async function elevenlabs(tekst: string, stem: string, soort: Spreeksoort): Promise<Buffer> {
   const e = stemInfo.elevenlabs;
-  // Losse woorden en getallen: Flash-model met Nederlands afgedwongen (anders klinkt "maan" soms Engels).
-  const kort = soort === 'woord' || soort === 'getal';
+  // Losse woorden: Flash-model met Nederlands afgedwongen (anders klinkt "maan" soms Engels).
+  // Getallen: als woord uitgeschreven via het zinnenmodel (het Flash-model fluisterde ze soms).
+  const kort = soort === 'woord';
   const modelId = kort ? e.modelWoorden : e.modelZinnen;
+  if (soort === 'getal' && /^\d+$/.test(tekst.trim())) tekst = getalInWoorden(Number(tekst));
   for (let poging = 1; poging <= 5; poging++) {
     try {
       const audio = await eleven().textToSpeech.convert(stem, {
@@ -212,7 +215,8 @@ async function maakAlles(droog: boolean) {
   mkdirSync(TTS, { recursive: true });
   const provider = stemInfo.provider as Provider;
   const stem = stemInfo.stem;
-  const taken = alleTeksten().map((t) => ({ ...t, sleutel: audioSleutel(t.tekst, t.soort, stem) }));
+  const sleutelStem = stemSleutel(stemInfo);
+  const taken = alleTeksten().map((t) => ({ ...t, sleutel: audioSleutel(t.tekst, t.soort, sleutelStem) }));
   // --opnieuw: alles opnieuw inspreken (bijv. na het wijzigen van alleen het tempo).
   const nieuw = args.has('--opnieuw') ? taken : taken.filter((t) => !existsSync(join(TTS, `${t.sleutel}.mp3`)));
   const tekens = nieuw.reduce((n, t) => n + t.tekst.length, 0);
@@ -233,7 +237,17 @@ async function maakAlles(droog: boolean) {
   }
 
   const bestanden = taken.map((t) => t.sleutel).filter((k) => existsSync(join(TTS, `${k}.mp3`)));
-  writeFileSync(join(MAP, 'audio-manifest.json'), JSON.stringify({ stem, bestanden }));
+  writeFileSync(join(MAP, 'audio-manifest.json'), JSON.stringify({ stem: sleutelStem, bestanden }));
+  // Oude opnames (andere stem of versie) opruimen.
+  const houd = new Set(bestanden);
+  let weg = 0;
+  for (const f of readdirSync(TTS)) {
+    if (f.endsWith('.mp3') && !houd.has(f.slice(0, -4))) {
+      unlinkSync(join(TTS, f));
+      weg++;
+    }
+  }
+  if (weg) console.log(`${weg} oude opnames verwijderd.`);
   console.log(`audio-manifest.json bijgewerkt (${bestanden.length} bestanden).`);
 }
 

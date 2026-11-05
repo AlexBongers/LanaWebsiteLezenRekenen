@@ -4,6 +4,10 @@
 import { get, set } from 'idb-keyval';
 import type { Vaardigheid } from '../engine/adaptief';
 import type { Herhaling } from '../engine/herhaling';
+import { somNiveau } from '../engine/generator-rekenen';
+
+/** Aantal rekenniveaus; was eerst 3, nu 5 kleinere stapjes. */
+const REKEN_STAPPEN = 5;
 import { FLITS_START } from '../engine/generator-lezen';
 
 export type HeldinId = 'rumi' | 'mira' | 'zoey';
@@ -22,6 +26,8 @@ export type Telling = { goed: number; totaal: number };
 
 export type Voortgang = {
   versie: 1;
+  /** Met hoeveel rekenniveaus deze voortgang is opgebouwd. */
+  rekenStappen?: number;
   noten: number;
   vaardigheden: {
     rekenen: Vaardigheid;
@@ -45,6 +51,8 @@ export type Voortgang = {
   instellingen: {
     /** Na zoveel minuten volgt na het concert een pauze (0 = geen grens). */
     sessieMinuten: number;
+    /** Volledig scherm bij het starten (standaard uit: dan blijven de knoppen van de tablet zichtbaar). */
+    volledigScherm: boolean;
     opgavenPerSessie: number;
     apparaatStem: string | null;
     effecten: boolean;
@@ -55,10 +63,11 @@ export type Voortgang = {
 export function standaardVoortgang(): Voortgang {
   return {
     versie: 1,
+    rekenStappen: REKEN_STAPPEN,
     noten: 0,
     vaardigheden: {
       // Groep 4: rekenen start op R3 (tot 100 zonder overschrijding), flitsen op L2.
-      rekenen: { niveau: 1, recent: [] },
+      rekenen: { niveau: 0, recent: [] },
       flits: { niveau: 1, recent: [] },
       verhaal: { niveau: 0, recent: [] },
     },
@@ -70,6 +79,7 @@ export function standaardVoortgang(): Voortgang {
     stats: { sommen: {}, verwisselingen: {} },
     instellingen: {
       sessieMinuten: 15,
+      volledigScherm: false,
       opgavenPerSessie: 8,
       apparaatStem: null,
       effecten: true,
@@ -86,6 +96,21 @@ export const vg: Voortgang = $state(standaardVoortgang());
 function samenvoegen(basis: Voortgang, data: Partial<Voortgang>): Voortgang {
   // Wie al gespeeld heeft voordat de auditie bestond, hoeft die niet meer te doen.
   const gespeeld = (v?: Vaardigheid) => (v?.recent.length ?? 0) > 0;
+  // Oude voortgang met 3 rekenniveaus: rekenen opnieuw laten beginnen met een nieuwe, rustigere auditie.
+  if ((data.rekenStappen ?? 3) < REKEN_STAPPEN && data.vaardigheden) {
+    data = {
+      ...data,
+      rekenStappen: REKEN_STAPPEN,
+      vaardigheden: { ...data.vaardigheden, rekenen: { niveau: 0, recent: [], opNiveau: [] } },
+      auditie: { rekenen: false, flits: data.auditie?.flits ?? gespeeld(data.vaardigheden.flits) },
+      herhaling: Object.fromEntries(
+        Object.entries(data.herhaling ?? {}).map(([id, item]) => {
+          const m = /^som\.(\d+)([+-])(\d+)$/.exec(id);
+          return [id, m ? { ...item, niveau: somNiveau(Number(m[1]), m[2] as '+' | '-', Number(m[3])) } : item];
+        }),
+      ),
+    };
+  }
   return {
     ...basis,
     ...data,

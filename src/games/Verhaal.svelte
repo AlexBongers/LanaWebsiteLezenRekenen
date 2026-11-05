@@ -41,6 +41,33 @@
 
   let vraag = $derived(verhaal.vragen[vraagIndex]);
 
+  /** Het verhaal in kleine stukjes: hooguit 3 zinnen en ongeveer 120 letters per bladzijde. */
+  function verdeel(zinnen: string[]): number[][] {
+    const paginas: number[][] = [];
+    let huidig: number[] = [];
+    let letters = 0;
+    zinnen.forEach((z, i) => {
+      if (huidig.length && (huidig.length >= 3 || letters + z.length > 120)) {
+        paginas.push(huidig);
+        huidig = [];
+        letters = 0;
+      }
+      huidig.push(i);
+      letters += z.length;
+    });
+    if (huidig.length) paginas.push(huidig);
+    return paginas;
+  }
+  const paginas = verdeel(verhaal.zinnen);
+  let pagina = $state(0);
+  let laatste = $derived(pagina === paginas.length - 1);
+
+  function blader(stap: number) {
+    stopSpreken();
+    actieveZin = null;
+    pagina = Math.max(0, Math.min(paginas.length - 1, pagina + stap));
+  }
+
   onMount(() => {
     (async () => {
       if (intro) await spreek(intro);
@@ -129,6 +156,20 @@
       <h2>{verhaal.titel}</h2>
       <span class="noot">♫</span>
     </header>
+    {#if fase === 'lezen'}
+      {#key pagina}
+        <div class="bladzijde">
+          {#each paginas[pagina] as i}
+            <button class="regel" class:actief={actieveZin === i} onclick={() => leesZin(i)}>
+              {verhaal.zinnen[i]}
+            </button>
+          {/each}
+        </div>
+      {/key}
+      <div class="stippen" aria-label="Bladzijde {pagina + 1} van {paginas.length}">
+        {#each paginas as _, p}<span class:aan={p === pagina}></span>{/each}
+      </div>
+    {:else}
     <p class="tekst">
       {#each verhaal.zinnen as zin, i}
         <span
@@ -141,10 +182,19 @@
         >{' '}
       {/each}
     </p>
+    {/if}
     {#if fase === 'lezen'}
       <div class="onder">
-        <span class="tip">Tik op een zin als je hulp nodig hebt.</span>
-        <button class="knop-goud" bind:this={klaarKnop} onclick={klaarMetLezen}>Klaar met lezen ✓</button>
+        {#if pagina > 0}
+          <button class="terugblad" onclick={() => blader(-1)}>← Terug</button>
+        {:else}
+          <span class="tip">Tik op een zin als je hulp nodig hebt.</span>
+        {/if}
+        {#if laatste}
+          <button class="knop-goud" bind:this={klaarKnop} onclick={klaarMetLezen}>Klaar met lezen ✓</button>
+        {:else}
+          <button class="knop-goud" onclick={() => blader(1)}>Verder ➜</button>
+        {/if}
       </div>
     {/if}
   </article>
@@ -240,9 +290,71 @@
   }
   .vragen .tekst {
     font-size: 23px;
-    line-height: 38px;
-    background: repeating-linear-gradient(180deg, transparent 0 36px, rgba(124, 58, 237, 0.13) 36px 38px);
-    background-attachment: local;
+    line-height: 1.35;
+    word-spacing: 0.12em;
+    background: none;
+  }
+  /* Bij de vragen: elke zin op een eigen regel, zodat het antwoord makkelijk terug te vinden is */
+  .vragen .zin {
+    display: block;
+    padding: 5px 8px;
+    border-bottom: 2px solid rgba(124, 58, 237, 0.12);
+  }
+  /* Bladzijde bij het zelf lezen: weinig tekst, grote letters, veel ruimte */
+  .bladzijde {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+    padding: 6px 10px;
+    animation: pop-in 0.35s ease-out;
+  }
+  .regel {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 0;
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-family: var(--font-lees);
+    font-size: 40px;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+    word-spacing: 0.16em;
+    color: #1e1b4b;
+    cursor: pointer;
+    border-bottom: 3px solid rgba(124, 58, 237, 0.15);
+    transition: background 0.2s;
+  }
+  .regel.actief {
+    background: #fde68a;
+    box-shadow: 0 0 0 3px #fbbf24;
+  }
+  .stippen {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 4px 0 6px;
+  }
+  .stippen span {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(124, 58, 237, 0.2);
+  }
+  .stippen span.aan {
+    background: #a21caf;
+    transform: scale(1.2);
+  }
+  .terugblad {
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #6d28d9;
+    background: #ede9fe;
+    border: 3px solid #c4b5fd;
   }
   .zin {
     padding: 3px 2px;

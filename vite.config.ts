@@ -16,7 +16,7 @@ export default defineConfig({
         short_name: 'Gouden Missie',
         description: 'Lezen en rekenen met de demon hunters.',
         lang: 'nl',
-        display: 'fullscreen',
+        display: 'standalone',
         orientation: 'landscape',
         background_color: '#1b0b3a',
         theme_color: '#1b0b3a',
