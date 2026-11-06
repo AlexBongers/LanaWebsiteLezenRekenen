@@ -73,7 +73,6 @@
       if (intro) await spreek(intro);
       await spreek(teksten.verhaal.start);
     })();
-    return stopSpreken;
   });
 
   async function leesZin(i: number) {

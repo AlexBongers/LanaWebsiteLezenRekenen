@@ -22,7 +22,6 @@
 
   onMount(() => {
     void spreek(stad.welkom);
-    return stopSpreken;
   });
 
   function kies(p: PodiumId) {

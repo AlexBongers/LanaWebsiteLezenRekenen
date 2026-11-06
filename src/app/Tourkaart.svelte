@@ -44,7 +44,6 @@
 
   onMount(() => {
     void spreek(tourKlaar(vg.tour) ? teksten.tour.klaar : teksten.tour.start);
-    return stopSpreken;
   });
 
   function kies(i: number) {

@@ -48,7 +48,6 @@
       await spreek(auditie ? teksten.auditie.start : teksten.sommen.start);
       await zegSom();
     })();
-    return stopSpreken;
   });
 
   async function kies(keuze: number, i: number) {

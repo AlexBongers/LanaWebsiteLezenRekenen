@@ -43,7 +43,6 @@
     void zingVoor();
     return () => {
       gestopt = true;
-      stopSpreken();
     };
   });
 

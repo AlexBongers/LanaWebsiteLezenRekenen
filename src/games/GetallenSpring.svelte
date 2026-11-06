@@ -41,7 +41,6 @@
       await spreek(teksten.springen.start);
       await zegOpdracht();
     })();
-    return stopSpreken;
   });
 
   async function zegOpdracht() {

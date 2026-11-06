@@ -21,7 +21,6 @@
 
   onMount(() => {
     void spreek(teksten.spelkeuze);
-    return stopSpreken;
   });
 
   function kies(s: SpelId) {

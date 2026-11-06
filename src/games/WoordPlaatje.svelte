@@ -27,7 +27,6 @@
 
   onMount(() => {
     void spreek(teksten.plaatje.start);
-    return stopSpreken;
   });
 
   async function kies(woord: string, i: number) {

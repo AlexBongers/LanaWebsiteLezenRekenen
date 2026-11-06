@@ -37,7 +37,6 @@
 
   onMount(() => {
     void zegOpdracht();
-    return stopSpreken;
   });
 
   async function zegOpdracht() {

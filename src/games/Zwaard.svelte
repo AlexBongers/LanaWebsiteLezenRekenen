@@ -32,7 +32,6 @@
 
   onMount(() => {
     void spreek(teksten.zwaard.start);
-    return stopSpreken;
   });
 
   function knip(na: number) {

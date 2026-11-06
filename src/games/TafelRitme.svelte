@@ -48,7 +48,6 @@
     return () => {
       gestopt = true;
       clearInterval(beat);
-      stopSpreken();
     };
   });
 

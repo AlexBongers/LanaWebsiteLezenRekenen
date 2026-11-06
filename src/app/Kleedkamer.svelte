@@ -32,7 +32,6 @@
 
   onMount(() => {
     void spreek(teksten.kleedkamer.welkom);
-    return stopSpreken;
   });
 
   function tik(cat: CategorieId, item: Item) {

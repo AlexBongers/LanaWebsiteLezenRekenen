@@ -28,7 +28,6 @@
 
   onMount(() => {
     void spreek(teksten.zinnen.start);
-    return stopSpreken;
   });
 
   async function kies(k: ZinOpgave['keuzes'][number], i: number) {

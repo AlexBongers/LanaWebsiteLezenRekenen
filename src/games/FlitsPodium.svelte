@@ -47,7 +47,6 @@
       if (auditie) await spreek(teksten.auditie.start);
       await spreek(teksten.flits.start);
     })();
-    return stopSpreken;
   });
 
   async function flits(duur: number) {

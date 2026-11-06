@@ -34,7 +34,6 @@
       await spreek(teksten.rijm.start);
       await zegWoord();
     })();
-    return stopSpreken;
   });
 
   async function zegWoord() {

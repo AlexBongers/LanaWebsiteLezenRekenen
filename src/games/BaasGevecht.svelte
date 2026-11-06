@@ -61,7 +61,6 @@
       if (intro) await spreek(intro);
       await start();
     })();
-    return stopSpreken;
   });
 
   async function start() {
