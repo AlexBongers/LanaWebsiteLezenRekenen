@@ -27,7 +27,7 @@
   let los = $state(0);
   let fout: number[] = $state([]);
   let bezig = $state(false);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let veldEl: HTMLElement | undefined = $state();
   let knopEls: HTMLElement[] = $state([]);
 
@@ -57,10 +57,10 @@
     bezig = true;
     speelGoed();
     glitterOp(bron ?? null);
-    stemming = 'juich';
+    stemming = Math.random() < 0.5 ? 'juich' : 'draai';
     opNoten(ronde.goed(), bron);
     await spreek(String(o.getal), 'getal');
-    await spreek(compliment());
+    await spreek(compliment('mira'));
     await wacht(250);
     volgende();
   }

@@ -14,7 +14,7 @@
     wie,
     stemming = 'rust',
     hoogte = 320,
-  }: { wie: HeldinId; stemming?: 'rust' | 'dans' | 'juich' | 'denk'; hoogte?: number } = $props();
+  }: { wie: HeldinId; stemming?: 'rust' | 'dans' | 'juich' | 'denk' | 'draai'; hoogte?: number } = $props();
 
   const STIJL = {
     rumi: {
@@ -105,7 +105,7 @@
   let armL = $derived(ARM_LINKS[wie]);
   let handL = $derived(HAND_LINKS[wie]);
   let benen = $derived(BENEN[wie]);
-  let zingt = $derived(stemming === 'juich' || stemming === 'dans');
+  let zingt = $derived(stemming === 'juich' || stemming === 'dans' || stemming === 'draai');
 
   const romp = 'M74 86 C69 104 78 132 86 150 C84 160 81 168 80 178 L120 178 C119 168 116 160 114 150 C122 132 131 104 126 86 C114 79 86 79 74 86 Z';
 
@@ -506,6 +506,20 @@
   }
   .juich .lijf {
     animation: spring 0.65s ease-in-out infinite;
+  }
+  /* rondje draaien van blijdschap */
+  .draai .lijf {
+    animation: draai 1s ease-in-out infinite;
+  }
+  .draai .arm-rechts {
+    animation: zwaai 0.5s ease-in-out infinite alternate;
+  }
+  @keyframes draai {
+    0% { transform: scaleX(1) translateY(0); }
+    25% { transform: scaleX(0.2) translateY(-16px); }
+    50% { transform: scaleX(-1) translateY(-22px); }
+    75% { transform: scaleX(-0.2) translateY(-16px); }
+    100% { transform: scaleX(1) translateY(0); }
   }
   .hoofd {
     transform-origin: 100px 62px;

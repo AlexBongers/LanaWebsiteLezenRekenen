@@ -26,7 +26,7 @@
   let positie: number | null = $state(null); // waar Mira's ster staat
   let fout: number[] = $state([]);
   let bezig = $state(false);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('dans');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let lijnEl: HTMLElement | undefined = $state();
 
   const B = 920; // breedte van de getallenlijn in px
@@ -69,10 +69,10 @@
       bezig = true;
       speelGoed();
       glitterOp(lijnEl ?? null);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       opNoten(ronde.goed(), lijnEl);
       await spreek(String(doel), 'getal');
-      await spreek(compliment());
+      await spreek(compliment('mira'));
       await wacht(250);
       volgende();
     } else {

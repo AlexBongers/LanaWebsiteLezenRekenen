@@ -32,15 +32,19 @@
   import { stopSpreken } from '../audio/stem';
   import { speelCombo } from '../audio/geluid';
   import { vliegNoten } from '../ui/vlieg';
+  import { noteerSterren, sterrenVoor } from '../engine/tour';
 
   let {
     spel,
+    stadId,
     opTerug,
     opStop,
     pauzeNodig = () => false,
     opPauze = opTerug,
   }: {
     spel: SpelId;
+    /** Stad op de wereldtour: daar komen de sterren van dit concert bij. */
+    stadId?: string;
     opTerug: () => void;
     opStop: () => void;
     /** Is de speeltijd om? Dan volgt na dit concert een pauze. */
@@ -203,12 +207,14 @@
     vg.noten += bonus;
     verdiend += bonus;
     const goed = resultaten.filter((r) => r.goed).length;
+    if (stadId) vg.tour = noteerSterren(vg.tour, stadId, heldin, sterrenVoor(goed, resultaten.length));
     vg.sessies = [
       ...vg.sessies.slice(-199),
       {
         datum: new Date().toISOString(),
         heldin,
         spel,
+        stad: stadId,
         goed,
         totaal: resultaten.length,
         noten: verdiend,

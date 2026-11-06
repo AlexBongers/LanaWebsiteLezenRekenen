@@ -1,0 +1,62 @@
+[
+  {
+    "id": "seoel",
+    "naam": "Seoel",
+    "embleem": "🌸",
+    "kleur": "#ec4899",
+    "zaal": "Het Lichtjespaleis",
+    "welkom": "Welkom in Seoel! Hier begint onze wereldtour. Met wie ga je oefenen?",
+    "baas": "Grompie",
+    "baasIntro": "Oh nee! Grompie wil het schild van Seoel breken. Zing hem weg met goede antwoorden!"
+  },
+  {
+    "id": "tokio",
+    "naam": "Tokio",
+    "embleem": "🗻",
+    "kleur": "#f43f5e",
+    "zaal": "De Neonhal",
+    "welkom": "Welkom in Tokio! Kijk eens naar al die lichtjes. Met wie ga je oefenen?",
+    "baas": "Kriebelkop",
+    "baasIntro": "Daar is Kriebelkop! Hij kriebelt aan het schild. Zing hem weg!"
+  },
+  {
+    "id": "amsterdam",
+    "naam": "Amsterdam",
+    "embleem": "🌷",
+    "kleur": "#f97316",
+    "zaal": "Het Grachtenpodium",
+    "welkom": "Welkom in Amsterdam! Ons concert is aan de gracht. Met wie ga je oefenen?",
+    "baas": "Slijmbal",
+    "baasIntro": "Bah, Slijmbal maakt alles plakkerig! Zing hem weg met goede antwoorden!"
+  },
+  {
+    "id": "parijs",
+    "naam": "Parijs",
+    "embleem": "🗼",
+    "kleur": "#8b5cf6",
+    "zaal": "Het Torentheater",
+    "welkom": "Welkom in Parijs! Wat een mooie toren. Met wie ga je oefenen?",
+    "baas": "Mopperpot",
+    "baasIntro": "Mopperpot moppert en moppert. Laat hem horen hoe mooi wij zingen!"
+  },
+  {
+    "id": "newyork",
+    "naam": "New York",
+    "embleem": "🗽",
+    "kleur": "#06b6d4",
+    "zaal": "Het Wolkenkrabber-podium",
+    "welkom": "Welkom in New York! Hier is het podium heel hoog. Met wie ga je oefenen?",
+    "baas": "Lawaaimaker",
+    "baasIntro": "Lawaaimaker maakt zoveel herrie! Zing nog harder en nog mooier!"
+  },
+  {
+    "id": "finale",
+    "naam": "De Gouden Finale",
+    "embleem": "👑",
+    "kleur": "#fbbf24",
+    "zaal": "Het Gouden Stadion",
+    "welkom": "Welkom bij de Gouden Finale! Dit is het grootste concert van de hele tour!",
+    "baas": "Koning Kreun",
+    "baasIntro": "Koning Kreun is de baas van alle demonen. Zing samen het gouden lied en red het schild!"
+  }
+]

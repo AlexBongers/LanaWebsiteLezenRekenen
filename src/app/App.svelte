@@ -4,7 +4,10 @@
   import Achtergrond from '../ui/Achtergrond.svelte';
   import Bevestig from '../ui/Bevestig.svelte';
   import Start from './Start.svelte';
-  import HeldinKeuze from './HeldinKeuze.svelte';
+  import Tourkaart from './Tourkaart.svelte';
+  import Stad from './Stad.svelte';
+  import Kleedkamer from './Kleedkamer.svelte';
+  import BaasLevel from './BaasLevel.svelte';
   import Level from './Level.svelte';
   import Ouderhoek from './Ouderhoek.svelte';
   import Einde from './Einde.svelte';
@@ -13,13 +16,16 @@
   import characters from '../../content/characters.json';
   import teksten from '../../content/teksten.json';
   import { laadVoortgang, vg, type HeldinId } from '../store/voortgang.svelte';
+  import { STEDEN, huidigeStad, type PodiumId } from '../engine/tour';
   import { laadStemManifest, spreek, stopSpreken, zetApparaatStem } from '../audio/stem';
   import { ontgrendelGeluid, zetEffectenAan } from '../audio/geluid';
 
-  type Scherm = 'start' | 'keuze' | 'spellen' | 'level' | 'ouder' | 'einde';
+  type Scherm = 'start' | 'tour' | 'stad' | 'spellen' | 'level' | 'baas' | 'kleedkamer' | 'ouder' | 'einde';
   let scherm = $state<Scherm>('start');
   let heldin = $state<HeldinId>('rumi');
   let spel = $state<SpelId>('flits');
+  /** Stad op de wereldtour waar nu gespeeld wordt. */
+  let stadId = $state('seoel');
   let vraagStop = $state(false);
   let wakeLock: WakeLockSentinel | null = null;
   /** Begin van deze speelbeurt (voor de pauze na 10, 15 of 20 minuten). */
@@ -41,7 +47,15 @@
   }
   let vraagAfsluiten = $state(false);
 
-  let accent = $derived(scherm === 'level' || scherm === 'spellen' ? characters[heldin].kleur : '#8b5cf6');
+  let accent = $derived(
+    scherm === 'level' || scherm === 'spellen'
+      ? characters[heldin].kleur
+      : scherm === 'baas'
+        ? '#f59e0b'
+        : scherm === 'stad'
+          ? (STEDEN.find((s) => s.id === stadId)?.kleur ?? '#8b5cf6')
+          : '#8b5cf6',
+  );
 
   onMount(() => {
     void laadVoortgang().then(() => {
@@ -64,9 +78,10 @@
         return;
       }
       history.pushState({ app: true }, '');
-      if (scherm === 'level') vraagStop = true;
-      else if (scherm === 'ouder' || scherm === 'spellen') scherm = 'keuze';
-      else if (scherm === 'keuze') vraagAfsluiten = true;
+      if (scherm === 'level' || scherm === 'baas') vraagStop = true;
+      else if (scherm === 'spellen') scherm = 'stad';
+      else if (scherm === 'stad' || scherm === 'kleedkamer' || scherm === 'ouder') scherm = 'tour';
+      else if (scherm === 'tour') vraagAfsluiten = true;
     };
     addEventListener('popstate', opTerugknop);
 
@@ -109,13 +124,31 @@
     })();
     void houdSchermAan();
     speelStart = Date.now();
-    scherm = 'keuze';
-    void spreek(teksten.welkom);
+    stadId = huidigeStad(vg.tour).id;
+    scherm = 'tour';
   }
 
-  function kies(h: HeldinId) {
-    heldin = h;
+  /** In de stad: een heldin (naar haar spelmenu) of de baas-demon. */
+  function kies(p: PodiumId) {
+    if (p === 'baas') {
+      scherm = 'baas';
+      return;
+    }
+    heldin = p;
     scherm = 'spellen';
+  }
+
+  function naarStad(id = stadId) {
+    stopSpreken();
+    vraagStop = false;
+    stadId = id;
+    scherm = 'stad';
+  }
+
+  function naarTour() {
+    stopSpreken();
+    vraagStop = false;
+    scherm = 'tour';
   }
 
   function kiesSpel(s: SpelId) {
@@ -141,11 +174,6 @@
     scherm = 'einde';
   }
 
-  function naarKeuze() {
-    stopSpreken();
-    vraagStop = false;
-    scherm = 'keuze';
-  }
 
   /** Terug naar het spelmenu van dezelfde heldin. */
   function naarSpellen() {
@@ -158,16 +186,27 @@
 <Achtergrond {accent} />
 
 <div class="buhne" style="transform: translate(-50%, -50%) scale({schaal})">
-  {#key scherm + (scherm === 'level' ? spel : '')}
+  {#key scherm + (scherm === 'level' ? spel : scherm === 'baas' ? stadId : '')}
     <div class="laag" in:scale={{ start: 0.96, duration: 420, delay: 120 }} out:fade={{ duration: 180 }}>
       {#if scherm === 'start'}
         <Start opStart={begin} />
-      {:else if scherm === 'keuze'}
-        <HeldinKeuze opKies={kies} opOuder={() => (scherm = 'ouder')} opStoppen={() => (vraagAfsluiten = true)} />
+      {:else if scherm === 'tour'}
+        <Tourkaart
+          opStad={naarStad}
+          opKleedkamer={() => (scherm = 'kleedkamer')}
+          opOuder={() => (scherm = 'ouder')}
+          opStoppen={() => (vraagAfsluiten = true)}
+        />
+      {:else if scherm === 'stad'}
+        <Stad {stadId} opKies={kies} opTerug={naarTour} />
       {:else if scherm === 'spellen'}
-        <SpelKeuze {heldin} opKies={kiesSpel} opTerug={naarKeuze} />
+        <SpelKeuze {heldin} opKies={kiesSpel} opTerug={() => naarStad()} />
       {:else if scherm === 'level'}
-        <Level {spel} opTerug={naarSpellen} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+        <Level {spel} {stadId} opTerug={naarSpellen} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+      {:else if scherm === 'baas'}
+        <BaasLevel {stadId} opTerug={() => naarStad()} opTour={naarTour} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+      {:else if scherm === 'kleedkamer'}
+        <Kleedkamer opTerug={naarTour} />
       {:else if scherm === 'einde'}
         <Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />
       {/if}
@@ -175,7 +214,7 @@
   {/key}
 
   {#if vraagStop}
-    <Bevestig vraag={teksten.stoppen} ja="Ja, stoppen" nee="Nee, verder!" opJa={naarSpellen} opNee={() => (vraagStop = false)} />
+    <Bevestig vraag={teksten.stoppen} ja="Ja, stoppen" nee="Nee, verder!" opJa={() => (scherm === 'baas' ? naarStad() : naarSpellen())} opNee={() => (vraagStop = false)} />
   {/if}
   {#if vraagAfsluiten}
     <Bevestig vraag={teksten.afsluiten} ja="Ja, stoppen" nee="Nee, verder!" opJa={afsluiten} opNee={() => (vraagAfsluiten = false)} />
@@ -184,7 +223,7 @@
 
 <!-- De ouderhoek gebruikt het hele scherm en mag scrollen -->
 {#if scherm === 'ouder'}
-  <Ouderhoek opSluit={() => (scherm = 'keuze')} />
+  <Ouderhoek opSluit={naarTour} />
 {/if}
 
 <div class="draai" aria-hidden={true}>

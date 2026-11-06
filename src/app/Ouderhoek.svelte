@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { bewaar, exporteer, importeer, vg, wisAlles } from '../store/voortgang.svelte';
   import { percentage, zetNiveau } from '../engine/adaptief';
+  import { STEDEN, stadGered, totaalSterren } from '../engine/tour';
   import { inDoosjes } from '../engine/herhaling';
   import { lastigsteSommen, vaakVerwisseld } from '../engine/overzicht';
   import { FLITS_START } from '../engine/generator-lezen';
@@ -125,6 +126,10 @@
     <section>
       <h2>Overzicht</h2>
       <p><strong>{vg.noten}</strong> gouden noten · <strong>{week.length}</strong> concerten en <strong>{minutenWeek}</strong> minuten in de afgelopen 7 dagen</p>
+      <p>
+        Wereldtour: <strong>{STEDEN.filter((s) => stadGered(s.id, vg.tour)).length}</strong> van {STEDEN.length} steden gered ·
+        <strong>{totaalSterren(vg.tour)}</strong> sterren · {vg.gekocht.length} kleedkamer-items gekocht
+      </p>
       <table>
         <tbody>
           <tr><th>Rekenen (Mira)</th><td>{REKENEN[vg.vaardigheden.rekenen.niveau]}</td><td>{pct(vg.vaardigheden.rekenen)}</td></tr>

@@ -23,7 +23,7 @@
   let o = $derived(ronde.huidig);
   let fout: string[] = $state([]);
   let bezig = $state(false);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let knopEls: HTMLElement[] = $state([]);
 
   onMount(() => {
@@ -37,9 +37,9 @@
       bezig = true;
       speelGoed();
       glitterOp(knopEls[i]);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       opNoten(ronde.goed(), knopEls[i]);
-      await spreek(compliment());
+      await spreek(compliment('zoey'));
       await wacht(300);
       volgende();
     } else {

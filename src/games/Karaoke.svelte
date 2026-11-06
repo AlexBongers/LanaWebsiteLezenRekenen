@@ -13,7 +13,7 @@
   import { speelGoed, speelTik, speelFanfare } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
   import { bewaar, vg } from '../store/voortgang.svelte';
-  import { teksten, wacht } from './teksten';
+  import { teksten, compliment, wacht } from './teksten';
   import type { SpelProps } from './types';
 
   let { opNoten, opVoortgang, opKlaar }: SpelProps = $props();
@@ -35,7 +35,7 @@
   let fase: 'voorzingen' | 'klaarzetten' | 'lezen' | 'uitslag' = $state('voorzingen');
   let start = 0;
   let tijden: number[] = $state([]);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('dans');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let podiumEl: HTMLElement | undefined = $state();
   let gestopt = false;
 
@@ -109,11 +109,11 @@
     fase = 'uitslag';
     speelGoed();
     glitterOp(podiumEl ?? null);
-    stemming = 'juich';
+    stemming = Math.random() < 0.5 ? 'juich' : 'draai';
     opNoten(3, podiumEl);
     const sneller = tijden.length > 1 && seconden < tijden[tijden.length - 2];
     if (sneller) await spreek(teksten.karaoke.sneller);
-    else await spreek(teksten.complimenten[0]);
+    else await spreek(compliment('rumi'));
   }
 
   async function verder() {

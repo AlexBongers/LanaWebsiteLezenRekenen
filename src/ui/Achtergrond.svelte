@@ -28,6 +28,9 @@
     {/each}
   </svg>
   <div class="schild"></div>
+  <span class="vallend v1"></span>
+  <span class="vallend v2"></span>
+  <span class="vallend v3"></span>
   <div class="noten">
     {#each noten as n}
       <span
@@ -93,6 +96,25 @@
     background-image:
       radial-gradient(circle at 50% 100%, rgba(251, 191, 36, 0.12), transparent 40%);
     animation: schild-glow 6s ease-in-out infinite;
+  }
+  .vallend {
+    position: absolute;
+    width: 140px;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, transparent, #fff 70%, #fde68a);
+    filter: drop-shadow(0 0 6px #fff);
+    opacity: 0;
+    rotate: 20deg;
+  }
+  .v1 { top: 8%; left: 10%; animation: val 9s ease-in 2s infinite; }
+  .v2 { top: 18%; left: 55%; animation: val 13s ease-in 6s infinite; }
+  .v3 { top: 4%; left: 35%; animation: val 17s ease-in 11s infinite; }
+  @keyframes val {
+    0% { transform: translateX(0); opacity: 0; }
+    2% { opacity: 1; }
+    8% { transform: translateX(420px); opacity: 0; }
+    100% { transform: translateX(420px); opacity: 0; }
   }
   .noten span {
     position: absolute;

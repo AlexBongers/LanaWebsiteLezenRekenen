@@ -5,7 +5,15 @@
     "vak": "Lezen",
     "uitleg": "Flitsen, plaatjes, zwaard en karaoke",
     "kleur": "#8b5cf6",
-    "intro": "Hoi! Ik ben Rumi. Kom je met mij flitslezen?"
+    "intro": "Hoi! Ik ben Rumi. Kom je met mij flitslezen?",
+    "complimenten": [
+      "Rumi zingt een hoge noot voor jou!",
+      "Rumi knipoogt: perfect gelezen!",
+      "Snel gelezen! Rumi is onder de indruk.",
+      "Rumi zegt: jij hebt flitsogen!",
+      "Zo snel als een bliksem!",
+      "Rumi zwaait met haar zwaard: raak!"
+    ]
   },
   "mira": {
     "naam": "Mira",
@@ -13,7 +21,15 @@
     "vak": "Rekenen",
     "uitleg": "Sommen, tafels, springen en dozen",
     "kleur": "#ec4899",
-    "intro": "Hoi! Ik ben Mira. Zullen we samen sommen dansen?"
+    "intro": "Hoi! Ik ben Mira. Zullen we samen sommen dansen?",
+    "complimenten": [
+      "Mira danst van blijdschap!",
+      "Mira maakt een radslag voor jou!",
+      "Mira zegt: wat een rekenkanon!",
+      "Die som danste je zo weg!",
+      "Mira klapt in haar handen!",
+      "Mira draait een pirouette: goed zo!"
+    ]
   },
   "zoey": {
     "naam": "Zoey",
@@ -21,6 +37,14 @@
     "vak": "Lezen en begrijpen",
     "uitleg": "Rijmen, zinnen en verhalen",
     "kleur": "#06b6d4",
-    "intro": "Hoi! Ik ben Zoey. Lees jij mijn nieuwe verhaal?"
+    "intro": "Hoi! Ik ben Zoey. Lees jij mijn nieuwe verhaal?",
+    "complimenten": [
+      "Zoey rapt: dat is helemaal goed!",
+      "Zoey schrijft jouw naam in haar liedje!",
+      "Zoey zegt: jij leest als een echte songschrijver!",
+      "Yo! Goed gelezen!",
+      "Zoey doet een vreugdedansje!",
+      "Zoey zegt: super gevonden in het verhaal!"
+    ]
   }
 }

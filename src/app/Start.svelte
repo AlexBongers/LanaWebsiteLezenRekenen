@@ -1,5 +1,7 @@
 <script lang="ts">
   import Heldin from '../art/Heldin.svelte';
+  import Lana from '../art/Lana.svelte';
+  import { vg } from '../store/voortgang.svelte';
   let { opStart }: { opStart: () => void } = $props();
 </script>
 
@@ -18,6 +20,7 @@
   <div class="groep">
     <div class="d1 plek" style="--kleur:#8b5cf6"><Heldin wie="rumi" stemming="dans" hoogte={380} /></div>
     <div class="d2 plek" style="--kleur:#ec4899"><Heldin wie="mira" stemming="dans" hoogte={380} /></div>
+    <div class="d4 plek" style="--kleur:#fbbf24"><Lana avatar={vg.avatar} stemming="dans" hoogte={360} /></div>
     <div class="d3 plek" style="--kleur:#06b6d4"><Heldin wie="zoey" stemming="dans" hoogte={380} /></div>
   </div>
 
@@ -62,7 +65,7 @@
   .groep {
     display: flex;
     align-items: end;
-    gap: 40px;
+    gap: 18px;
     margin: 4px 0 10px;
   }
   .plek {
@@ -95,6 +98,7 @@
   .d1 { animation-delay: 0s; }
   .d2 :global(.lijf) { animation-delay: -0.3s !important; }
   .d3 :global(.lijf) { animation-delay: -0.6s !important; }
+  .d4 :global(.lijf) { animation-delay: -0.45s !important; }
   .begin {
     min-height: 88px;
     font-size: 36px;

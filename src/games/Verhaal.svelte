@@ -37,7 +37,7 @@
   let onthuld = $state(false);
   let knopEls: HTMLElement[] = $state([]);
   let klaarKnop: HTMLElement | undefined = $state();
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
 
   let vraag = $derived(verhaal.vragen[vraagIndex]);
 
@@ -89,7 +89,7 @@
     opNoten(3, klaarKnop);
     opVoortgang(1 / stappen);
     fase = 'vragen';
-    stemming = 'juich';
+    stemming = Math.random() < 0.5 ? 'juich' : 'draai';
     await wacht(400);
     void zegVraag();
   }
@@ -104,10 +104,10 @@
       goedGekozen = true;
       speelGoed();
       glitterOp(knopEls[i]);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       resultaten.push({ id: `verhaal.${verhaal.id}.${vraagIndex}`, niveau: 0, bron: 'niveau', goed: pogingen === 0 });
       opNoten(pogingen === 0 ? 2 : 1, knopEls[i]);
-      await spreek(compliment());
+      await spreek(compliment('zoey'));
       await wacht(300);
       volgende();
     } else {
@@ -425,7 +425,7 @@
     background: linear-gradient(180deg, #ffffff, #ecfeff);
     border: 3px solid #fff;
     box-shadow: 0 6px 0 #0891b2, 0 10px 20px rgba(0, 0, 0, 0.3);
-    animation: pop-in 0.4s ease-out backwards;
+    animation: pop-in 0.4s ease-out backwards, zweef-knop 3s ease-in-out 0.5s infinite;
   }
   .keuze:active {
     transform: translateY(4px);

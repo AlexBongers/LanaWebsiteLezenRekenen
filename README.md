@@ -58,6 +58,13 @@ npm run deploy
 
 De app staat op **https://lanas-gouden-missie.exl999.workers.dev**. Lokaal kan dit ook: `npx wrangler login` en dan `npm run deploy`.
 
+## Wereldtour en kleedkamer (fase 4)
+
+- **Wereldtour:** 6 steden (Seoel, Tokio, Amsterdam, Parijs, New York, de Gouden Finale). In elke stad speelt Lana bij Rumi, Mira en Zoey (elk spel telt mee voor de sterren van die heldin in die stad). Daarna komt de **baas-demon** met 5 hartjes: gemengde sommen en flitswoorden. Is hij weggezongen, dan gaat de volgende stad open.
+- **Kleedkamer:** Lana maakt haar eigen figuur, het vierde lid van de groep, in dezelfde stijl als de heldinnen: kapsel, haarkleur, outfit, accessoire, podiumlicht, huid- en oogkleur. Eerst passen, dan kopen met gouden noten. Haar figuur staat op het startscherm, de tourkaart, in het baas-gevecht en bij de beloning.
+- **Aanmoedigingen:** ruim 60 verschillende zinnen (veel met Lana's naam, en eigen zinnetjes per heldin), via een "zakje": een zin komt pas terug als de andere geweest zijn.
+- **Beweging:** glitter bij elke tik, heldinnen die een rondje draaien bij een goed antwoord, zwevende knoppen, vallende sterren, een levende tourkaart.
+
 ## Op de Samsung-tablet zetten
 
 1. Open het adres in **Chrome** op de tablet.
@@ -69,8 +76,8 @@ De app staat op **https://lanas-gouden-missie.exl999.workers.dev**. Lokaal kan d
 
 Alle vaste teksten (instructies, complimenten, flitswoorden, verhaaltjes en de getallen 0 tot 100) zijn ingesproken met **ElevenLabs**, stem **Roos**: een jonge, vrolijke Nederlandse stem. De bestanden staan in `public/audio/tts/` en werken ook offline. Ook de verhaaltjessommen: die komen uit een vaste verzameling van 72 (24 per niveau, `content/verhaaltjessommen.json`), zodat alles vooraf is ingesproken en de tabletstem niet meer nodig is. Een test bewaakt dat elke gesproken som en elk verhaaltje een bestand heeft. Nieuwe verzameling maken: `npm run verhaalsommen` en dan `npm run audio`.
 
-- **Tempo:** instructies op 1,0, zinnen en getallen op 0,95, losse woorden op 0,9 (instelbaar in `content/stem.json`; verhoog daar `versie` als je het tempo wijzigt). De app knipt de stilte aan begin en eind van elk fragment weg en maakt alle fragmenten even hard, zodat de stukjes van een som duidelijk en direct op elkaar aansluiten.
-- **Modellen:** `eleven_multilingual_v2` voor zinnen en getallen (getallen uitgeschreven, bijv. zevenenveertig), `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden.
+- **Tempo:** instructies op 1,0, zinnen en getallen op 0,95, losse woorden op 0,9 (instelbaar in `content/stem.json`; verhoog daar `versie` als je het tempo wijzigt). De app knipt de stilte aan begin en eind van elk fragment weg, zodat de stukjes van een som direct op elkaar aansluiten. **Volume:** elke opname staat op dezelfde luidheid (-16 LUFS, met ffmpeg). Het stemscript doet dit automatisch bij nieuwe opnames; bestaande opnames gelijk trekken: `npm run audio:volume`.
+- **Modellen:** `eleven_multilingual_v2` voor zinnen, `eleven_flash_v2_5` met Nederlands afgedwongen voor losse woorden, en voor getallen en plus/min/is het model uit `nederlandsAfdwingen` met Nederlands afgedwongen (een los woord als "dertig" klonk anders soms Engels). Getallen opnieuw inspreken: `npm run audio -- --getallen`.
 - **Verbruik:** alles inspreken kost ongeveer 5.000 credits.
 - **Andere stem kiezen:** in de ouderhoek staan proefstemmen (Roos, Ruth, Emma, Melanie). Zet de id van de gekozen stem in `content/stem.json` en draai `npm run audio`.
 

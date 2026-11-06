@@ -17,4 +17,6 @@ export type SpelProps<T = never> = {
   niveau?: number;
   /** Aantal opgaven per concert. */
   aantal?: number;
+  /** De stad op de wereldtour waar gespeeld wordt (baas-demon). */
+  stadId?: string;
 };

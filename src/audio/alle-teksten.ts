@@ -12,6 +12,7 @@ import rijm from '../../content/fase3/rijm.json';
 import klank from '../../content/fase3/klankgroepen.json';
 import zinnen from '../../content/fase3/zinnen.json';
 import karaoke from '../../content/fase3/karaoke.json';
+import steden from '../../content/wereld/tour.json';
 import type { Spreeksoort } from './hash';
 
 export type TeSpreken = { tekst: string; soort: Spreeksoort };
@@ -31,7 +32,16 @@ export function alleTeksten(): TeSpreken[] {
   const voeg = (tekst: string, soort: Spreeksoort) => lijst.push({ tekst, soort });
 
   strings(teksten).forEach((t) => voeg(t, 'instructie'));
-  Object.values(characters).forEach((c) => voeg(c.intro, 'instructie'));
+  Object.values(characters).forEach((c) => {
+    voeg(c.intro, 'instructie');
+    c.complimenten.forEach((z) => voeg(z, 'instructie'));
+  });
+
+  // Fase 4: wereldtour
+  for (const s of steden) {
+    voeg(s.welkom, 'instructie');
+    voeg(s.baasIntro, 'instructie');
+  }
 
   for (const [sleutel, groepen] of Object.entries(woorden)) {
     if (sleutel.startsWith('_')) continue;

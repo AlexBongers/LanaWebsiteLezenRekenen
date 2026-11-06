@@ -9,6 +9,8 @@ import { somNiveau } from '../engine/generator-rekenen';
 /** Aantal rekenniveaus; was eerst 3, nu 5 kleinere stapjes. */
 const REKEN_STAPPEN = 5;
 import { FLITS_START } from '../engine/generator-lezen';
+import { STANDAARD_AVATAR, type Avatar } from '../engine/kleedkamer';
+import type { TourStand } from '../engine/tour';
 
 export type HeldinId = 'rumi' | 'mira' | 'zoey';
 
@@ -30,7 +32,9 @@ export type Leestempo = { datum: string; liedje: string; ronde: number; seconden
 
 export type Sessie = {
   datum: string;
-  heldin: HeldinId;
+  heldin: HeldinId | 'baas';
+  /** Stad op de wereldtour (sinds fase 4). */
+  stad?: string;
   /** Welk spel (sinds fase 3). */
   spel?: string;
   goed: number;
@@ -66,6 +70,12 @@ export type Voortgang = {
     /** Verwisselde woorden, bijv. "lucht→licht": 3. */
     verwisselingen: Record<string, number>;
   };
+  /** Lana's eigen figuur (kleedkamer). */
+  avatar: Avatar;
+  /** Gekochte kleedkamer-items, bijv. "outfit:glitterjurk". */
+  gekocht: string[];
+  /** Wereldtour: sterren per stad per podium. */
+  tour: TourStand;
   instellingen: {
     /** Na zoveel minuten volgt na het concert een pauze (0 = geen grens). */
     sessieMinuten: number;
@@ -105,6 +115,9 @@ export function standaardVoortgang(): Voortgang {
     herhaling: {},
     auditie: { rekenen: false, flits: false },
     stats: { sommen: {}, verwisselingen: {} },
+    avatar: { ...STANDAARD_AVATAR },
+    gekocht: [],
+    tour: {},
     instellingen: {
       sessieMinuten: 15,
       volledigScherm: false,
@@ -148,6 +161,7 @@ function samenvoegen(basis: Voortgang, data: Partial<Voortgang>): Voortgang {
       flits: gespeeld(data.vaardigheden?.flits),
     },
     stats: { ...basis.stats, ...(data.stats ?? {}) },
+    avatar: { ...basis.avatar, ...(data.avatar ?? {}) },
     instellingen: { ...basis.instellingen, ...(data.instellingen ?? {}) },
   };
 }

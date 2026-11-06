@@ -7,6 +7,9 @@
  *   npm run audio                  maakt alle ontbrekende bestanden + audio-manifest.json
  *   npm run audio -- --opnieuw     spreekt alles opnieuw in (na het wijzigen van het tempo)
  *   npm run audio -- --afdwingen   spreekt de teksten uit 'nederlandsAfdwingen' (stem.json) opnieuw in
+ *   npm run audio -- --getallen    spreekt alle getallen opnieuw in (met Nederlands afgedwongen)
+ *
+ * Elke nieuwe opname wordt met ffmpeg op dezelfde luidheid gezet (-16 LUFS), zie tools/volume.ts.
  *
  * Sleutels: GOOGLE_TTS_API_KEY, ELEVENLABS_API_KEY of AZURE_SPEECH_KEY (+ AZURE_SPEECH_REGION),
  * als omgevingsvariabele of in .env.local / .env (zie .env.example).
@@ -14,6 +17,7 @@
  * Provider, stem en tempo staan in content/stem.json.
  */
 import { existsSync, mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { heeftFfmpeg, normaliseer as normaliseerVolume } from './volume';
 import { join } from 'node:path';
 import { Readable } from 'node:stream';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
@@ -114,7 +118,8 @@ async function elevenlabs(tekst: string, stem: string, soort: Spreeksoort): Prom
   // Losse woorden: Flash-model met Nederlands afgedwongen (anders klinkt "maan" soms Engels).
   // Getallen: als woord uitgeschreven via het zinnenmodel (het Flash-model fluisterde ze soms).
   const kort = soort === 'woord';
-  const forceer = e.nederlandsAfdwingen?.teksten.includes(normaliseer(tekst)) ?? false;
+  // Getallen zijn losse woorden ("dertig"): zonder afgedwongen Nederlands klonk dat soms Engels.
+  const forceer = soort === 'getal' || (e.nederlandsAfdwingen?.teksten.includes(normaliseer(tekst)) ?? false);
   const modelId = forceer ? e.nederlandsAfdwingen.model : kort ? e.modelWoorden : e.modelZinnen;
   const v4 = /eleven_v4/.test(modelId);
   if (soort === 'getal' && /^\d+$/.test(tekst.trim())) tekst = getalInWoorden(Number(tekst));
@@ -208,7 +213,7 @@ async function maakProefstemmen() {
     if (!process.env[SLEUTELS[provider]]) continue;
     process.stdout.write(`Proefstem ${p.naam} … `);
     try {
-      writeFileSync(join(PROEF, `${provider}-${p.id}.mp3`), await spreekIn(provider, stemInfo.proefzin, p.id, 'instructie'));
+      writeFileSync(join(PROEF, `${provider}-${p.id}.mp3`), normaliseerVolume(await spreekIn(provider, stemInfo.proefzin, p.id, 'instructie')).mp3);
       console.log('klaar');
     } catch (e) {
       console.log(`mislukt: ${(e as Error).message}`);
@@ -226,12 +231,18 @@ async function maakAlles(droog: boolean) {
   // --opnieuw: alles opnieuw inspreken (bijv. na het wijzigen van alleen het tempo).
   // --afdwingen: de teksten uit nederlandsAfdwingen opnieuw inspreken.
   const afdwingen = new Set(args.has('--afdwingen') ? (stemInfo.elevenlabs.nederlandsAfdwingen?.teksten ?? []) : []);
+  const getallen = args.has('--getallen');
   const nieuw = args.has('--opnieuw')
     ? taken
-    : taken.filter((t) => afdwingen.has(normaliseer(t.tekst)) || !existsSync(join(TTS, `${t.sleutel}.mp3`)));
+    : taken.filter(
+        (t) =>
+          afdwingen.has(normaliseer(t.tekst)) ||
+          (getallen && t.soort === 'getal') ||
+          !existsSync(join(TTS, `${t.sleutel}.mp3`)),
+      );
   const tekens = nieuw.reduce((n, t) => n + t.tekst.length, 0);
 
-  console.log(`Provider: ${provider}, stem: ${stem}`);
+  console.log(`Provider: ${provider}, stem: ${stem}, volume gelijk trekken: ${heeftFfmpeg ? 'ja' : 'nee (ffmpeg ontbreekt)'}`);
   console.log(`${taken.length} teksten, waarvan ${nieuw.length} nieuw (${tekens} tekens).`);
   if (droog) {
     nieuw.slice(0, 12).forEach((t) => console.log(`  [${t.soort}] ${t.tekst}`));
@@ -241,7 +252,7 @@ async function maakAlles(droog: boolean) {
 
   let klaar = 0;
   for (const t of nieuw) {
-    writeFileSync(join(TTS, `${t.sleutel}.mp3`), await spreekIn(provider, t.tekst, stem, t.soort));
+    writeFileSync(join(TTS, `${t.sleutel}.mp3`), normaliseerVolume(await spreekIn(provider, t.tekst, stem, t.soort)).mp3);
     klaar++;
     if (klaar % 25 === 0 || klaar === nieuw.length) console.log(`  ${klaar}/${nieuw.length}`);
   }

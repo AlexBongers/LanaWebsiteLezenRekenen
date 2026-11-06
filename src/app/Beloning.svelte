@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import Heldin from '../art/Heldin.svelte';
+  import Lana from '../art/Lana.svelte';
+  import { vg } from '../store/voortgang.svelte';
+  import { uitZak } from '../games/teksten';
   import { spreek } from '../audio/stem';
   import { speelFanfare } from '../audio/geluid';
   import { grootFeest } from '../ui/feest';
@@ -10,6 +13,8 @@
   let {
     heldin,
     goed,
+    terugTekst = 'Ander spel',
+    gesproken,
     totaal,
     noten,
     omhoog,
@@ -20,8 +25,12 @@
     opTerug,
     opPauze = opTerug,
   }: {
-    heldin: HeldinId;
+    heldin: HeldinId | 'baas';
     goed: number;
+    /** Tekst op de terug-knop. */
+    terugTekst?: string;
+    /** Wat de stem zegt (anders een wisselende beloningszin). */
+    gesproken?: string;
     totaal: number;
     noten: number;
     omhoog: boolean;
@@ -36,13 +45,16 @@
   } = $props();
 
   let sterren = $derived(totaal === 0 ? 3 : goed / totaal >= 0.85 ? 3 : goed / totaal >= 0.6 ? 2 : 1);
-  const anderen = (['rumi', 'mira', 'zoey'] as HeldinId[]).filter((h) => h !== heldin);
+  // Eén keer kiezen bij het openen: een wisselende kop en zin, vaak met Lana's naam.
+  const kop = untrack(() => uitZak('beloningKop', teksten.beloningKoppen));
+  const zin = untrack(() => gesproken ?? (melding ? teksten.auditie.klaar : uitZak('beloning', teksten.beloningen)));
+  const blij = (h: HeldinId) => (h === heldin ? 'draai' : 'dans');
 
   onMount(() => {
     speelFanfare();
     grootFeest();
     void (async () => {
-      await spreek(melding ? teksten.auditie.klaar : teksten.beloning);
+      await spreek(zin);
       if (pauze) await spreek(teksten.pauze.tijd);
     })();
   });
@@ -50,7 +62,7 @@
 
 <div class="scherm">
   <div class="kaart">
-    <p class="lana">Goed gedaan, Lana!</p>
+    <p class="lana">{kop}</p>
     <h2 class="goudtekst">{titel}</h2>
 
     <div class="sterren">
@@ -68,9 +80,10 @@
     </div>
 
     <div class="groep">
-      <Heldin wie={anderen[0]} stemming="dans" hoogte={265} />
-      <Heldin wie={heldin} stemming="juich" hoogte={315} />
-      <Heldin wie={anderen[1]} stemming="dans" hoogte={265} />
+      <div class="lid" style="--d:0s"><Heldin wie="rumi" stemming={blij('rumi')} hoogte={255} /></div>
+      <div class="lid" style="--d:.1s"><Heldin wie="mira" stemming={blij('mira')} hoogte={265} /></div>
+      <div class="lid" style="--d:.2s"><Lana avatar={vg.avatar} stemming="juich" hoogte={285} licht /></div>
+      <div class="lid" style="--d:.3s"><Heldin wie="zoey" stemming={blij('zoey')} hoogte={250} /></div>
     </div>
 
     <div class="noten">+{noten} gouden noten</div>
@@ -88,7 +101,7 @@
       </div>
     {:else}
       <div class="knoppen">
-        <button class="knop-goud ander" onclick={opTerug}>Ander spel</button>
+        <button class="knop-goud ander" onclick={opTerug}>{terugTekst}</button>
         <button class="knop-goud" onclick={opNogEens}>Nog een keer! ✨</button>
       </div>
     {/if}
@@ -136,6 +149,13 @@
   }
   .sterren svg.aan {
     filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.9));
+  }
+  .lid {
+    animation: lid-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    animation-delay: calc(0.5s + var(--d));
+  }
+  @keyframes lid-in {
+    from { transform: translateY(120px) scale(0.6); opacity: 0; }
   }
   .groep {
     display: flex;

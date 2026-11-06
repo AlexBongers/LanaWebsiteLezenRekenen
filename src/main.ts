@@ -6,6 +6,9 @@ import '@fontsource/andika/latin-700.css';
 import './app/thema.css';
 import { mount } from 'svelte';
 import App from './app/App.svelte';
+import { installeerTikEffect } from './ui/tikEffect';
+
+installeerTikEffect();
 
 const app = mount(App, { target: document.getElementById('app')! });
 

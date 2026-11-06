@@ -26,7 +26,7 @@
   let lacht: number | null = $state(null);
   let onthuld = $state(false);
   let bezig = $state(false);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('dans');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let demonEls: HTMLElement[] = $state([]);
   let opnieuw = new Set<number>();
   let eersteFout: number | null = null;
@@ -59,10 +59,10 @@
       speelGoed();
       speelPoef();
       glitterOp(demonEls[i]);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       if (!opnieuw.has(index)) resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: pogingen === 0 });
       opNoten(pogingen === 0 ? 2 : 1, demonEls[i]);
-      await spreek(compliment());
+      await spreek(compliment('mira'));
       await wacht(300);
       volgende();
     } else {

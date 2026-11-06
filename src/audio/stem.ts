@@ -90,7 +90,7 @@ function spreekMetApparaat(tekst: string, soort: Spreeksoort, mijnBeurt: number,
 type Fragment = { buffer: AudioBuffer; start: number; duur: number; versterking: number };
 const fragmenten = new Map<string, Promise<Fragment | null>>();
 const DREMPEL = 0.012;
-const DOEL_PIEK = 0.8;
+const DOEL_PIEK = 0.95;
 
 function knipStilte(buffer: AudioBuffer): Fragment {
   const data = buffer.getChannelData(0);
@@ -98,10 +98,11 @@ function knipStilte(buffer: AudioBuffer): Fragment {
   while (begin < data.length && Math.abs(data[begin]) < DREMPEL) begin++;
   let eind = data.length - 1;
   while (eind > begin && Math.abs(data[eind]) < DREMPEL) eind--;
-  // Even hard maken: zachte opnames (bijv. een gefluisterd getal) worden versterkt.
+  // Alle opnames zijn al op dezelfde luidheid gezet (tools/maak-audio.ts, -16 LUFS).
+  // Versterken op de piek gaf juist hoorbare verschillen; alleen nog een veiligheidsgrens.
   let piek = 0;
   for (let i = begin; i <= eind; i++) piek = Math.max(piek, Math.abs(data[i]));
-  const versterking = piek > 0 ? Math.min(8, Math.max(1, DOEL_PIEK / piek)) : 1;
+  const versterking = piek > DOEL_PIEK ? DOEL_PIEK / piek : 1;
   if (eind <= begin) return { buffer, start: 0, duur: buffer.duration, versterking };
   const marge = Math.floor(buffer.sampleRate * 0.03);
   const van = Math.max(0, begin - marge);

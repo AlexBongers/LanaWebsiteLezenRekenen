@@ -24,7 +24,7 @@
   let knippen: number[] = $state([]);
   let gehakt = $state(false);
   let bezig = $state(false);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let woordEl: HTMLElement | undefined = $state();
 
   let maat = $derived(Math.min(100, Math.floor(860 / o.woord.length)));
@@ -49,10 +49,10 @@
       speelPoef();
       speelGoed();
       glitterOp(woordEl ?? null);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       opNoten(ronde.goed(), woordEl);
       await spreek(o.woord, 'woord');
-      await spreek(compliment());
+      await spreek(compliment('rumi'));
       await wacht(300);
       volgende();
     } else {

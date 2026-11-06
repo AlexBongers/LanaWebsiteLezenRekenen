@@ -30,7 +30,7 @@
   let fase: 'klaar' | 'flits' | 'kiezen' | 'wacht' | 'goed' | 'onthuld' = $state('klaar');
   let pogingen = $state(0);
   let fout: string[] = $state([]);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('rust');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let podiumEl: HTMLElement | undefined = $state();
 
   let item = $derived(rij[index]);
@@ -65,14 +65,14 @@
       fase = 'goed';
       speelGoed();
       glitterOp(podiumEl ?? null);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       if (!opnieuw.has(index)) {
         resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: pogingen === 0, gekozen: eersteFout });
         if (pogingen === 0) vg.flitstijd = nieuweFlitstijd(vg.flitstijd, true);
       }
       opNoten(pogingen === 0 ? 2 : 1, podiumEl);
       await spreek(opgave.woord, 'woord');
-      await spreek(compliment());
+      await spreek(compliment('rumi'));
       await wacht(200);
       volgende();
     } else {
@@ -335,7 +335,7 @@
     background: linear-gradient(180deg, #ffffff, #ede9fe);
     border: 4px solid #fff;
     box-shadow: 0 7px 0 #7c3aed, 0 12px 24px rgba(0, 0, 0, 0.35);
-    animation: pop-in 0.4s ease-out backwards;
+    animation: pop-in 0.4s ease-out backwards, zweef-knop 2.6s ease-in-out 0.5s infinite;
     transition: transform 0.1s;
   }
   .keuze:active:not(:disabled) {

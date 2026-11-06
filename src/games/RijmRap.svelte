@@ -23,7 +23,7 @@
   let o = $derived(ronde.huidig);
   let fout: string[] = $state([]);
   let bezig = $state(false);
-  let stemming: 'rust' | 'dans' | 'juich' | 'denk' = $state('dans');
+  let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let knopEls: HTMLElement[] = $state([]);
 
   /** Het rijmstuk: de laatste klinker(s) met wat erna komt ("maan" → "aan"). */
@@ -49,11 +49,11 @@
       bezig = true;
       speelGoed();
       glitterOp(knopEls[i]);
-      stemming = 'juich';
+      stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       opNoten(ronde.goed(), knopEls[i]);
       await spreek(o.woord, 'woord');
       await spreek(o.rijm, 'woord');
-      await spreek(compliment());
+      await spreek(compliment('zoey'));
       await wacht(200);
       volgende();
     } else {
