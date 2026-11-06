@@ -1,0 +1,40 @@
+# Zet de site automatisch online op Cloudflare bij elke push.
+# Eenmalig nodig: GitHub → Settings → Secrets and variables → Actions → secret CLOUDFLARE_API_TOKEN
+# (een Cloudflare-token met het sjabloon "Edit Cloudflare Workers").
+name: Online zetten
+
+on:
+  push:
+    branches: [main, claude/admiring-gates-tp1dyv]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: 47a61f631bcfe6e68260798a58441704
+    steps:
+      - name: Token aanwezig?
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::warning::Geen CLOUDFLARE_API_TOKEN-secret ingesteld; de site wordt niet online gezet."
+      - uses: actions/checkout@v4
+        if: env.CLOUDFLARE_API_TOKEN != ''
+      - uses: actions/setup-node@v4
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        with:
+          node-version: 22
+          cache: npm
+      - name: Installeren
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npm ci
+      - name: Testen
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npm test
+      - name: Bouwen en online zetten
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npm run deploy
