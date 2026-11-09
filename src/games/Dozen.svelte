@@ -7,6 +7,8 @@
   import Heldin from '../art/Heldin.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import { maakDozen, type DozenOpgave } from '../engine/generator-fase3';
+  import Dozen3D from './Dozen3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
@@ -29,6 +31,8 @@
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let veldEl: HTMLElement | undefined = $state();
+  /** 3D als het apparaat dat kan; anders de platte versie. */
+  let drieD = $state(heeftWebGL());
   let knopEls: HTMLElement[] = $state([]);
 
   // Bij tellen staat het getal al klaar in dozen; bij bouwen begint het leeg.
@@ -115,8 +119,12 @@
       {#if o.soort === 'bouw'}
         <div class="opdrachtkaart"><div class="getal">Maak <span class="hint-goud">{o.getal}</span></div></div>
       {/if}
+    {/key}
 
-      <div class="veld" bind:this={veldEl}>
+    <div class="veld" class:drie={drieD} bind:this={veldEl}>
+      {#if drieD}
+        <Dozen3D dozen={toonDozen} los={toonLos} opFout={() => (drieD = false)} />
+      {:else}
         <div class="groep">
           {#each Array.from({ length: toonDozen }) as _, d (d)}
             <div class="doos">
@@ -127,11 +135,13 @@
         <div class="groep losse">
           {#each Array.from({ length: toonLos }) as _, s (s)}<span class="stok groot"></span>{/each}
         </div>
-        {#if o.soort === 'bouw' && ronde.pogingen > 0}
-          <div class="teller">{dozen} × 10 + {los} = {dozen * 10 + los}</div>
-        {/if}
-      </div>
+      {/if}
+      {#if o.soort === 'bouw' && ronde.pogingen > 0}
+        <div class="teller">{dozen} × 10 + {los} = {dozen * 10 + los}</div>
+      {/if}
+    </div>
 
+    {#key ronde.nummer}
       {#if o.soort === 'bouw'}
         <div class="bediening">
           <div class="paar">
@@ -171,6 +181,19 @@
   .getal {
     font-size: 60px;
     font-weight: 700;
+  }
+  .veld.drie {
+    padding: 0;
+    min-width: 0;
+    width: 880px;
+    height: 320px;
+    max-width: none;
+    border: 3px solid rgba(249, 168, 212, 0.35);
+    background: radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.25), rgba(10, 2, 30, 0.55) 70%);
+    overflow: hidden;
+  }
+  .veld.drie .teller {
+    z-index: 2;
   }
   .veld {
     position: relative;

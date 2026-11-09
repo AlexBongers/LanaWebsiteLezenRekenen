@@ -8,6 +8,7 @@
   import { FLITS_START } from '../engine/generator-lezen';
   import { aantalStemBestanden, nederlandseStemmen, spreek, zetApparaatStem } from '../audio/stem';
   import { zetEffectenAan } from '../audio/geluid';
+  import { wilLicht, zetLichteModus } from '../ui/prestatie';
   import stemInfo from '../../content/stem.json';
   import { SPELLEN } from '../games/spellen';
   import characters from '../../content/characters.json';
@@ -248,6 +249,23 @@
           <option value={15}>15 minuten</option>
           <option value={20}>20 minuten</option>
           <option value={0}>geen pauze</option>
+        </select>
+      </label>
+      <label>
+        Lichte modus (minder effecten, voor een trage tablet)
+        <select
+          value={vg.instellingen.lichteModus}
+          onchange={(e) => {
+            vg.instellingen.lichteModus = (e.target as HTMLSelectElement).value as 'auto' | 'aan' | 'uit';
+            // Automatisch kiezen? Dan meet de app het bij de volgende keer starten opnieuw.
+            if (vg.instellingen.lichteModus === 'auto') vg.instellingen.lichtGemeten = null;
+            zetLichteModus(wilLicht(vg.instellingen));
+            bewaar();
+          }}
+        >
+          <option value="auto">Automatisch{vg.instellingen.lichtGemeten === null ? ' (wordt gemeten)' : vg.instellingen.lichtGemeten ? ' (nu aan: de tablet is wat traag)' : ' (nu uit: alles loopt soepel)'}</option>
+          <option value="aan">Altijd aan</option>
+          <option value="uit">Altijd uit</option>
         </select>
       </label>
       <label class="vink">

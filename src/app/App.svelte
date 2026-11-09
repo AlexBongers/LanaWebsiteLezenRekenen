@@ -15,7 +15,8 @@
   import { SPEL, type SpelId } from '../games/spellen';
   import characters from '../../content/characters.json';
   import teksten from '../../content/teksten.json';
-  import { laadVoortgang, vg, type HeldinId } from '../store/voortgang.svelte';
+  import { bewaar, laadVoortgang, vg, type HeldinId } from '../store/voortgang.svelte';
+  import { meetBeeldsnelheid, TRAAG_ONDER, wilLicht, zetLichteModus } from '../ui/prestatie';
   import { STEDEN, huidigeStad, type PodiumId } from '../engine/tour';
   import { laadStemManifest, spreek, stopSpreken, zetApparaatStem } from '../audio/stem';
   import { ontgrendelGeluid, zetEffectenAan } from '../audio/geluid';
@@ -58,9 +59,22 @@
   );
 
   onMount(() => {
-    void laadVoortgang().then(() => {
+    void laadVoortgang().then(async () => {
       zetApparaatStem(vg.instellingen.apparaatStem);
       zetEffectenAan(vg.instellingen.effecten);
+      zetLichteModus(wilLicht(vg.instellingen));
+      // Automatisch: de eerste keer meten hoe vlot de tablet draait en zo nodig de lichte modus aanzetten.
+      if (vg.instellingen.lichteModus === 'auto' && vg.instellingen.lichtGemeten === null) {
+        for (let poging = 0; poging < 5 && vg.instellingen.lichtGemeten === null; poging++) {
+          await new Promise((r) => setTimeout(r, poging === 0 ? 1200 : 4000));
+          const fps = await meetBeeldsnelheid(2200);
+          if (fps !== null) {
+            vg.instellingen.lichtGemeten = fps < TRAAG_ONDER;
+            zetLichteModus(wilLicht(vg.instellingen));
+            void bewaar();
+          }
+        }
+      }
     });
     void laadStemManifest();
 

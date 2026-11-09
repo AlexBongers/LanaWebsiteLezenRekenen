@@ -154,3 +154,14 @@ describe('alles van fase 3 is ingesproken', () => {
     for (const l of karaoke.liedjes) for (const r of l.regels) expect(lijst.has(`zin|${r}`)).toBe(true);
   });
 });
+
+describe('lichte modus', () => {
+  it('staat aan bij "aan", of bij "automatisch" als de meting traag was', async () => {
+    const { wilLicht } = await import('../src/ui/prestatie');
+    expect(wilLicht({ lichteModus: 'aan', lichtGemeten: false })).toBe(true);
+    expect(wilLicht({ lichteModus: 'uit', lichtGemeten: true })).toBe(false);
+    expect(wilLicht({ lichteModus: 'auto', lichtGemeten: true })).toBe(true);
+    expect(wilLicht({ lichteModus: 'auto', lichtGemeten: false })).toBe(false);
+    expect(wilLicht({ lichteModus: 'auto', lichtGemeten: null })).toBe(false);
+  });
+});

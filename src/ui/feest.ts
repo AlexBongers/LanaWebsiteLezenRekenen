@@ -1,4 +1,5 @@
 import confetti from 'canvas-confetti';
+import { isLicht } from './prestatie';
 
 const KLEUREN = ['#fbbf24', '#fde68a', '#f472b6', '#a78bfa', '#22d3ee', '#ffffff'];
 
@@ -7,7 +8,7 @@ export function glitterOp(el: Element | null) {
   if (!el) return;
   const r = el.getBoundingClientRect();
   confetti({
-    particleCount: 40,
+    particleCount: isLicht() ? 16 : 40,
     spread: 70,
     startVelocity: 28,
     gravity: 0.9,
@@ -24,8 +25,9 @@ export function glitterOp(el: Element | null) {
 export function grootFeest() {
   const einde = Date.now() + 1800;
   (function frame() {
-    confetti({ particleCount: 6, angle: 60, spread: 60, origin: { x: 0, y: 0.8 }, colors: KLEUREN, shapes: ['star', 'circle'] });
-    confetti({ particleCount: 6, angle: 120, spread: 60, origin: { x: 1, y: 0.8 }, colors: KLEUREN, shapes: ['star', 'circle'] });
+    const n = isLicht() ? 2 : 6;
+    confetti({ particleCount: n, angle: 60, spread: 60, origin: { x: 0, y: 0.8 }, colors: KLEUREN, shapes: ['star', 'circle'] });
+    confetti({ particleCount: n, angle: 120, spread: 60, origin: { x: 1, y: 0.8 }, colors: KLEUREN, shapes: ['star', 'circle'] });
     if (Date.now() < einde) requestAnimationFrame(frame);
   })();
 }

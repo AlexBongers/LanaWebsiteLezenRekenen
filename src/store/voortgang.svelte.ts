@@ -85,6 +85,10 @@ export type Voortgang = {
     apparaatStem: string | null;
     effecten: boolean;
     verhaaltjesSommen: boolean;
+    /** Lichte modus (minder schaduwen en filters, voor een trage tablet): automatisch, altijd aan of altijd uit. */
+    lichteModus: 'auto' | 'aan' | 'uit';
+    /** Uitkomst van de automatische meting (null = nog niet gemeten). */
+    lichtGemeten: boolean | null;
   };
 };
 
@@ -125,6 +129,8 @@ export function standaardVoortgang(): Voortgang {
       apparaatStem: null,
       effecten: true,
       verhaaltjesSommen: true,
+      lichteModus: 'auto',
+      lichtGemeten: null,
     },
   };
 }

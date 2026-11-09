@@ -5,6 +5,8 @@
   import Tekstballon from '../ui/Tekstballon.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import { maakSpringen, type SpringOpgave } from '../engine/generator-fase3';
+  import Spring3D from './Spring3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { somId } from '../engine/generator-rekenen';
   import { spreek, somDelen, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
@@ -28,6 +30,8 @@
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let lijnEl: HTMLElement | undefined = $state();
+  /** 3D als het apparaat dat kan; anders de platte getallenlijn. */
+  let drieD = $state(heeftWebGL());
 
   const B = 920; // breedte van de getallenlijn in px
   let streepjes = $derived(Array.from({ length: (o.tot - o.van) / o.stap + 1 }, (_, i) => o.van + i * o.stap));
@@ -121,29 +125,50 @@
         <div class="luid"><Luidspreker opTik={zegOpdracht} /></div>
       </div>
 
-      <div class="lijn" bind:this={lijnEl} style="width:{B}px">
-        <div class="balk"></div>
-        {#each streepjes as n (n)}
-          <button
-            class="streep"
-            class:tien={n % 10 === 0}
-            class:fout={fout.includes(n)}
-            class:doel={ronde.onthuld && o.doelen.includes(n)}
-            style="left:{x(n)}px"
-            onclick={() => tik(n)}
-            aria-label="Getal {n}"
-          >
-            <span class="tick"></span>
-            {#if metGetal(n)}<span class="getal">{n}</span>{/if}
-          </button>
-        {/each}
-        {#if positie !== null}
-          {#key positie}
-            <div class="mira" style="left:{x(positie)}px">⭐</div>
-          {/key}
+    {/key}
+
+      <div class="lijn" class:drie={drieD} bind:this={lijnEl} style="width:{B}px">
+        {#if drieD}
+          <Spring3D
+            van={o.van}
+            tot={o.tot}
+            stap={o.stap}
+            {positie}
+            {fout}
+            doelen={ronde.onthuld ? o.doelen : []}
+            getoond={streepjes.filter(metGetal)}
+            opTik={tik}
+            opFout={() => (drieD = false)}
+          />
+          <!-- Onzichtbare knoppen: toetsenbord, schermlezers en tests -->
+          <div class="verborgen">
+            {#each streepjes as n (n)}
+              <button onclick={() => tik(n)} aria-label="Getal {n}">{n}</button>
+            {/each}
+          </div>
+        {:else}
+          <div class="balk"></div>
+          {#each streepjes as n (n)}
+            <button
+              class="streep"
+              class:tien={n % 10 === 0}
+              class:fout={fout.includes(n)}
+              class:doel={ronde.onthuld && o.doelen.includes(n)}
+              style="left:{x(n)}px"
+              onclick={() => tik(n)}
+              aria-label="Getal {n}"
+            >
+              <span class="tick"></span>
+              {#if metGetal(n)}<span class="getal">{n}</span>{/if}
+            </button>
+          {/each}
+          {#if positie !== null}
+            {#key positie}
+              <div class="mira" style="left:{x(positie)}px">⭐</div>
+            {/key}
+          {/if}
         {/if}
       </div>
-    {/key}
     {#if ronde.onthuld}
       <button class="knop-goud verder-knop" onclick={volgende}>Verder ➜</button>
     {/if}
@@ -174,6 +199,21 @@
     right: 18px;
     top: 50%;
     transform: translateY(-50%);
+  }
+  .lijn.drie {
+    height: 270px;
+    margin-top: 4px;
+    border-radius: 26px;
+    background: radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.22), rgba(10, 2, 30, 0.5) 70%);
+    border: 3px solid rgba(249, 168, 212, 0.3);
+    overflow: hidden;
+  }
+  .verborgen {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
   .lijn {
     position: relative;

@@ -219,3 +219,36 @@ button {
   0%, 100% { translate: 0 0; }
   50% { translate: 0 -5px; }
 }
+
+/* ---------- Lichte modus: minder zware effecten voor een trage tablet ---------- */
+.licht svg g[filter],
+.licht svg ellipse[filter] {
+  filter: none;
+}
+.licht .heldin,
+.licht .lana {
+  filter: none !important;
+}
+.licht *,
+.licht *::before,
+.licht *::after {
+  backdrop-filter: none !important;
+}
+.licht .achtergrond .spot {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  opacity: 0.28 !important;
+  animation: none !important;
+}
+.licht .achtergrond .vallend,
+.licht .achtergrond .schild {
+  display: none;
+}
+.licht .opdrachtkaart,
+.licht .kaart,
+.licht .zinkaart {
+  box-shadow: none;
+}
+.licht .knop-goud {
+  filter: none;
+}

@@ -16,8 +16,8 @@ Na het kiezen van een heldin kiest Lana een spel. De snelle spellen staan bovena
 | | 🎤 Karaoke-podium | Herhaald lezen: de stem zingt voor (woorden lichten op), daarna leest Lana twee keer zelf. De tijd wordt gemeten. |
 | **Mira** | 💃 Dans-sommen | Plus en min tot 100 in vijf rustige stapjes, met getallenlijn-hint. |
 | | 🥁 Tafel-ritme | Op een beat: 2, 4, 6, … welk getal komt hierna? Tafels van 1, 2, 10, dan 5, dan 3 en 4. |
-| | 🦘 Getallen-spring | Tik op de getallenlijn waar een getal staat; later sommen via het hele tiental (47 + 8: eerst naar 50). |
-| | 📦 Lightstick-dozen | Maak een getal met dozen van 10 en losse lichtstokken, of tel hoeveel het er zijn. |
+| | 🦘 Getallen-spring (3D) | Tik op de lichtgevende catwalk waar een getal staat; later sommen via het hele tiental (47 + 8: eerst naar 50). De gouden ster springt mee. |
+| | 📦 Lightstick-dozen (3D) | Maak een getal met glazen dozen van 10 en losse lichtstokken op een 3D-podium (slepen draait het podium), of tel hoeveel het er zijn. |
 | **Zoey** | 🎧 Rijm-rap | Zoey rapt een woord; welk geschreven woord rijmt erop? |
 | | 🎬 Zinnen-show | Lees een zin en kies het plaatje dat erbij past (de plaatjes lijken op elkaar). |
 | | 📖 Songtekst-verhaal | Een verhaaltje in korte stukjes lezen, daarna 3 vragen. |
@@ -37,6 +37,11 @@ Verder:
 - Een fout antwoord geeft eerst een hint. Bij een tweede fout wordt het antwoord rustig uitgelegd en komt de opgave later terug.
 - **Ouderhoek:** houd het slotje linksboven 3 seconden vast en reken de keersom uit. Hier vind je het overzicht (niveau per spel, leestempo-grafiek van de karaoke, welke sommen lastig zijn, welke woorden ze verwisselt, wat er in de doosjes zit), kun je het niveau zelf zetten, de stem kiezen en een back-up maken.
 - Werkt offline, als app op het startscherm, liggend en schermvullend. De Android-terugknop vraagt eerst "wil je stoppen?".
+
+## 3D en lichte modus
+
+- **3D:** Getallen-spring en Lightstick-dozen zijn echte 3D-spellen (three.js). three.js wordt pas geladen als zo'n spel opent. Heeft een apparaat geen WebGL of verliest het de tekening, dan krijgt Lana vanzelf de platte 2D-versie.
+- **Soepel op elke tablet:** bij de eerste keer starten meet de app hoe vlot hij draait. Is de tablet traag (onder 42 beeldjes per seconde), dan gaat de **lichte modus** aan: minder schaduwen, filters en confetti. De 3D-scherpte zakt ook vanzelf als het stottert. In de ouderhoek kun je de lichte modus op Automatisch, Altijd aan of Altijd uit zetten.
 
 ## Online zetten op Cloudflare (Worker)
 
