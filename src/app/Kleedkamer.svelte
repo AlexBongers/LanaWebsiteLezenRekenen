@@ -25,6 +25,8 @@
   let tab = $state<Tab>('haar');
   let pas = $state<{ cat: CategorieId; item: Item } | null>(null);
   let schud = $state(false);
+  /** Even feest na het kopen: flits, sprongetje en juichen. */
+  let nieuw = $state(false);
   let podiumEl: HTMLElement | undefined = $state();
 
   let categorie = $derived(CATEGORIEEN.find((c) => c.id === tab));
@@ -62,6 +64,8 @@
     await bewaar();
     speelFanfare();
     glitterOp(podiumEl ?? null);
+    nieuw = true;
+    setTimeout(() => (nieuw = false), 2200);
     void spreek(teksten.kleedkamer.gekocht);
   }
 
@@ -99,10 +103,11 @@
           <span class="lampje" style="--i:{i}"></span>
         {/each}
       </div>
-      <div class="figuur">
-        <Lana avatar={toon} hoogte={500} licht stemming={pas ? 'denk' : 'dans'} />
+      <div class="flits" class:aan={nieuw}></div>
+      <div class="figuur" class:nieuw>
+        <Lana avatar={toon} hoogte={500} licht stemming={nieuw ? 'juich' : pas ? 'denk' : 'dans'} />
       </div>
-      <div class="naambord">
+      <div class="naambord" class:weg={!!pas}>
         <span class="naam">Lana</span>
         <span class="rol">het vierde lid</span>
       </div>
@@ -248,6 +253,28 @@
   .figuur {
     margin-bottom: -6px;
   }
+  .figuur.nieuw {
+    animation: nieuwe-look 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .flits {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(255, 247, 194, 0.95), rgba(251, 191, 36, 0.35) 45%, transparent 70%);
+  }
+  .flits.aan {
+    animation: flits 1.2s ease-out;
+  }
+  @keyframes nieuwe-look {
+    0% { transform: scale(0.94) translateY(8px); filter: brightness(2.2); }
+    55% { transform: scale(1.05) translateY(-16px); filter: brightness(1.3); }
+    100% { transform: scale(1) translateY(0); filter: none; }
+  }
+  @keyframes flits {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
   .naambord {
     position: relative;
     display: flex;
@@ -257,6 +284,9 @@
     padding: 4px 26px;
     border-radius: 18px;
     background: rgba(0, 0, 0, 0.45);
+  }
+  .naambord.weg {
+    visibility: hidden;
   }
   .naam {
     font-size: 36px;
@@ -269,18 +299,18 @@
   }
   .koop {
     position: absolute;
-    left: 16px;
-    right: 16px;
-    top: 16px;
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 14px;
+    gap: 6px;
+    padding: 10px 12px;
     border-radius: 22px;
-    background: rgba(27, 11, 58, 0.92);
+    background: rgba(27, 11, 58, 0.94);
     border: 3px solid #fde68a;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     animation: pop-in 0.3s ease-out;
   }

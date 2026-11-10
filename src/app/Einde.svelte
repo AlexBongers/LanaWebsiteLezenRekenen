@@ -2,6 +2,7 @@
   /** Sessie-einde: de speeltijd is om, de heldinnen zwaaien gedag. */
   import { onMount } from 'svelte';
   import Heldin from '../art/Heldin.svelte';
+  import Lana from '../art/Lana.svelte';
   import { spreek } from '../audio/stem';
   import teksten from '../../content/teksten.json';
   import { vg } from '../store/voortgang.svelte';
@@ -25,6 +26,7 @@
   <div class="groep">
     <Heldin wie="rumi" stemming="juich" hoogte={340} />
     <Heldin wie="mira" stemming="dans" hoogte={370} />
+    <Lana avatar={vg.avatar} stemming="dans" hoogte={350} licht />
     <Heldin wie="zoey" stemming="juich" hoogte={340} />
   </div>
 
