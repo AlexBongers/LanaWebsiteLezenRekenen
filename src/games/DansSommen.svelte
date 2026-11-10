@@ -5,6 +5,8 @@
   import Demon from '../art/Demon.svelte';
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Dans3D from './Dans3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import type { Som } from '../engine/generator-rekenen';
   import type { Gepland, Resultaat } from '../engine/sessie';
@@ -28,6 +30,9 @@
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let demonEls: HTMLElement[] = $state([]);
+  let drieD = $state(heeftWebGL());
+  let vlakEl: HTMLElement | undefined = $state();
+  const bron = (i: number) => (drieD ? (vlakEl ?? null) : demonEls[i]);
   let opnieuw = new Set<number>();
   let eersteFout: number | null = null;
 
@@ -57,10 +62,10 @@
       weg = i;
       speelGoed();
       speelPoef();
-      glitterOp(demonEls[i]);
+      glitterOp(bron(i));
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
       if (!opnieuw.has(index)) resultaten.push({ id: item.id, niveau: item.niveau, bron: item.bron, goed: pogingen === 0 });
-      opNoten(pogingen === 0 ? 2 : 1, demonEls[i]);
+      opNoten(pogingen === 0 ? 2 : 1, bron(i));
       await spreek(compliment('mira'));
       await wacht(300);
       volgende();
@@ -142,7 +147,23 @@
       {/if}
     </div>
 
-    <div class="demonen">
+    {#if drieD}
+      <div class="dansvloer" bind:this={vlakEl}>
+        <Dans3D
+          keuzes={som.keuzes}
+          basis={index}
+          sleutel={index}
+          {fout}
+          {weg}
+          {lacht}
+          goed={onthuld ? som.antwoord : weg !== null ? som.keuzes[weg] : null}
+          actief={!bezig && !onthuld}
+          opKies={(i) => (onthuld ? undefined : kies(som.keuzes[i], i))}
+          opFout={() => (drieD = false)}
+        />
+      </div>
+    {/if}
+    <div class="demonen" class:onzichtbaar={drieD}>
       {#each som.keuzes as keuze, i (index + '-' + keuze)}
         <button
           class="demon"
@@ -252,6 +273,22 @@
   }
   .hint.zichtbaar {
     height: 160px;
+  }
+  .dansvloer {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    width: 940px;
+    height: 330px;
+    margin-top: auto;
+  }
+  /* Blijft voor voorlezers en toetsenbord bruikbaar, maar de 3D-demonnen nemen het zicht over. */
+  .demonen.onzichtbaar {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    opacity: 0;
   }
   .demonen {
     margin-top: auto;

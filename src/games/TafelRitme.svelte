@@ -4,6 +4,8 @@
   import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Tafel3D from './Tafel3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { maakTafels, type TafelOpgave } from '../engine/generator-fase3';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
@@ -32,6 +34,8 @@
   let knopEls: HTMLElement[] = $state([]);
   let vorigeTafel = 0;
   let gestopt = false;
+  let drieD = $state(heeftWebGL());
+  let juist: number | null = $state(null);
 
   const TAFELNAAM = teksten.tafels.tafel as Record<string, string>;
 
@@ -72,6 +76,7 @@
     if (bezig || ronde.onthuld || fout.includes(n)) return;
     if (n === o.antwoord) {
       bezig = true;
+      juist = n;
       speelGoed();
       glitterOp(knopEls[i]);
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
@@ -96,6 +101,7 @@
   function volgende() {
     if (!ronde.volgende()) return;
     fout = [];
+    juist = null;
     stemming = 'dans';
     void speelReeks();
   }
@@ -118,7 +124,7 @@
         <div class="tegel vraag" class:goed={ronde.onthuld}>{ronde.onthuld ? o.antwoord : '?'}</div>
         <div class="luid"><Luidspreker opTik={speelReeks} /></div>
       </div>
-      <div class="keuzerij">
+      <div class="keuzerij" class:onzichtbaar={drieD}>
         {#each o.keuzes as k, i (k)}
           <button
             class="keuzeknop getalknop"
@@ -132,6 +138,20 @@
         {/each}
       </div>
     {/key}
+    {#if drieD}
+      <div class="trommels">
+        <Tafel3D
+          keuzes={o.keuzes}
+          {fout}
+          goed={ronde.onthuld ? o.antwoord : juist}
+          {pols}
+          actief={!bezig && !ronde.onthuld}
+          sleutel={ronde.nummer}
+          opKies={(n) => kies(n, o.keuzes.indexOf(n))}
+          opFout={() => (drieD = false)}
+        />
+      </div>
+    {/if}
     <div class="beat" aria-hidden="true">
       {#each [0, 1, 2, 3] as b}<span class:aan={pols % 4 === b}></span>{/each}
     </div>
@@ -191,6 +211,22 @@
   .luid {
     position: absolute;
     right: 0;
+  }
+  .trommels {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    width: 900px;
+    height: 290px;
+    margin: -6px 0;
+  }
+  /* Blijft voor voorlezers en toetsenbord bruikbaar, maar de 3D-drums nemen het zicht over. */
+  .keuzerij.onzichtbaar {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    opacity: 0;
   }
   .getalknop {
     min-width: 170px;

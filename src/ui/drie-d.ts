@@ -182,6 +182,7 @@ export async function maakPodium(canvas: HTMLCanvasElement, opties: PodiumOpties
 
   function opruimen() {
     gestopt = true;
+    verliezen.length = 0; // opruimen is geen verlies: de melding mag het spel niet naar 2D sturen
     cancelAnimationFrame(raf);
     waarnemer.disconnect();
     document.removeEventListener('visibilitychange', opZichtbaar);

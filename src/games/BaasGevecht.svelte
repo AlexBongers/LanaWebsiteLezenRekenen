@@ -10,6 +10,8 @@
   import Demon from '../art/Demon.svelte';
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Baas3D from './Baas3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { maakSom, REKEN_NIVEAUS, type Som } from '../engine/generator-rekenen';
   import { LEES_NIVEAUS, maakFlitsOpgaven, type FlitsOpgave } from '../engine/generator-lezen';
   import { STEDEN } from '../engine/tour';
@@ -50,6 +52,7 @@
   let aanval = $state(0);
   let groep: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let baasEl: HTMLElement | undefined = $state();
+  let drieD = $state(heeftWebGL());
   const resultaten: Resultaat[] = [];
   const noteer = (goed: boolean) =>
     resultaten.push({ id: `baas.${resultaten.length}`, niveau: 0, bron: 'niveau', goed });
@@ -201,9 +204,15 @@
     <Heldin wie="zoey" stemming={groep} hoogte={315} />
   </div>
 
+  {#if drieD}
+    <div class="baas3d">
+      <Baas3D soort={stadNr * 7 + 3} {verslagen} {lacht} {aanval} opFout={() => (drieD = false)} />
+    </div>
+  {/if}
+
   <!-- Zing-aanval: noten vliegen naar de baas -->
   {#key aanval}
-    {#if aanval > 0}
+    {#if aanval > 0 && !drieD}
       <div class="aanval" aria-hidden="true">
         {#each ['♪', '♫', '♬', '♪', '♫'] as n, i}
           <span style="animation-delay:{i * 0.06}s; --y:{(i - 2) * 26}px">{n}</span>
@@ -213,15 +222,17 @@
   {/key}
 
   <!-- De baas -->
-  <div class="baas" class:geraakt class:verslagen bind:this={baasEl}>
+  <div class="baas" class:drie={drieD} class:geraakt class:verslagen bind:this={baasEl}>
     <div class="hartjes" aria-label="{hartjes} hartjes">
       {#each Array.from({ length: HARTJES }, (_, i) => i) as i}
         <span class:weg={i >= hartjes}>💜</span>
       {/each}
     </div>
-    <div class="baaslijf">
-      <span class="kroon">👑</span>
-      <Demon soort={stadNr * 7 + 3} grootte={250} />
+    <div class="baaslijf" class:plaats={drieD}>
+      {#if !drieD}
+        <span class="kroon">👑</span>
+        <Demon soort={stadNr * 7 + 3} grootte={250} />
+      {/if}
       {#if lacht}<span class="haha">Hahaha!</span>{/if}
     </div>
     <div class="baasnaam">{STEDEN[stadNr].baas}</div>
@@ -351,7 +362,26 @@
     align-items: flex-end;
     gap: 0;
   }
+  .baas3d {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 900px;
+    height: 520px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  /* Hier staat de 3D-baas: de ruimte blijft vrij voor de hartjes en de naam. */
+  .baas.drie .hartjes {
+    margin-bottom: 52px;
+  }
+  .baaslijf.plaats {
+    width: 250px;
+    height: 250px;
+    animation: none;
+  }
   .baas {
+    z-index: 2;
     position: absolute;
     right: 40px;
     bottom: 14px;

@@ -3,6 +3,8 @@
   import { onMount } from 'svelte';
   import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
+  import Flits3D from './Flits3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import {
     FLITS_MAX,
@@ -32,6 +34,10 @@
   let fout: string[] = $state([]);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let podiumEl: HTMLElement | undefined = $state();
+  let drieD = $state(heeftWebGL());
+  /** Pas als het 3D-podium klaar is nemen de 3D-ster en het 3D-woord het over van de platte versie. */
+  let klaar3d = $state(false);
+  let toon3d = $derived(drieD && klaar3d);
 
   let item = $derived(rij[index]);
   let opgave = $derived(item.opgave);
@@ -130,7 +136,29 @@
       {/each}
     </div>
 
-    <div class="podium" bind:this={podiumEl}>
+    <div class="podium" class:drie={toon3d} bind:this={podiumEl}>
+      {#if drieD}
+        <div class="vlak3d">
+          <Flits3D
+            {fase}
+            woord={opgave.woord}
+            sleutel={index}
+            opTik={() => flits(vg.flitstijd)}
+            opKlaar={() => (klaar3d = true)}
+            opFout={() => {
+              drieD = false;
+              klaar3d = false;
+            }}
+          />
+        </div>
+      {/if}
+      {#if toon3d}
+        {#if fase === 'klaar'}
+          <button class="verborgen" onclick={() => flits(vg.flitstijd)} aria-label="Laat het woord zien"></button>
+        {:else if fase === 'onthuld'}
+          <div class="luid"><Luidspreker opTik={() => spreek(opgave.woord, 'woord')} /></div>
+        {/if}
+      {:else}
       <div class="lichtbundel" class:aan={fase === 'flits' || fase === 'goed' || fase === 'onthuld'}></div>
       {#if fase === 'klaar'}
         {#key index}
@@ -161,6 +189,7 @@
         {/if}
       {:else}
         <div class="vraag">?</div>
+      {/if}
       {/if}
     </div>
 
@@ -234,6 +263,30 @@
     background:
       radial-gradient(ellipse at 50% 60%, rgba(139, 92, 246, 0.35), transparent 70%),
       radial-gradient(ellipse at 50% 100%, rgba(251, 191, 36, 0.2), transparent 60%);
+  }
+  .podium.drie {
+    background: none;
+  }
+  .podium.drie::after {
+    display: none;
+  }
+  .vlak3d {
+    position: absolute;
+    left: -60px;
+    right: -60px;
+    top: -90px;
+    bottom: -14px;
+    /* Zachte randen: het 3D-beeld gaat vanzelf over in de achtergrond. */
+    -webkit-mask-image: radial-gradient(ellipse 54% 60% at 50% 52%, #000 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 54% 60% at 50% 52%, #000 62%, transparent 100%);
+  }
+  .verborgen {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    opacity: 0;
   }
   .podium::after {
     content: '';

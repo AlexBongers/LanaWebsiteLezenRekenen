@@ -3,6 +3,8 @@
   import { onMount } from 'svelte';
   import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
+  import Zwaard3D from './Zwaard3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { knipPlekken, maakZwaard, type ZwaardOpgave } from '../engine/generator-fase3';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelPoef, speelTik } from '../audio/geluid';
@@ -26,6 +28,9 @@
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let woordEl: HTMLElement | undefined = $state();
+  let drieD = $state(heeftWebGL());
+  let vlakEl: HTMLElement | undefined = $state();
+  const bron = () => (drieD ? (vlakEl ?? null) : (woordEl ?? null));
 
   let maat = $derived(Math.min(100, Math.floor(860 / o.woord.length)));
   const klinker = (l: string) => 'aeiouy'.includes(l);
@@ -47,9 +52,9 @@
       gehakt = true;
       speelPoef();
       speelGoed();
-      glitterOp(woordEl ?? null);
+      glitterOp(bron());
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
-      opNoten(ronde.goed(), woordEl);
+      opNoten(ronde.goed(), bron());
       await spreek(o.woord, 'woord');
       await spreek(compliment('rumi'));
       await wacht(300);
@@ -85,8 +90,21 @@
   </div>
 
   <div class="speelveld">
+    {#if drieD}
+      <div class="werkbank" bind:this={vlakEl}>
+        <Zwaard3D
+          woord={o.woord}
+          {knippen}
+          {gehakt}
+          hint={ronde.pogingen > 0}
+          sleutel={ronde.nummer}
+          opSpleet={(na) => knip(na)}
+          opFout={() => (drieD = false)}
+        />
+      </div>
+    {/if}
     {#key ronde.nummer}
-      <div class="woord" class:gehakt bind:this={woordEl} style="--maat:{maat}px">
+      <div class="woord" class:onzichtbaar={drieD} class:gehakt bind:this={woordEl} style="--maat:{maat}px">
         {#each o.woord.split('') as letter, i}
           <span class="letter" class:klinker={ronde.pogingen > 0 && klinker(letter)}>{letter}</span>
           {#if i < o.woord.length - 1}
@@ -107,6 +125,22 @@
 </div>
 
 <style>
+  .werkbank {
+    width: 960px;
+    height: 330px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  /* De platte letters blijven voor voorlezers en toetsenbord bruikbaar, maar de 3D-blokjes nemen het zicht over. */
+  .woord.onzichtbaar {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    opacity: 0;
+    animation: none;
+  }
   .woord {
     display: flex;
     align-items: stretch;
