@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Mira: Getallen-spring. Tik op de getallenlijn waar het getal staat; bij sommen eerst naar het hele tiental. */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import { maakSpringen, type SpringOpgave } from '../engine/generator-fase3';
@@ -107,7 +107,7 @@
 <div class="spelvlak">
   <div class="heldin-plek">
     <Tekstballon kleur="#ec4899" />
-    <Heldin wie="mira" {stemming} hoogte={420} />
+    <Duo wie="mira" {stemming} hoogte={420} />
   </div>
 
   <div class="speelveld">

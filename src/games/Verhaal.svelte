@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Zoey: Songtekst-verhaal. Zelf lezen, daarna vragen beantwoorden. */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import verhalen from '../../content/lezen/verhalen-E4.json';
@@ -146,7 +146,7 @@
 <div class="spel" class:vragen={fase === 'vragen'}>
   <div class="heldin">
     {#if fase === 'lezen'}<Tekstballon kleur="#06b6d4" />{/if}
-    <Heldin wie="zoey" {stemming} hoogte={fase === 'vragen' ? 260 : 360} />
+    <Duo wie="zoey" {stemming} hoogte={fase === 'vragen' ? 260 : 360} />
   </div>
 
   <article class="songtekst">
@@ -233,12 +233,12 @@
     position: absolute;
     inset: 0;
     display: grid;
-    grid-template-columns: 230px 1fr;
+    grid-template-columns: 290px 1fr;
     gap: 12px;
     padding: 0 28px 20px 0;
   }
   .spel.vragen {
-    grid-template-columns: 150px 1fr 450px;
+    grid-template-columns: 200px 1fr 450px;
   }
   .heldin {
     position: relative;

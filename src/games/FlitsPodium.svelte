@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Rumi: Flits-podium. Een woord flitst in de spotlight; welk woord zag je? */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import {
@@ -119,7 +119,7 @@
 <div class="spel">
   <div class="heldin">
     <Tekstballon kleur="#8b5cf6" />
-    <Heldin wie="rumi" {stemming} hoogte={420} />
+    <Duo wie="rumi" {stemming} hoogte={420} />
   </div>
 
   <div class="midden">

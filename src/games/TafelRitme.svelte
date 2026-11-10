@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Mira: Tafel-ritme. Een beat speelt, de reeks wordt opgezegd; welk getal komt hierna? */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import { maakTafels, type TafelOpgave } from '../engine/generator-fase3';
@@ -104,7 +104,7 @@
 <div class="spelvlak">
   <div class="heldin-plek">
     <Tekstballon kleur="#ec4899" />
-    <Heldin wie="mira" {stemming} hoogte={420} />
+    <Duo wie="mira" {stemming} hoogte={420} />
   </div>
 
   <div class="speelveld">

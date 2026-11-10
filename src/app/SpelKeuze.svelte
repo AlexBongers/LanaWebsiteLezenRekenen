@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Kies een spel van deze heldin. */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import characters from '../../content/characters.json';
@@ -45,7 +45,7 @@
   <div class="midden">
     <div class="heldin">
       <Tekstballon kleur={c.kleur} />
-      <Heldin wie={heldin} stemming={gekozen ? 'juich' : 'rust'} hoogte={470} />
+      <Duo wie={heldin} stemming={gekozen ? 'juich' : 'rust'} hoogte={470} />
     </div>
 
     <div class="spellen" class:drie={spellen.length === 3}>
@@ -98,7 +98,7 @@
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 340px 1fr;
     align-items: end;
     gap: 20px;
   }

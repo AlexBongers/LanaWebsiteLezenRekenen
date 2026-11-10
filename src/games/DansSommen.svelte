@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Mira: Dans-sommen. Tik de demon met het goede antwoord weg. */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Demon from '../art/Demon.svelte';
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
@@ -114,7 +114,7 @@
 <div class="spel">
   <div class="heldin">
     <Tekstballon kleur="#ec4899" />
-    <Heldin wie="mira" {stemming} hoogte={420} />
+    <Duo wie="mira" {stemming} hoogte={420} />
   </div>
 
   <div class="podium">

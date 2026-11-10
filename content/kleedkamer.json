@@ -6,12 +6,51 @@
       "naam": "Kapsel",
       "icoon": "💇",
       "items": [
-        { "id": "lang", "naam": "Lang los", "prijs": 0 },
-        { "id": "bob", "naam": "Korte bob", "prijs": 15 },
-        { "id": "staartjes", "naam": "Staartjes", "prijs": 15 },
-        { "id": "vlecht", "naam": "Lange vlecht", "prijs": 20 },
-        { "id": "knotjes", "naam": "Knotjes", "prijs": 20 },
-        { "id": "hogestaart", "naam": "Hoge staart", "prijs": 25 }
+        {
+          "id": "lang",
+          "naam": "Lang los",
+          "prijs": 0
+        },
+        {
+          "id": "bob",
+          "naam": "Korte bob",
+          "prijs": 15
+        },
+        {
+          "id": "staartjes",
+          "naam": "Staartjes",
+          "prijs": 15
+        },
+        {
+          "id": "vlecht",
+          "naam": "Lange vlecht",
+          "prijs": 20
+        },
+        {
+          "id": "knotjes",
+          "naam": "Knotjes",
+          "prijs": 20
+        },
+        {
+          "id": "hogestaart",
+          "naam": "Hoge staart",
+          "prijs": 25
+        },
+        {
+          "id": "vlechtjes",
+          "naam": "Twee vlechten",
+          "prijs": 25
+        },
+        {
+          "id": "krullen",
+          "naam": "Krullenbol",
+          "prijs": 30
+        },
+        {
+          "id": "knot",
+          "naam": "Ballerina-knot",
+          "prijs": 20
+        }
       ]
     },
     {
@@ -19,13 +58,126 @@
       "naam": "Haarkleur",
       "icoon": "🎨",
       "items": [
-        { "id": "bruin", "naam": "Bruin", "prijs": 0, "kleuren": ["#a0673a", "#6b3f1d", "#3b2010"] },
-        { "id": "zwart", "naam": "Zwart", "prijs": 0, "kleuren": ["#52525b", "#18181b", "#000000"] },
-        { "id": "blond", "naam": "Blond", "prijs": 0, "kleuren": ["#fde68a", "#d6a84a", "#8a6420"] },
-        { "id": "roze", "naam": "Roze", "prijs": 20, "kleuren": ["#fda4af", "#e11d74", "#831843"] },
-        { "id": "paars", "naam": "Paars", "prijs": 20, "kleuren": ["#c4b5fd", "#6d28d9", "#2e1065"] },
-        { "id": "blauw", "naam": "IJsblauw", "prijs": 25, "kleuren": ["#a5f3fc", "#0891b2", "#164e63"] },
-        { "id": "regenboog", "naam": "Regenboog", "prijs": 60, "kleuren": ["#f472b6", "#a78bfa", "#38bdf8"] }
+        {
+          "id": "bruin",
+          "naam": "Bruin",
+          "prijs": 0,
+          "kleuren": [
+            "#a0673a",
+            "#6b3f1d",
+            "#3b2010"
+          ]
+        },
+        {
+          "id": "zwart",
+          "naam": "Zwart",
+          "prijs": 0,
+          "kleuren": [
+            "#52525b",
+            "#18181b",
+            "#000000"
+          ]
+        },
+        {
+          "id": "blond",
+          "naam": "Blond",
+          "prijs": 0,
+          "kleuren": [
+            "#fde68a",
+            "#d6a84a",
+            "#8a6420"
+          ]
+        },
+        {
+          "id": "roze",
+          "naam": "Roze",
+          "prijs": 20,
+          "kleuren": [
+            "#fda4af",
+            "#e11d74",
+            "#831843"
+          ]
+        },
+        {
+          "id": "paars",
+          "naam": "Paars",
+          "prijs": 20,
+          "kleuren": [
+            "#c4b5fd",
+            "#6d28d9",
+            "#2e1065"
+          ]
+        },
+        {
+          "id": "blauw",
+          "naam": "IJsblauw",
+          "prijs": 25,
+          "kleuren": [
+            "#a5f3fc",
+            "#0891b2",
+            "#164e63"
+          ]
+        },
+        {
+          "id": "regenboog",
+          "naam": "Regenboog",
+          "prijs": 60,
+          "kleuren": [
+            "#f472b6",
+            "#a78bfa",
+            "#38bdf8"
+          ]
+        },
+        {
+          "id": "rood",
+          "naam": "Rood",
+          "prijs": 20,
+          "kleuren": [
+            "#fca5a5",
+            "#dc2626",
+            "#7f1d1d"
+          ]
+        },
+        {
+          "id": "oranje",
+          "naam": "Gember",
+          "prijs": 20,
+          "kleuren": [
+            "#fdba74",
+            "#ea580c",
+            "#7c2d12"
+          ]
+        },
+        {
+          "id": "mint",
+          "naam": "Mint",
+          "prijs": 25,
+          "kleuren": [
+            "#bbf7d0",
+            "#16a34a",
+            "#14532d"
+          ]
+        },
+        {
+          "id": "zilver",
+          "naam": "Zilver",
+          "prijs": 30,
+          "kleuren": [
+            "#f8fafc",
+            "#a1a1aa",
+            "#52525b"
+          ]
+        },
+        {
+          "id": "suikerspin",
+          "naam": "Suikerspin",
+          "prijs": 60,
+          "kleuren": [
+            "#f9a8d4",
+            "#c4b5fd",
+            "#7dd3fc"
+          ]
+        }
       ]
     },
     {
@@ -33,12 +185,81 @@
       "naam": "Outfit",
       "icoon": "👗",
       "items": [
-        { "id": "paarsjasje", "naam": "Paars jasje", "prijs": 0 },
-        { "id": "sterrenhoodie", "naam": "Sterren-hoodie", "prijs": 25 },
-        { "id": "rodejas", "naam": "Stoere rode jas", "prijs": 30 },
-        { "id": "sport", "naam": "Turquoise sport", "prijs": 30 },
-        { "id": "glitterjurk", "naam": "Glitterjurk", "prijs": 50 },
-        { "id": "goudpak", "naam": "Gouden podiumpak", "prijs": 80 }
+        {
+          "id": "paarsjasje",
+          "naam": "Paars jasje",
+          "prijs": 0
+        },
+        {
+          "id": "sterrenhoodie",
+          "naam": "Sterren-hoodie",
+          "prijs": 25
+        },
+        {
+          "id": "rodejas",
+          "naam": "Stoere rode jas",
+          "prijs": 30
+        },
+        {
+          "id": "sport",
+          "naam": "Turquoise sport",
+          "prijs": 30
+        },
+        {
+          "id": "glitterjurk",
+          "naam": "Glitterjurk",
+          "prijs": 50
+        },
+        {
+          "id": "goudpak",
+          "naam": "Gouden podiumpak",
+          "prijs": 80
+        },
+        {
+          "id": "rozejas",
+          "naam": "Roze podiumjasje",
+          "prijs": 30
+        },
+        {
+          "id": "ijsjas",
+          "naam": "IJsblauwe jas",
+          "prijs": 30
+        },
+        {
+          "id": "munthoodie",
+          "naam": "Mint-hoodie",
+          "prijs": 25
+        },
+        {
+          "id": "geelhoodie",
+          "naam": "Zonnige hoodie",
+          "prijs": 25
+        },
+        {
+          "id": "zwartgoud",
+          "naam": "Zwart met goud",
+          "prijs": 40
+        },
+        {
+          "id": "hunterjas",
+          "naam": "Hunter-jas",
+          "prijs": 45
+        },
+        {
+          "id": "rozejurk",
+          "naam": "Roze feestjurk",
+          "prijs": 50
+        },
+        {
+          "id": "sprookjesjurk",
+          "naam": "Sprookjesjurk",
+          "prijs": 55
+        },
+        {
+          "id": "zilverjurk",
+          "naam": "Zilveren sterrenjurk",
+          "prijs": 70
+        }
       ]
     },
     {
@@ -46,13 +267,66 @@
       "naam": "Extra",
       "icoon": "✨",
       "items": [
-        { "id": "geen", "naam": "Niets", "prijs": 0 },
-        { "id": "microfoon", "naam": "Gouden microfoon", "prijs": 15 },
-        { "id": "strik", "naam": "Grote strik", "prijs": 15 },
-        { "id": "koptelefoon", "naam": "Koptelefoon", "prijs": 20 },
-        { "id": "hartjesbril", "naam": "Hartjesbril", "prijs": 25 },
-        { "id": "sterrenstaf", "naam": "Sterrenstaf", "prijs": 40 },
-        { "id": "kroon", "naam": "Kroontje", "prijs": 60 }
+        {
+          "id": "geen",
+          "naam": "Niets",
+          "prijs": 0
+        },
+        {
+          "id": "microfoon",
+          "naam": "Gouden microfoon",
+          "prijs": 15
+        },
+        {
+          "id": "strik",
+          "naam": "Grote strik",
+          "prijs": 15
+        },
+        {
+          "id": "koptelefoon",
+          "naam": "Koptelefoon",
+          "prijs": 20
+        },
+        {
+          "id": "hartjesbril",
+          "naam": "Hartjesbril",
+          "prijs": 25
+        },
+        {
+          "id": "sterrenstaf",
+          "naam": "Sterrenstaf",
+          "prijs": 40
+        },
+        {
+          "id": "kroon",
+          "naam": "Kroontje",
+          "prijs": 60
+        },
+        {
+          "id": "kattenoortjes",
+          "naam": "Kattenoortjes",
+          "prijs": 20
+        },
+        {
+          "id": "zonnebril",
+          "naam": "Coole zonnebril",
+          "prijs": 25
+        },
+        {
+          "id": "bloemenkrans",
+          "naam": "Bloemenkrans",
+          "prijs": 25
+        },
+        {
+          "id": "lightstick",
+          "naam": "Hartjes-lightstick",
+          "prijs": 35
+        },
+        {
+          "id": "vleugels",
+          "naam": "Engelenvleugels",
+          "prijs": 70
+        }
       ]
     },
     {
@@ -60,19 +334,85 @@
       "naam": "Podiumlicht",
       "icoon": "💡",
       "items": [
-        { "id": "paars", "naam": "Paars", "prijs": 0, "kleur": "#8b5cf6" },
-        { "id": "roze", "naam": "Roze", "prijs": 10, "kleur": "#ec4899" },
-        { "id": "turquoise", "naam": "Turquoise", "prijs": 10, "kleur": "#06b6d4" },
-        { "id": "goud", "naam": "Goud", "prijs": 30, "kleur": "#fbbf24" },
-        { "id": "regenboog", "naam": "Regenboog", "prijs": 50, "kleur": "#f472b6" }
+        {
+          "id": "paars",
+          "naam": "Paars",
+          "prijs": 0,
+          "kleur": "#8b5cf6"
+        },
+        {
+          "id": "roze",
+          "naam": "Roze",
+          "prijs": 10,
+          "kleur": "#ec4899"
+        },
+        {
+          "id": "turquoise",
+          "naam": "Turquoise",
+          "prijs": 10,
+          "kleur": "#06b6d4"
+        },
+        {
+          "id": "goud",
+          "naam": "Goud",
+          "prijs": 30,
+          "kleur": "#fbbf24"
+        },
+        {
+          "id": "regenboog",
+          "naam": "Regenboog",
+          "prijs": 50,
+          "kleur": "#f472b6"
+        },
+        {
+          "id": "groen",
+          "naam": "Groen",
+          "prijs": 10,
+          "kleur": "#22c55e"
+        },
+        {
+          "id": "oranje",
+          "naam": "Oranje",
+          "prijs": 10,
+          "kleur": "#f97316"
+        },
+        {
+          "id": "rood",
+          "naam": "Rood",
+          "prijs": 10,
+          "kleur": "#ef4444"
+        },
+        {
+          "id": "wit",
+          "naam": "IJswit",
+          "prijs": 25,
+          "kleur": "#e0f2fe"
+        }
       ]
     }
   ],
-  "huid": ["#fde4d3", "#f6cfae", "#d9a47c", "#a8714c"],
+  "huid": [
+    "#fde4d3",
+    "#f6cfae",
+    "#d9a47c",
+    "#a8714c"
+  ],
   "ogen": [
-    { "id": "bruin", "kleur": "#92400e" },
-    { "id": "blauw", "kleur": "#2563eb" },
-    { "id": "groen", "kleur": "#16a34a" },
-    { "id": "grijs", "kleur": "#64748b" }
+    {
+      "id": "bruin",
+      "kleur": "#92400e"
+    },
+    {
+      "id": "blauw",
+      "kleur": "#2563eb"
+    },
+    {
+      "id": "groen",
+      "kleur": "#16a34a"
+    },
+    {
+      "id": "grijs",
+      "kleur": "#64748b"
+    }
   ]
 }

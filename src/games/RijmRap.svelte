@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Zoey: Rijm-rap. Zoey rapt een woord; welk geschreven woord rijmt erop? */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import { maakRijm, type RijmOpgave } from '../engine/generator-fase3';
@@ -80,7 +80,7 @@
 <div class="spelvlak">
   <div class="heldin-plek">
     <Tekstballon kleur="#06b6d4" />
-    <Heldin wie="zoey" {stemming} hoogte={420} />
+    <Duo wie="zoey" {stemming} hoogte={420} />
   </div>
 
   <div class="speelveld">

@@ -45,9 +45,20 @@
     sport: { jas: '#14b8a6', donker: '#0f766e', top: '#fbfbfd', broek: '#1d2a4d', schoen: 'sneaker', rand: '#fff' },
     glitterjurk: { jas: '#c084fc', donker: '#7e22ce', top: '#c084fc', broek: '#c084fc', schoen: '#a855f7', rand: '#fff' },
     goudpak: { jas: '#e8a317', donker: '#a1620b', top: '#fff7ed', broek: '#fffbeb', schoen: '#d97706', rand: '#fff7c2' },
+    rozejas: { jas: '#f472b6', donker: '#be185d', top: '#fff1f7', broek: '#831843', schoen: '#ec4899', rand: 'goud' },
+    ijsjas: { jas: '#38bdf8', donker: '#0369a1', top: '#f0f9ff', broek: '#1e3a8a', schoen: '#0ea5e9', rand: 'goud' },
+    zwartgoud: { jas: '#1f1d2b', donker: '#0a0910', top: '#fff7ed', broek: '#14121c', schoen: '#14121c', rand: 'goud' },
+    hunterjas: { jas: '#1e1b4b', donker: '#0b0a26', top: '#0f172a', broek: '#0f172a', schoen: '#312e81', rand: '#22d3ee' },
+    munthoodie: { jas: '#34d399', donker: '#047857', top: '#34d399', broek: '#134e4a', schoen: 'sneaker', rand: '#fff' },
+    geelhoodie: { jas: '#facc15', donker: '#a16207', top: '#facc15', broek: '#422006', schoen: 'sneaker', rand: '#fff' },
+    rozejurk: { jas: '#f9a8d4', donker: '#be185d', top: '#f9a8d4', broek: '#f9a8d4', schoen: '#ec4899', rand: '#fff' },
+    sprookjesjurk: { jas: '#60a5fa', donker: '#1d4ed8', top: '#60a5fa', broek: '#60a5fa', schoen: '#3b82f6', rand: '#fff' },
+    zilverjurk: { jas: '#cbd5e1', donker: '#64748b', top: '#cbd5e1', broek: '#cbd5e1', schoen: '#94a3b8', rand: '#fff' },
   } as const;
   let o = $derived(OUTFIT[avatar.outfit as keyof typeof OUTFIT] ?? OUTFIT.paarsjasje);
-  let rok = $derived(avatar.outfit === 'glitterjurk');
+  let rok = $derived(['glitterjurk', 'rozejurk', 'sprookjesjurk', 'zilverjurk'].includes(avatar.outfit));
+  let hoodie = $derived(['sterrenhoodie', 'munthoodie', 'geelhoodie'].includes(avatar.outfit));
+  let regen = $derived(['regenboog', 'suikerspin'].includes(avatar.haarkleur));
   let kort = $derived(avatar.outfit === 'sport');
   let zingt = $derived(stemming === 'juich' || stemming === 'dans' || stemming === 'draai');
 
@@ -115,9 +126,9 @@
       <stop offset="0.45" stop-color={huidLicht} />
       <stop offset="1" stop-color={huidDonker} />
     </linearGradient>
-    <linearGradient id="{id}-haar" x1="0.2" y1="0" x2={avatar.haarkleur === 'regenboog' ? '1' : '0.6'} y2="1">
+    <linearGradient id="{id}-haar" x1="0.2" y1="0" x2={regen ? '1' : '0.6'} y2="1">
       <stop offset="0" stop-color={hk[0]} />
-      <stop offset={avatar.haarkleur === 'regenboog' ? '0.5' : '0.25'} stop-color={hk[1]} />
+      <stop offset={regen ? '0.5' : '0.25'} stop-color={hk[1]} />
       <stop offset="1" stop-color={hk[2]} />
     </linearGradient>
     <linearGradient id="{id}-haarzij" x1="0" y1="0" x2="1" y2="0">
@@ -141,6 +152,11 @@
       <stop offset="0.35" stop-color="#000" stop-opacity="0" />
       <stop offset="0.7" stop-color="#fff" stop-opacity="0.12" />
       <stop offset="1" stop-color="#000" stop-opacity="0.3" />
+    </linearGradient>
+    <linearGradient id="{id}-vleugel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.6" stop-color="#e9d5ff" />
+      <stop offset="1" stop-color="#fde68a" />
     </linearGradient>
     <linearGradient id="{id}-goud" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#fff4c2" />
@@ -192,6 +208,19 @@
 
   <g filter="url(#{id}-lijn)">
     <g class="lijf">
+      <!-- ============ VLEUGELS ============ -->
+      {#if avatar.accessoire === 'vleugels'}
+        {#each [0, 1] as kant}
+          <g class="zwaai" class:omgekeerd={kant === 1} style="transform-origin:{kant ? 120 : 80}px 105px">
+            <g transform={kant ? 'translate(200 0) scale(-1 1)' : undefined}>
+              <path d="M84 108 C60 104 30 92 10 56 C8 44 12 34 15 28 C24 44 36 50 50 50 C46 38 52 24 58 16 C62 34 72 46 86 58 Z" fill="url(#{id}-vleugel)" />
+              <path d="M84 112 C66 116 40 112 22 92 C18 82 20 74 22 68 C32 80 46 84 60 82 C58 76 62 70 66 64 C68 80 76 90 86 98 Z" fill="url(#{id}-vleugel)" opacity="0.9" />
+              <path d="M82 104 C58 92 36 70 18 40 M82 108 C62 100 44 90 28 76" stroke="#f2b632" stroke-width="1.1" fill="none" opacity="0.7" />
+            </g>
+          </g>
+        {/each}
+      {/if}
+
       <!-- ============ ACHTERHAAR ============ -->
       {#if avatar.haar === 'vlecht'}
         <g class="zwaai" style="transform-origin:74px 70px">
@@ -212,6 +241,37 @@
         </g>
         <path transform={HOOFD} d="M74 30 C70 -8 130 -8 126 30 L127 66 C116 74 84 74 73 66 Z" fill="url(#{id}-haar)" />
         <ellipse transform={HOOFD} cx="104" cy="5" rx="5" ry="3" fill="#f472b6" />
+      {:else if avatar.haar === 'vlechtjes'}
+        {#each [0, 1] as kant}
+          <g class="zwaai" class:omgekeerd={kant === 1} style="transform-origin:{kant ? 126 : 74}px 70px">
+            <g transform={kant ? 'translate(200 0) scale(-1 1)' : undefined}>
+              <path d="M72 60 C64 110 68 175 62 236 L69 236 C74 175 80 110 83 60 Z" fill={hk[2]} />
+              {#each Array.from({ length: 13 }, (_, i) => i) as i}
+                {@const cx = 74 - i * 0.55 + (i % 2 ? 2.2 : -2.2)}
+                {@const cy = 72 + i * 13}
+                <ellipse {cx} {cy} rx={7 - i * 0.2} ry="8.4" transform="rotate({i % 2 ? 32 : -32} {cx} {cy})" fill="url(#{id}-haarzij)" />
+              {/each}
+              <circle cx="65" cy="238" r="4" fill="#f472b6" />
+              <path d="M62 241 q-3 9 -5 15 M65 241 q0 9 0 16 M68 241 q3 9 5 15" stroke={hk[1]} stroke-width="2.8" stroke-linecap="round" fill="none" />
+            </g>
+          </g>
+        {/each}
+        <path transform={HOOFD} d="M74 30 C70 -8 130 -8 126 30 L128 62 C116 72 84 72 72 62 Z" fill="url(#{id}-haar)" />
+      {:else if avatar.haar === 'krullen'}
+        <g transform={HOOFD}>
+          {#each [[68, 8, 13], [132, 8, 13], [60, 30, 13], [140, 30, 13], [58, 54, 12.5], [142, 54, 12.5], [62, 78, 12], [138, 78, 12], [56, 100, 10.5], [144, 100, 10.5], [80, -8, 12], [100, -13, 13], [120, -8, 12]] as [x, y, r]}
+            <circle cx={x} cy={y} r={r} fill="url(#{id}-haar)" />
+            <path d="M{x - r * 0.45} {y + r * 0.1} q{r * 0.45} {-r * 0.7} {r * 0.9} 0" stroke={hk[0]} stroke-width="1.3" fill="none" opacity="0.6" stroke-linecap="round" />
+          {/each}
+          <path d="M74 30 C70 -8 130 -8 126 30 L128 60 C118 68 82 68 72 60 Z" fill="url(#{id}-haar)" />
+        </g>
+      {:else if avatar.haar === 'knot'}
+        <g transform={HOOFD}>
+          <circle cx="100" cy="-6" r="13" fill="url(#{id}-haar)" />
+          <path d="M91 -8 q9 -9 18 0 M93 -2 q7 -6 14 0" stroke={hk[0]} stroke-width="1.3" fill="none" opacity="0.7" stroke-linecap="round" />
+          <path d="M74 30 C70 -8 130 -8 126 30 L128 60 C118 68 82 68 72 60 Z" fill="url(#{id}-haar)" />
+          <ellipse cx="100" cy="4" rx="10" ry="3" fill="#f472b6" />
+        </g>
       {:else if avatar.haar === 'lang'}
         <path transform={HOOFD} d="M74 30 C70 -8 130 -8 126 30 C130 70 134 110 130 150 C120 158 112 152 104 158 L96 158 C88 152 80 158 70 150 C66 110 70 70 74 30 Z" fill="url(#{id}-haar)" />
         <path transform={HOOFD} d="M76 60 C74 90 74 120 76 146 M124 60 C126 90 126 120 124 146" stroke={hk[0]} stroke-width="1.4" fill="none" opacity="0.45" />
@@ -274,7 +334,7 @@
         {#each [[86, 110], [112, 104], [100, 180], [76, 226], [124, 230], [96, 244], [110, 206], [88, 196], [102, 130]] as [x, y]}
           <path d="M{x} {y - 4} l1.2 3 3 1 -3 1 -1.2 3 -1.2 -3 -3 -1 3 -1z" fill="#fff" class="glitter" />
         {/each}
-      {:else if avatar.outfit === 'sterrenhoodie'}
+      {:else if hoodie}
         <path d="M72 86 C66 110 72 150 72 184 L128 184 C128 150 134 110 128 86 C114 78 86 78 72 86 Z" fill={o.jas} />
         <path d="M72 86 C66 110 72 150 72 184 L128 184 C128 150 134 110 128 86 C114 78 86 78 72 86 Z" fill="url(#{id}-stof)" />
         <path d="M84 150 h32 v20 h-32 z" fill={o.donker} opacity="0.35" />
@@ -436,6 +496,25 @@
             <path d="M75 30 C70 -14 130 -14 125 30" stroke="#1f2937" stroke-width="4" fill="none" />
             <rect x="70" y="24" width="10" height="17" rx="4.5" fill="#ec4899" />
             <rect x="120" y="24" width="10" height="17" rx="4.5" fill="#ec4899" />
+          {:else if avatar.accessoire === 'kattenoortjes'}
+            <path d="M75 24 C75 -4 125 -4 125 24" stroke="#1f2937" stroke-width="3" fill="none" />
+            <path d="M77 8 L78 -14 L95 -2 Z" fill="#f9a8d4" stroke="#1f2937" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M123 8 L122 -14 L105 -2 Z" fill="#f9a8d4" stroke="#1f2937" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M81 2 L81.5 -7 L89 -2 Z M119 2 L118.5 -7 L111 -2 Z" fill="#ec4899" />
+          {:else if avatar.accessoire === 'bloemenkrans'}
+            <path d="M76 26 C76 -3 124 -3 124 26" stroke="#4ade80" stroke-width="2.4" fill="none" />
+            {#each [[77, 24], [80, 10], [90, 1], [100, -1.5], [110, 1], [120, 10], [123, 24]] as [x, y], i}
+              {@const kl = ['#f472b6', '#fde68a', '#c4b5fd', '#fb923c'][i % 4]}
+              {#each [0, 72, 144, 216, 288] as a}
+                <circle cx={x + Math.cos((a * Math.PI) / 180) * 2.8} cy={y + Math.sin((a * Math.PI) / 180) * 2.8} r="2.4" fill={kl} />
+              {/each}
+              <circle cx={x} cy={y} r="1.6" fill="#fff7c2" />
+            {/each}
+          {:else if avatar.accessoire === 'zonnebril'}
+            <rect x="77.5" y="24" width="21" height="13.5" rx="5.5" fill="#0f172a" fill-opacity="0.82" stroke="#ec4899" stroke-width="1.6" />
+            <rect x="101.5" y="24" width="21" height="13.5" rx="5.5" fill="#0f172a" fill-opacity="0.82" stroke="#ec4899" stroke-width="1.6" />
+            <path d="M98.5 28.5 Q100 26.5 101.5 28.5 M77.5 28 L74.5 26.5 M122.5 28 L125.5 26.5" stroke="#ec4899" stroke-width="1.6" fill="none" />
+            <path d="M81 28 l5 -2 M105 28 l5 -2" stroke="#fff" stroke-width="1.4" opacity="0.55" stroke-linecap="round" />
           {:else if avatar.accessoire === 'hartjesbril'}
             {#each [89, 111] as x}
               <path d="M{x} 36 C{x - 12} 28 {x - 7} 19 {x} 25 C{x + 7} 19 {x + 12} 28 {x} 36 Z" fill="#f472b6" fill-opacity="0.45" stroke="#db2777" stroke-width="1.6" />
@@ -454,6 +533,14 @@
           <rect x="149.5" y="10" width="5" height="96" rx="2.5" fill="url(#{id}-goud)" />
           <g filter="url(#{id}-gloed)">
             <path d="M152 -10 l4.5 9.2 10.1 1.5 -7.3 7.1 1.7 10 -9 -4.7 -9 4.7 1.7 -10 -7.3 -7.1 10.1 -1.5z" fill="url(#{id}-goud)" stroke="#fff7c2" stroke-width="1.2" />
+          </g>
+        {:else if avatar.accessoire === 'lightstick'}
+          <rect x="149.5" y="22" width="5" height="84" rx="2.5" fill="#f9a8d4" />
+          <rect x="149.5" y="22" width="5" height="84" rx="2.5" fill="#fff" opacity="0.35" />
+          <rect x="148.2" y="84" width="7.6" height="22" rx="2" fill="url(#{id}-goud)" />
+          <g filter="url(#{id}-gloed)" class="glitter">
+            <path d="M152 30 C130 14 140 -2 152 9 C164 -2 174 14 152 30 Z" fill="#f472b6" stroke="#fff" stroke-width="1.4" />
+            <ellipse cx="146" cy="8" rx="3" ry="2" fill="#fff" opacity="0.7" />
           </g>
         {:else}
           <path d="M147.6 92 L149 60 L155 60 L156.4 92 Q152 95 147.6 92 Z" fill="url(#{id}-mic)" />

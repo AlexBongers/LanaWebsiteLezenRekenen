@@ -1,7 +1,7 @@
 <script lang="ts">
   /** Rumi: Klankgroepen-zwaard. Tik tussen de letters om het woord in klankgroepen te hakken. */
   import { onMount } from 'svelte';
-  import Heldin from '../art/Heldin.svelte';
+  import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import { knipPlekken, maakZwaard, type ZwaardOpgave } from '../engine/generator-fase3';
   import { spreek, stopSpreken } from '../audio/stem';
@@ -81,7 +81,7 @@
 <div class="spelvlak">
   <div class="heldin-plek">
     <Tekstballon kleur="#8b5cf6" />
-    <Heldin wie="rumi" {stemming} hoogte={420} />
+    <Duo wie="rumi" {stemming} hoogte={420} />
   </div>
 
   <div class="speelveld">
