@@ -10,6 +10,7 @@
 
   let {
     delen,
+    extra = [],
     door,
     geplaatst,
     fouten,
@@ -20,7 +21,9 @@
     opFout,
   }: {
     delen: string[];
-    /** Volgorde waarin de blokjes vooraan liggen (indexen in `delen`). */
+    /** Extra blokjes die er niet in horen (dictee). */
+    extra?: string[];
+    /** Volgorde waarin de blokjes vooraan liggen (indexen in `delen` + `extra`). */
     door: number[];
     /** Hoeveel blokjes al op hun plek staan. */
     geplaatst: number;
@@ -177,8 +180,9 @@
       hoofd.add(plek);
       plekken.push(plek);
     });
+    const alle = [...delen, ...extra];
     door.forEach((j, k) => {
-      const d = delen[j];
+      const d = alle[j];
       const kleur = KLEUREN[(j + sleutel) % KLEUREN.length];
       const mat = new THREE.MeshPhysicalMaterial({ color: kleur, roughness: 0.4, clearcoat: 0.6, clearcoatRoughness: 0.3, envMapIntensity: 0.5, emissive: kleur, emissiveIntensity: 0.08 });
       const tex = bordTextuur(THREE, d, { breed: 256 + d.length * 60, hoog: 200, maat: 0.6, font, van: '#fffdf7', naar: '#f5f3ff', rand: '#ffffff' });
@@ -191,7 +195,8 @@
       const schaduw = maakSchaduw(THREE, breedte(d) * 0.65, 0.5);
       schaduw.scale.y = 0.6;
       hoofd.add(groep, schaduw);
-      const benedenX = (k - (n - 1) / 2) * 3.0;
+      const stap = Math.min(2.6, 9.4 / Math.max(1, door.length));
+      const benedenX = (k - (door.length - 1) / 2) * stap;
       blokken.push({
         j,
         groep,
@@ -199,7 +204,7 @@
         tex,
         schaduw,
         beneden: { x: benedenX, z: 1.5 + (k % 2) * 0.35, rz: ((k * 37) % 7 - 3) * 0.04 },
-        boven: { x: bovenX[j] },
+        boven: { x: bovenX[j] ?? 0 },
         start: t0 + k * 0.12,
         vlieg: 0,
         wiebel: -10,
@@ -209,6 +214,7 @@
 
   $effect(() => {
     delen.join('|');
+    extra.join('|');
     door.join(',');
     sleutel;
     if (gereed) untrack(bouw);

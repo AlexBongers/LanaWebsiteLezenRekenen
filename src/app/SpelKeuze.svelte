@@ -48,7 +48,7 @@
       <Duo wie={heldin} stemming={gekozen ? 'juich' : 'rust'} hoogte={470} />
     </div>
 
-    <div class="spellen" class:drie={spellen.length === 3}>
+    <div class="spellen" class:drie={spellen.length === 3} class:veel={spellen.length > 6}>
       {#each spellen as s, i}
         {@const niveau = vg.vaardigheden[s.vaardigheid].niveau}
         <button
@@ -135,6 +135,41 @@
   }
   .spellen.drie .spel {
     min-height: 120px;
+  }
+  /* Veel spellen (Mira): drie kolommen met compactere kaarten */
+  .spellen.veel {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .spellen.veel .spel {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    min-height: 0;
+    padding: 30px 10px 12px;
+    border-radius: 24px;
+  }
+  .spellen.veel .icoon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    font-size: 40px;
+  }
+  .spellen.veel .naam {
+    font-size: 24px;
+  }
+  .spellen.veel .uitleg {
+    font-size: 16px;
+  }
+  .spellen.veel .labels {
+    top: 6px;
+    right: 8px;
+  }
+  .spellen.veel .snel,
+  .spellen.veel .niveau {
+    font-size: 13px;
+    padding: 1px 8px;
   }
   .spel:active {
     transform: scale(0.97);

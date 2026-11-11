@@ -20,7 +20,7 @@ import { ALLE_TIJDEN, klokZin } from '../engine/generator-fase5';
 export type TeSpreken = { tekst: string; soort: Spreeksoort };
 
 /** Losse woorden die bij sommen horen ("47", "plus", "8", "is", "55"). */
-export const SOM_WOORDEN = ['plus', 'min', 'is'];
+export const SOM_WOORDEN = ['plus', 'min', 'is', 'euro', 'cent', 'centimeter', 'kilo'];
 
 function strings(x: unknown): string[] {
   if (typeof x === 'string') return [x];

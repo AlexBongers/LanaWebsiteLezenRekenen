@@ -11,7 +11,7 @@
   import { maakPodium, type Podium } from '../ui/drie-d';
   import { bordTextuur, gloedTextuur, maakDeeltjes, maakSchaduw, maakSterren, maakVloer, veer, type Deeltjes } from '../ui/drie-d-bouw';
 
-  type Thema = 'bollen' | 'platen' | 'tvs';
+  type Thema = 'bollen' | 'platen' | 'tvs' | 'stenen';
 
   let {
     thema,
@@ -78,6 +78,7 @@
     bollen: { camera: [0, 2.5, 7.4], kijkNaar: [0, 1.3, 0] },
     platen: { camera: [0, 3.4, 8.2], kijkNaar: [0, 1.1, 0] },
     tvs: { camera: [0, 2.2, 7.3], kijkNaar: [0, 1.55, 0] },
+    stenen: { camera: [0, 2.4, 7.6], kijkNaar: [0, 1.45, 0] },
   };
 
   onMount(() => {
@@ -98,7 +99,7 @@
           straal: 6,
           schaalX: 1.08,
           schaalZ: 0.4,
-          kleur: thema === 'platen' ? 0x1e1b4b : thema === 'tvs' ? 0x134e4a : 0x4c1d95,
+          kleur: thema === 'platen' ? 0x1e1b4b : thema === 'tvs' ? 0x134e4a : thema === 'stenen' ? 0x312e81 : 0x4c1d95,
           randKleur: thema === 'platen' ? 0x22d3ee : thema === 'tvs' ? 0x2dd4bf : 0xf472b6,
         });
         hoofd = new THREE.Group();
@@ -176,6 +177,15 @@
               m.emissive.setHex(isFout ? 0x374151 : kleur);
               m.emissiveIntensity = isGoed ? 1.2 : isFout ? 0.1 : 0.6 + Math.sin(t * 4 + it.i) * 0.25;
               it.label.position.y = 2.15 + Math.sin(t * 2 + it.i) * 0.06;
+            } else if (thema === 'stenen') {
+              const m = it.kleurMat as MeshPhysicalMaterial;
+              m.color.setHex(isGoed ? 0x4ade80 : it.kleur).lerp(new THREE.Color(0x6b7280), it.grijs);
+              m.emissive.setHex(isGoed ? 0x22c55e : it.kleur);
+              m.emissiveIntensity = isGoed ? 0.7 + Math.sin(t * 6) * 0.25 : 0.25 * (1 - it.grijs);
+              const steen = it.lijf.userData.steen as Mesh;
+              steen.rotation.y = t * (isGoed ? 4 : 0.9) + it.i;
+              steen.position.y = 1.2 + Math.sin(t * 2 + it.i) * 0.08;
+              it.label.position.y = 2.55 + Math.sin(t * 2 + it.i) * 0.05;
             } else {
               const m = it.kleurMat as MeshPhysicalMaterial;
               m.color.setHex(it.kleur).lerp(new THREE.Color(0x6b7280), it.grijs);
@@ -382,6 +392,41 @@
     return { lijf, label, kleurMat: kastMat };
   }
 
+  function bouwSteen(i: number, kleur: number, labelMat: MeshBasicMaterial) {
+    const { THREE } = podium!;
+    const lijf = new THREE.Group();
+    // Zilveren sokkel
+    const zilver = new THREE.MeshPhysicalMaterial({ color: 0xe5e7eb, metalness: 0.95, roughness: 0.18 });
+    const sokkel = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 0.4, 6), zilver);
+    sokkel.position.y = 0.2;
+    // Geslepen edelsteen
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: kleur,
+      metalness: 0.1,
+      roughness: 0.05,
+      clearcoat: 1,
+      clearcoatRoughness: 0.02,
+      flatShading: true,
+      emissive: kleur,
+      emissiveIntensity: 0.25,
+      transparent: true,
+      opacity: 0.92,
+    });
+    const steen = new THREE.Mesh(new THREE.OctahedronGeometry(0.85, 1), mat);
+    steen.scale.set(1, 1.25, 1);
+    steen.position.y = 1.2;
+    const gloed = new THREE.Mesh(
+      new THREE.CircleGeometry(1.3, 32),
+      new THREE.MeshBasicMaterial({ map: gloedTextuur(THREE, `#${kleur.toString(16).padStart(6, '0')}`), transparent: true, opacity: 0.45, depthWrite: false, blending: THREE.AdditiveBlending }),
+    );
+    gloed.position.set(0, 1.2, -0.5);
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.75), labelMat);
+    label.position.set(0, 2.55, 0.3);
+    lijf.add(sokkel, gloed, steen, label);
+    lijf.userData.steen = steen;
+    return { lijf, label, kleurMat: mat };
+  }
+
   function bouw() {
     if (!podium || !hoofd) return;
     const { THREE } = podium;
@@ -402,7 +447,14 @@
       const kleur = KLEUREN[i % KLEUREN.length];
       const tex = { norm: maakTextuur(tekst, 'norm'), goed: maakTextuur(tekst, 'goed'), fout: maakTextuur(tekst, 'fout') };
       const labelMat = new THREE.MeshBasicMaterial({ map: tex.norm, transparent: true, toneMapped: false, depthWrite: false });
-      const deel = thema === 'bollen' ? bouwBol(i, kleur, labelMat) : thema === 'platen' ? bouwPlaat(i, kleur, labelMat) : bouwTv(i, kleur, labelMat);
+      const deel =
+        thema === 'bollen'
+          ? bouwBol(i, kleur, labelMat)
+          : thema === 'platen'
+            ? bouwPlaat(i, kleur, labelMat)
+            : thema === 'stenen'
+              ? bouwSteen(i, kleur, labelMat)
+              : bouwTv(i, kleur, labelMat);
       const groep = new THREE.Group();
       groep.add(deel.lijf);
       // Tikvlak

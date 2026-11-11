@@ -231,5 +231,31 @@
   "bouwen": {
     "start": "Luister naar het woord. Tik de blokjes in de goede volgorde.",
     "hint": "Zeg het woord langzaam. Welk stukje hoor je eerst?"
+  },
+  "dictee": {
+    "start": "Dictee! Luister naar het woord en bouw het met de letters.",
+    "hint": "Zeg het woord heel langzaam. Welke klank hoor je nu?",
+    "goed": "Helemaal goed geschreven!"
+  },
+  "klinker": {
+    "start": "Er mist een klank in het woord. Welke letters horen erin?",
+    "hint": "Luister goed. Is het een korte klank of een lange klank?"
+  },
+  "harten": {
+    "start": "Verliefde harten! Welk getal hoort erbij? Samen maken ze het grote getal.",
+    "hint": "Tel verder vanaf het kleine getal, tot je bij het grote getal bent.",
+    "samen": "Samen zijn ze verliefd!"
+  },
+  "geld": {
+    "start": "Hoeveel geld is het samen? Tel alle munten en briefjes.",
+    "hint": "Begin bij het grootste geld. Tel de rest er steeds bij."
+  },
+  "meten": {
+    "zwaarder": "Welke is zwaarder? Kijk goed naar de weegschaal.",
+    "hintZwaar": "De kant die het laagst hangt, is het zwaarst.",
+    "liniaal": "Hoe lang is het potlood? Kijk naar de liniaal.",
+    "hintLiniaal": "Begin bij de nul. Kijk waar de punt van het potlood ophoudt.",
+    "kilo": "Hoeveel kilo weegt het pakje? Tel de gewichtjes.",
+    "hintKilo": "De weegschaal is recht. Elk gewichtje weegt één kilo. Tel ze maar."
   }
 }

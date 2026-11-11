@@ -30,7 +30,12 @@ export type VaardigheidId =
   | 'sterren'
   | 'ballonnen'
   | 'klok'
-  | 'bouwen';
+  | 'bouwen'
+  | 'dictee'
+  | 'klinker'
+  | 'harten'
+  | 'geld'
+  | 'meten';
 
 export type Leestempo = { datum: string; liedje: string; ronde: number; seconden: number; woorden: number };
 
@@ -122,6 +127,11 @@ export function standaardVoortgang(): Voortgang {
       ballonnen: { niveau: 0, recent: [] },
       klok: { niveau: 0, recent: [] },
       bouwen: { niveau: 0, recent: [] },
+      dictee: { niveau: 0, recent: [] },
+      klinker: { niveau: 0, recent: [] },
+      harten: { niveau: 0, recent: [] },
+      geld: { niveau: 0, recent: [] },
+      meten: { niveau: 0, recent: [] },
     },
     leestempo: [],
     gezongen: [],

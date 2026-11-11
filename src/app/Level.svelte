@@ -14,6 +14,11 @@
   import BallonnenRij from '../games/BallonnenRij.svelte';
   import KlokShow from '../games/KlokShow.svelte';
   import BlokkenBouwer from '../games/BlokkenBouwer.svelte';
+  import LetterDictee from '../games/LetterDictee.svelte';
+  import KlinkerKristallen from '../games/KlinkerKristallen.svelte';
+  import VerliefdeHarten from '../games/VerliefdeHarten.svelte';
+  import GeldTellen from '../games/GeldTellen.svelte';
+  import MetenWegen from '../games/MetenWegen.svelte';
   import { SPEL, type SpelId } from '../games/spellen';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
@@ -89,6 +94,11 @@
     ballonnen: BallonnenRij,
     klok: KlokShow,
     bouwen: BlokkenBouwer,
+    dictee: LetterDictee,
+    klinker: KlinkerKristallen,
+    harten: VerliefdeHarten,
+    geld: GeldTellen,
+    meten: MetenWegen,
   } as const;
 
   // ---------- Het concert plannen ----------
