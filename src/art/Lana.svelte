@@ -4,6 +4,7 @@
    * (zelfde verhoudingen, gezicht en schaduw). Alles is in te stellen in de kleedkamer:
    * kapsel, haarkleur, outfit, accessoire, huidskleur en oogkleur.
    */
+  import Diepte from './Diepte.svelte';
   import { HUIDTINTEN, OOGKLEUREN, haarKleuren, lichtKleur, type Avatar } from '../engine/kleedkamer';
 
   let {
@@ -12,6 +13,8 @@
     hoogte = 320,
     licht = false,
     stil = false,
+    diepte = true,
+    schijf = true,
   }: {
     avatar: Avatar;
     stemming?: 'rust' | 'dans' | 'juich' | 'denk' | 'draai';
@@ -19,6 +22,9 @@
     licht?: boolean;
     /** Zonder animaties (voor kleine voorbeeldjes). */
     stil?: boolean;
+    /** Schaduw, podiumschijf, draai en randlicht (uit voor stickers en kleine voorbeeldjes). */
+    diepte?: boolean;
+    schijf?: boolean;
   } = $props();
 
   const id = `l${Math.random().toString(36).slice(2, 8)}`;
@@ -114,6 +120,7 @@
   const jasR = 'M126 86 C130 104 126 126 122 144 L108 146 L106 92 L112 82 Z';
 </script>
 
+<Diepte kleur={lk} {stemming} aan={diepte && !stil} {schijf}>
 <svg class="lana {stemming}" class:stil viewBox="4 -30 192 410" style="height:{hoogte}px" role="img" aria-label="Lana">
   <defs>
     <radialGradient id="{id}-huid" cx="0.38" cy="0.3" r="0.85">
@@ -554,11 +561,12 @@
     </g>
   </g>
 </svg>
+</Diepte>
 
 <style>
   .lana {
     overflow: visible;
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+    filter: drop-shadow(-2px -1px 1px var(--rand, transparent)) drop-shadow(2px 0 5px color-mix(in srgb, var(--rand, transparent) 55%, transparent)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
   }
   .lijf {
     transform-origin: 100px 372px;

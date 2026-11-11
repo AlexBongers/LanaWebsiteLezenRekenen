@@ -34,7 +34,7 @@
       {#if b.soort === 'emoji'}
         <span class="emoji" style="font-size:{grootte * 0.56}px">{b.teken}</span>
       {:else if b.soort === 'heldin'}
-        <div class="portret" style="top:{grootte * 0.04}px"><Heldin wie={b.wie} stemming="rust" hoogte={grootte * 2.3} /></div>
+        <div class="portret" style="top:{grootte * 0.04}px"><Heldin wie={b.wie} stemming="rust" hoogte={grootte * 2.3} diepte={false} /></div>
       {:else if b.soort === 'lana'}
         <div class="portret" style="top:{grootte * 0.04}px"><Lana avatar={vg.avatar} hoogte={grootte * 2.3} stil /></div>
       {:else}

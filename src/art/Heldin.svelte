@@ -9,12 +9,23 @@
    * stemming: 'rust' (zacht wiegen), 'dans', 'juich' (springen), 'denk' (hoofd schuin)
    */
   import type { HeldinId } from '../store/voortgang.svelte';
+  import Diepte from './Diepte.svelte';
+  import characters from '../../content/characters.json';
 
   let {
     wie,
     stemming = 'rust',
     hoogte = 320,
-  }: { wie: HeldinId; stemming?: 'rust' | 'dans' | 'juich' | 'denk' | 'draai'; hoogte?: number } = $props();
+    diepte = true,
+    schijf = true,
+  }: {
+    wie: HeldinId;
+    stemming?: 'rust' | 'dans' | 'juich' | 'denk' | 'draai';
+    hoogte?: number;
+    /** Schaduw, podiumschijf, draai en randlicht (uit voor stickers). */
+    diepte?: boolean;
+    schijf?: boolean;
+  } = $props();
 
   const STIJL = {
     rumi: {
@@ -113,6 +124,7 @@
   const JAS_DONKER = { rumi: '#050409', mira: '#7d0a1d', zoey: '#0e7490' } as const;
 </script>
 
+<Diepte kleur={characters[wie].kleur} {stemming} aan={diepte} {schijf}>
 <svg
   class="heldin {stemming}"
   viewBox="4 -30 192 410"
@@ -488,11 +500,12 @@
   </g>
   </g>
 </svg>
+</Diepte>
 
 <style>
   .heldin {
     overflow: visible;
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+    filter: drop-shadow(-2px -1px 1px var(--rand, transparent)) drop-shadow(2px 0 5px color-mix(in srgb, var(--rand, transparent) 55%, transparent)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
   }
   .lijf {
     transform-origin: 100px 372px;
