@@ -13,9 +13,10 @@
     opStad,
     opKleedkamer,
     opPlakboek,
+    opUitdaging,
     opOuder,
     opStoppen,
-  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opOuder: () => void; opStoppen: () => void } = $props();
+  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opUitdaging: () => void; opOuder: () => void; opStoppen: () => void } = $props();
 
   // Posities van de steden op de kaart (procent van de kaart).
   const PLEK = [
@@ -126,6 +127,12 @@
       {#if vg.stickersNieuw.length}<span class="nieuw-teller">{vg.stickersNieuw.length}</span>{/if}
     </button>
   </div>
+
+  <button class="uitdaging-knop" onclick={opUitdaging} aria-label="Uitdaging voor groep 5: Tafel-kampioen">
+    <span class="beker">🏆</span>
+    <span class="tekst"><strong>Uitdaging</strong><small>groep 5</small></span>
+    <span class="slotje">🔒</span>
+  </button>
 </div>
 
 <style>
@@ -308,6 +315,51 @@
     z-index: 2;
     display: flex;
     gap: 16px;
+  }
+  .uitdaging-knop {
+    position: absolute;
+    right: 28px;
+    bottom: 22px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px 8px 12px;
+    border-radius: 24px;
+    color: #422006;
+    background: linear-gradient(160deg, #fff7c2, #fbbf24 55%, #d97706);
+    border: 3px solid #fff7c2;
+    box-shadow: 0 6px 0 #92400e, 0 0 30px rgba(251, 191, 36, 0.7);
+    animation: glim 2.4s ease-in-out infinite;
+  }
+  .uitdaging-knop .beker {
+    font-size: 46px;
+    line-height: 1;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3));
+  }
+  .uitdaging-knop .tekst {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.05;
+  }
+  .uitdaging-knop strong {
+    font-size: 26px;
+  }
+  .uitdaging-knop small {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 999px;
+    color: #fff;
+    background: #b45309;
+  }
+  .uitdaging-knop .slotje {
+    font-size: 26px;
+  }
+  @keyframes glim {
+    0%, 100% { box-shadow: 0 6px 0 #92400e, 0 0 20px rgba(251, 191, 36, 0.5); }
+    50% { box-shadow: 0 6px 0 #92400e, 0 0 40px rgba(251, 191, 36, 0.95); }
   }
   .plakboek-knop {
     position: relative;

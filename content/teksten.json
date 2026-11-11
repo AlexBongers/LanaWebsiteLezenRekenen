@@ -257,5 +257,14 @@
     "hintLiniaal": "Begin bij de nul. Kijk waar de punt van het potlood ophoudt.",
     "kilo": "Hoeveel kilo weegt het pakje? Tel de gewichtjes.",
     "hintKilo": "De weegschaal is recht. Elk gewichtje weegt één kilo. Tel ze maar."
+  },
+  "uitdaging": {
+    "poort": "Dit is de uitdaging voor groep vijf! Los eerst deze moeilijke som op. Dan gaat de deur open.",
+    "open": "Goed zo! De deur is open. Welkom in de arena van de tafel-kampioenen!",
+    "dicht": "Bijna! Reken nog eens rustig. Eerst de tientallen, dan de rest.",
+    "nieuweSom": "Probeer deze som maar.",
+    "start": "Typ het antwoord met de cijfers. Tik daarna op het groene vinkje.",
+    "hint": "Kijk naar het hulpje. Reken via een tafel die je al kent.",
+    "klaar": "Jij bent een echte tafel-kampioen!"
   }
 }
