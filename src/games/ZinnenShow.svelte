@@ -4,6 +4,8 @@
   import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
+  import Keuze3D from './Keuze3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { maakZinnen, type ZinOpgave } from '../engine/generator-fase3';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed } from '../audio/geluid';
@@ -25,6 +27,10 @@
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
   let knopEls: HTMLElement[] = $state([]);
+  let drieD = $state(heeftWebGL());
+  let juist: number | null = $state(null);
+  let vlakEl: HTMLElement | undefined = $state();
+  const bron = (i: number) => (drieD ? (vlakEl ?? null) : knopEls[i]);
 
   onMount(() => {
     void spreek(teksten.zinnen.start);
@@ -34,10 +40,11 @@
     if (bezig || ronde.onthuld || fout.includes(k.zin)) return;
     if (k.zin === o.zin) {
       bezig = true;
+      juist = i;
       speelGoed();
-      glitterOp(knopEls[i]);
+      glitterOp(bron(i));
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
-      opNoten(ronde.goed(), knopEls[i]);
+      opNoten(ronde.goed(), bron(i));
       await spreek(compliment('zoey'));
       await wacht(300);
       volgende();
@@ -56,6 +63,7 @@
   function volgende() {
     if (!ronde.volgende()) return;
     fout = [];
+    juist = null;
     bezig = false;
     stemming = 'rust';
   }
@@ -73,7 +81,7 @@
         <p class="zin">{o.zin}</p>
         <Luidspreker opTik={() => spreek(o.zin, 'zin')} klein />
       </div>
-      <div class="keuzerij">
+      <div class="keuzerij" class:onzichtbaar-3d={drieD}>
         {#each o.keuzes as k, i (k.zin)}
           <button
             class="keuzeknop scene"
@@ -89,6 +97,21 @@
         {/each}
       </div>
     {/key}
+    {#if drieD}
+      <div class="vlak-3d" bind:this={vlakEl}>
+        <Keuze3D
+          thema="tvs"
+          soort="emoji"
+          labels={o.keuzes.map((k) => k.plaatje)}
+          fout={o.keuzes.map((k, i) => (fout.includes(k.zin) ? i : -1)).filter((i) => i >= 0)}
+          goed={ronde.onthuld ? o.keuzes.findIndex((k) => k.zin === o.zin) : juist}
+          actief={!bezig && !ronde.onthuld}
+          sleutel={ronde.nummer}
+          opKies={(i) => kies(o.keuzes[i], i)}
+          opFout={() => (drieD = false)}
+        />
+      </div>
+    {/if}
     {#if ronde.onthuld}
       <button class="knop-goud verder-knop" onclick={volgende}>Verder ➜</button>
     {/if}

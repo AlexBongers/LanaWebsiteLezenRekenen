@@ -4,6 +4,8 @@
   import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
+  import Keuze3D from './Keuze3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { maakRijm, type RijmOpgave } from '../engine/generator-fase3';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
@@ -25,6 +27,10 @@
   let bezig = $state(false);
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let knopEls: HTMLElement[] = $state([]);
+  let drieD = $state(heeftWebGL());
+  let juist: number | null = $state(null);
+  let vlakEl: HTMLElement | undefined = $state();
+  const bron = (i: number) => (drieD ? (vlakEl ?? null) : knopEls[i]);
 
   /** Het rijmstuk: de laatste klinker(s) met wat erna komt ("maan" → "aan"). */
   const rijmdeel = (w: string) => w.match(/[aeiouy]+[^aeiouy]*$/)?.[0] ?? w;
@@ -46,10 +52,11 @@
     if (bezig || ronde.onthuld || fout.includes(w)) return;
     if (w === o.rijm) {
       bezig = true;
+      juist = i;
       speelGoed();
-      glitterOp(knopEls[i]);
+      glitterOp(bron(i));
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
-      opNoten(ronde.goed(), knopEls[i]);
+      opNoten(ronde.goed(), bron(i));
       await spreek(o.woord, 'woord');
       await spreek(o.rijm, 'woord');
       await spreek(compliment('zoey'));
@@ -71,6 +78,7 @@
   function volgende() {
     if (!ronde.volgende()) return;
     fout = [];
+    juist = null;
     bezig = false;
     stemming = 'dans';
     void zegWoord();
@@ -84,7 +92,7 @@
   </div>
 
   <div class="speelveld">
-    <div class="equalizer" aria-hidden="true">
+    <div class="equalizer" class:onzichtbaar-3d={drieD} aria-hidden="true">
       {#each Array.from({ length: 12 }) as _, i}<span style="animation-delay:{(i * 0.13) % 0.9}s"></span>{/each}
     </div>
     {#key ronde.nummer}
@@ -97,7 +105,7 @@
         <div class="luid"><Luidspreker opTik={zegWoord} /></div>
       </div>
       <p class="vraag">Welk woord rijmt erop?</p>
-      <div class="keuzerij">
+      <div class="keuzerij" class:onzichtbaar-3d={drieD}>
         {#each o.keuzes as k, i (k)}
           <button
             class="keuzeknop"
@@ -112,6 +120,21 @@
         {/each}
       </div>
     {/key}
+    {#if drieD}
+      <div class="vlak-3d" bind:this={vlakEl}>
+        <Keuze3D
+          thema="platen"
+          soort="woord"
+          labels={o.keuzes}
+          fout={o.keuzes.map((k, i) => (fout.includes(k) ? i : -1)).filter((i) => i >= 0)}
+          goed={ronde.onthuld ? o.keuzes.indexOf(o.rijm) : juist}
+          actief={!bezig && !ronde.onthuld}
+          sleutel={ronde.nummer}
+          opKies={(i) => kies(o.keuzes[i], i)}
+          opFout={() => (drieD = false)}
+        />
+      </div>
+    {/if}
     {#if ronde.onthuld}
       <button class="knop-goud verder-knop" onclick={volgende}>Verder ➜</button>
     {/if}

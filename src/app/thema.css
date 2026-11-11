@@ -252,3 +252,20 @@ button {
 .licht .knop-goud {
   filter: none;
 }
+
+/* 3D-spellen: de platte knoppen blijven bruikbaar voor voorlezers en toetsenbord, maar onzichtbaar. */
+.onzichtbaar-3d {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%);
+  opacity: 0;
+}
+/* Een 3D-vlak met zachte randen dat in de achtergrond overloopt. */
+.vlak-3d {
+  width: 940px;
+  height: 340px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
