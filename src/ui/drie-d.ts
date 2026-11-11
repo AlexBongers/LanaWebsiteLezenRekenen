@@ -71,6 +71,28 @@ export async function maakPodium(canvas: HTMLCanvasElement, opties: PodiumOpties
   const goud = new THREE.DirectionalLight(0xfde68a, 1.6);
   goud.position.set(0, 8, 6);
   scene.add(roze, blauw, goud);
+  // Randlicht van achteren: geeft alles een zachte, glanzende rand.
+  const rug = new THREE.DirectionalLight(0x67e8f9, 1.3);
+  rug.position.set(0, 5, -8);
+  const rug2 = new THREE.DirectionalLight(0xf0abfc, 0.8);
+  rug2.position.set(-6, 3, -6);
+  scene.add(rug, rug2);
+
+  // Omgevingslicht: metaal, glas en glimmende dingen weerspiegelen een zachte studio.
+  // In de lichte modus slaan we dit over (scheelt rekenwerk op een trage tablet).
+  let omgeving: TypeThree.Texture | null = null;
+  if (!document.documentElement.classList.contains('licht')) {
+    try {
+      const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js');
+      const pm = new THREE.PMREMGenerator(renderer);
+      omgeving = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+      pm.dispose();
+      scene.environment = omgeving;
+      scene.environmentIntensity = 0.55;
+    } catch {
+      // Geen omgevingslicht: het werkt ook zonder.
+    }
+  }
 
   const reduceer = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const frames: ((t: number, dt: number) => void)[] = [];
@@ -195,6 +217,7 @@ export async function maakPodium(canvas: HTMLCanvasElement, opties: PodiumOpties
         x.dispose();
       });
     });
+    omgeving?.dispose();
     renderer.dispose();
     renderer.forceContextLoss();
   }

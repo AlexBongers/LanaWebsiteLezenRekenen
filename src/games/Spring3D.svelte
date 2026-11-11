@@ -6,6 +6,7 @@
   import { onMount, untrack } from 'svelte';
   import type { Group, Mesh, MeshStandardMaterial, MeshBasicMaterial } from 'three';
   import { maakPodium, tekstTextuur, type Podium } from '../ui/drie-d';
+  import { maakSchaduw, maakSterren } from '../ui/drie-d-bouw';
 
   let {
     van,
@@ -41,6 +42,7 @@
   let strepen: Streep[] = [];
   let lijnGroep: Group;
   let ster: Group;
+  let sterSchaduw: Mesh;
   let sterX = 0;
   let sterVan = 0;
   let sterNaar = 0;
@@ -68,7 +70,7 @@
         // Catwalk
         const baan = new THREE.Mesh(
           new THREE.BoxGeometry(LENGTE + 1.6, 0.5, 3.4),
-          new THREE.MeshStandardMaterial({ color: 0x3b1a6e, metalness: 0.2, roughness: 0.4, emissive: 0x2e1065, emissiveIntensity: 0.6 }),
+          new THREE.MeshPhysicalMaterial({ color: 0x3b1a6e, metalness: 0.15, roughness: 0.55, envMapIntensity: 0.3, emissive: 0x2e1065, emissiveIntensity: 0.6 }),
         );
         baan.position.y = -0.25;
         const streep = new THREE.Mesh(
@@ -96,7 +98,7 @@
         sh.closePath();
         const sterGeo = new THREE.ExtrudeGeometry(sh, { depth: 0.22, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2 });
         sterGeo.center();
-        const sterMat = new THREE.MeshStandardMaterial({ color: 0xfde68a, emissive: 0xf59e0b, emissiveIntensity: 1.4, metalness: 0.3, roughness: 0.25 });
+        const sterMat = new THREE.MeshPhysicalMaterial({ color: 0xfde68a, emissive: 0xf59e0b, emissiveIntensity: 1.0, metalness: 0.7, roughness: 0.18, clearcoat: 1 });
         ster = new THREE.Group();
         ster.add(new THREE.Mesh(sterGeo, sterMat));
         const halo = new THREE.Mesh(
@@ -107,6 +109,10 @@
         ster.add(halo);
         ster.visible = false;
         scene.add(ster);
+        sterSchaduw = maakSchaduw(THREE, 0.9, 0.6);
+        sterSchaduw.visible = false;
+        scene.add(sterSchaduw);
+        maakSterren(p, { breed: 18, hoog: 4, y: 1.5, diep: 4, aantal: 36 });
 
         p.bijTik((id) => opTik(Number(id)));
 
@@ -133,6 +139,10 @@
             ster.position.set(sterX, 1.55 + hoogte + Math.sin(t * 2.5) * 0.05, 0);
             ster.rotation.y = Math.sin(t * 1.4) * 0.35 + v * Math.PI * 2;
             ster.scale.setScalar(1 + Math.sin(v * Math.PI) * 0.15);
+            sterSchaduw.visible = true;
+            sterSchaduw.position.set(sterX, 0.015, 0);
+            sterSchaduw.scale.setScalar(1 - hoogte * 0.25);
+            (sterSchaduw.material as MeshBasicMaterial).opacity = 0.6 - hoogte * 0.2;
           }
         });
 
@@ -245,6 +255,7 @@
     if (n === null) {
       sterZichtbaar = false;
       ster.visible = false;
+      if (sterSchaduw) sterSchaduw.visible = false;
       return;
     }
     const doel = teken(n);

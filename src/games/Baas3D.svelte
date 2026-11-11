@@ -7,7 +7,7 @@
   import { onMount, untrack } from 'svelte';
   import type { Group, Mesh, MeshBasicMaterial, Sprite } from 'three';
   import { maakPodium, type Podium } from '../ui/drie-d';
-  import { bordTextuur, kleurDemon, maakDeeltjes, maakDemon3D, maakSterren, type Demon3D, type Deeltjes } from '../ui/drie-d-bouw';
+  import { animeerDemon, bordTextuur, kleurDemon, maakDeeltjes, maakDemon3D, maakSchaduw, maakSterren, type Demon3D, type Deeltjes } from '../ui/drie-d-bouw';
 
   let {
     soort,
@@ -33,6 +33,7 @@
   let demon: Demon3D;
   let kroon: Group;
   let aura: Mesh;
+  let schaduw: Mesh;
   let noten: { sprite: Sprite; start: number; y0: number; i: number; klaar: boolean }[] = [];
   let notenGroep: Group;
   let notenTex: import('three').Texture[] = [];
@@ -102,6 +103,9 @@
         baas.add(kroon);
         baas.position.set(BAAS_X, 0, 0);
         scene.add(baas);
+        schaduw = maakSchaduw(THREE, 1.9, 0.6);
+        schaduw.position.set(BAAS_X, 0.02, 0.2);
+        scene.add(schaduw);
 
         // Noten voor de zing-aanval
         notenGroep = new THREE.Group();
@@ -126,6 +130,8 @@
           m.emissiveIntensity = flits ? 0.9 : 0.12;
           if (!flits) kleurDemon(THREE, demon, 0);
           const lachend = huidigLacht || t < lachtTot;
+          animeerDemon(demon, t, lachend ? 'lacht' : au > 0 ? 'boos' : 'rust');
+          schaduw.scale.setScalar(Math.max(0.0001, s * (1 - Math.max(0, zweef) * 0.5)));
           const mond = demon.userData.mond;
           mond.scale.set(lachend ? 1.5 : 1, lachend ? 1.9 + Math.sin(t * 20) * 0.35 : au > 0 ? 1.4 : 1, 1);
           mond.rotation.z = au > 0.1 && !lachend ? 0 : Math.PI;

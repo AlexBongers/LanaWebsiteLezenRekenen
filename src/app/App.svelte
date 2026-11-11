@@ -7,6 +7,7 @@
   import Tourkaart from './Tourkaart.svelte';
   import Stad from './Stad.svelte';
   import Kleedkamer from './Kleedkamer.svelte';
+  import Plakboek from './Plakboek.svelte';
   import BaasLevel from './BaasLevel.svelte';
   import Level from './Level.svelte';
   import Ouderhoek from './Ouderhoek.svelte';
@@ -21,7 +22,7 @@
   import { laadStemManifest, spreek, stopSpreken, zetApparaatStem } from '../audio/stem';
   import { ontgrendelGeluid, zetEffectenAan } from '../audio/geluid';
 
-  type Scherm = 'start' | 'tour' | 'stad' | 'spellen' | 'level' | 'baas' | 'kleedkamer' | 'ouder' | 'einde';
+  type Scherm = 'start' | 'tour' | 'stad' | 'spellen' | 'level' | 'baas' | 'kleedkamer' | 'plakboek' | 'ouder' | 'einde';
   let scherm = $state<Scherm>('start');
   let heldin = $state<HeldinId>('rumi');
   let spel = $state<SpelId>('flits');
@@ -94,7 +95,7 @@
       history.pushState({ app: true }, '');
       if (scherm === 'level' || scherm === 'baas') vraagStop = true;
       else if (scherm === 'spellen') scherm = 'stad';
-      else if (scherm === 'stad' || scherm === 'kleedkamer' || scherm === 'ouder') scherm = 'tour';
+      else if (scherm === 'stad' || scherm === 'kleedkamer' || scherm === 'plakboek' || scherm === 'ouder') scherm = 'tour';
       else if (scherm === 'tour') vraagAfsluiten = true;
     };
     addEventListener('popstate', opTerugknop);
@@ -208,6 +209,7 @@
         <Tourkaart
           opStad={naarStad}
           opKleedkamer={() => (scherm = 'kleedkamer')}
+          opPlakboek={() => (scherm = 'plakboek')}
           opOuder={() => (scherm = 'ouder')}
           opStoppen={() => (vraagAfsluiten = true)}
         />
@@ -221,6 +223,8 @@
         <BaasLevel {stadId} opTerug={() => naarStad()} opTour={naarTour} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
       {:else if scherm === 'kleedkamer'}
         <Kleedkamer opTerug={naarTour} />
+      {:else if scherm === 'plakboek'}
+        <Plakboek opTerug={naarTour} />
       {:else if scherm === 'einde'}
         <Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />
       {/if}

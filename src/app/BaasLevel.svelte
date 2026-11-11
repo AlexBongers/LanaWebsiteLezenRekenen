@@ -145,6 +145,7 @@
       gesproken={uitslag.gesproken}
       pauze={uitslag.pauze}
       terugTekst={uitslag.gered ? 'Naar de wereldtour' : `Terug naar ${stad.naam}`}
+      baasStad={uitslag.gered ? stadId : undefined}
       opNogEens={nogEens}
       opTerug={uitslag.gered ? opTour : opTerug}
       {opPauze}

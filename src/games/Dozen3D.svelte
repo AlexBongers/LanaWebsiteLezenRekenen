@@ -6,6 +6,7 @@
   import { onMount } from 'svelte';
   import type { Object3D, Group, Mesh } from 'three';
   import { maakPodium, type Podium } from '../ui/drie-d';
+  import { maakSchaduw, maakSterren } from '../ui/drie-d-bouw';
 
   let { dozen, los, opFout }: { dozen: number; los: number; opFout: () => void } = $props();
 
@@ -44,7 +45,7 @@
         // Vloer: een rond podium met een gloeiende rand
         const vloer = new THREE.Mesh(
           new THREE.CylinderGeometry(8.4, 8.8, 0.4, 64),
-          new THREE.MeshStandardMaterial({ color: 0x4c1d95, metalness: 0.15, roughness: 0.45, emissive: 0x2e1065, emissiveIntensity: 0.5 }),
+          new THREE.MeshPhysicalMaterial({ color: 0x4c1d95, metalness: 0.1, roughness: 0.6, envMapIntensity: 0.3, emissive: 0x2e1065, emissiveIntensity: 0.5 }),
         );
         vloer.position.set(1.6, -0.25, -0.5);
         vloer.scale.set(1.05, 1, 0.5);
@@ -56,6 +57,7 @@
         rand.position.set(1.6, -0.03, -0.5);
         rand.scale.set(1.05, 1, 0.5);
         scene.add(vloer, rand);
+        maakSterren(p, { breed: 18, hoog: 4, y: 2, diep: 4, aantal: 36 });
 
         doosGroep = new THREE.Group();
         stokGroep = new THREE.Group();
@@ -68,7 +70,7 @@
         const stokMat = new THREE.MeshStandardMaterial({ color: 0xffd1e8, emissive: 0xf0489c, emissiveIntensity: 1.5, roughness: 0.35 });
         const gloeiMat = new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
         const doosGeo = new THREE.BoxGeometry(1.55, 1.3, 1.0);
-        const doosMat = new THREE.MeshPhysicalMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.42, roughness: 0.15, metalness: 0.1, clearcoat: 1 });
+        const doosMat = new THREE.MeshPhysicalMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.38, roughness: 0.08, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.05, ior: 1.5, specularIntensity: 1 });
         const kaderGeo = new THREE.EdgesGeometry(doosGeo);
         const kaderMat = new THREE.LineBasicMaterial({ color: 0xddd6fe });
 
@@ -80,7 +82,9 @@
           const gl = new THREE.Mesh(gloeiGeo, gloeiMat);
           gl.position.y = 0.55;
           gl.scale.set(1.6, 1.3, 1.6);
-          g.add(s, gl);
+          const sch = maakSchaduw(THREE, 0.35, 0.5);
+          sch.position.y = -0.03;
+          g.add(s, gl, sch);
           return g;
         };
         bouwDoos = () => {
@@ -89,7 +93,10 @@
           kast.position.y = 0.65;
           const kader = new THREE.LineSegments(kaderGeo, kaderMat);
           kader.position.copy(kast.position);
-          g.add(kast, kader);
+          const sch = maakSchaduw(THREE, 1.15, 0.55);
+          sch.scale.y = 0.75;
+          sch.position.y = -0.03;
+          g.add(kast, kader, sch);
           for (let i = 0; i < 10; i++) {
             const s = new THREE.Mesh(stokGeo, stokMat);
             s.position.set(-0.6 + (i % 5) * 0.3, 0.62, i < 5 ? 0.2 : -0.2);

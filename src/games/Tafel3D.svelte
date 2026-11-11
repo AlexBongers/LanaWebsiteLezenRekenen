@@ -6,7 +6,7 @@
   import { onMount, untrack } from 'svelte';
   import type { Group, Mesh, MeshStandardMaterial, MeshBasicMaterial } from 'three';
   import { maakPodium, type Podium } from '../ui/drie-d';
-  import { bordTextuur, maakDeeltjes, maakSterren, maakVloer, veer, type Deeltjes } from '../ui/drie-d-bouw';
+  import { bordTextuur, maakDeeltjes, maakSchaduw, maakSterren, maakVloer, veer, type Deeltjes } from '../ui/drie-d-bouw';
 
   let {
     keuzes,
@@ -152,12 +152,15 @@
       const groep = new THREE.Group();
       groep.position.set(x, 0, -Math.abs(i - (aantal - 1) / 2) * 0.35);
 
-      const schaal = new THREE.MeshStandardMaterial({ color: kleur, metalness: 0.35, roughness: 0.32, emissive: kleur, emissiveIntensity: 0.15 });
+      const schaduw = maakSchaduw(THREE, 1.75, 0.6);
+      schaduw.position.y = 0.01;
+      groep.add(schaduw);
+      const schaal = new THREE.MeshPhysicalMaterial({ color: kleur, metalness: 0.45, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.1, emissive: kleur, emissiveIntensity: 0.15 });
       const kast = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.18, 1.0, 44), schaal);
       kast.position.y = 0.5;
       groep.add(kast);
       // Gouden randen en schroefjes
-      const goud = new THREE.MeshStandardMaterial({ color: 0xfde68a, metalness: 0.7, roughness: 0.25, emissive: 0xb45309, emissiveIntensity: 0.25 });
+      const goud = new THREE.MeshStandardMaterial({ color: 0xfde68a, metalness: 0.9, roughness: 0.2, emissive: 0xb45309, emissiveIntensity: 0.2 });
       for (const y of [0.04, 1.0]) {
         const r = new THREE.Mesh(new THREE.TorusGeometry(y > 0.5 ? 1.25 : 1.18, 0.06, 10, 48), goud);
         r.rotation.x = Math.PI / 2;

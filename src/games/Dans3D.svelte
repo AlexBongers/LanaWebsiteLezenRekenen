@@ -11,6 +11,8 @@
     kleurDemon,
     maakDeeltjes,
     maakDemon3D,
+    maakSchaduw,
+    animeerDemon,
     maakSterren,
     veer,
     type Demon3D,
@@ -63,6 +65,7 @@
     grijs: number;
     lachtTot: number;
     x: number;
+    schaduw: Mesh;
   };
   let items: Item[] = [];
   let hoofdGroep: Group;
@@ -77,7 +80,7 @@
     (async () => {
       try {
         if (!canvas) return;
-        const p = await maakPodium(canvas, { fov: 34, camera: [0, 2.9, 7.3], kijkNaar: [0, 1.15, 0] });
+        const p = await maakPodium(canvas, { fov: 34, camera: [0, 2.7, 7.6], kijkNaar: [0, 0.8, 0] });
         if (uit) return p.opruimen();
         podium = p;
         p.bijVerlies(opFout);
@@ -129,16 +132,21 @@
             it.groep.position.set(it.x, y, 0);
             it.groep.rotation.set(0, ry, rz);
             it.groep.scale.setScalar(Math.max(0.0001, s) * 0.92);
+            // Schaduw op de dansvloer: kleiner en lichter als de demon hoger zweeft
+            const hoog = Math.max(0, y - 1.15);
+            it.schaduw.position.set(it.x, 0.02, 0.15);
+            it.schaduw.scale.setScalar(Math.max(0.0001, s) * (1 - hoog * 0.12));
+            (it.schaduw.material as MeshBasicMaterial).opacity = 0.55 * Math.max(0, 1 - hoog * 0.3) * Math.min(1, s);
             const isFout = huidigFout.includes(it.n);
             it.grijs += ((isFout ? 1 : 0) - it.grijs) * 0.15;
             kleurDemon(THREE, it.demon, it.grijs);
             // Mond: lachen = groot en open
             const lachend = t < it.lachtTot;
+            animeerDemon(it.demon, t, lachend ? 'lacht' : huidigGoed === it.n ? 'blij' : isFout ? 'boos' : 'rust');
             const mond = it.demon.userData.mond;
             mond.scale.set(lachend ? 1.35 : isFout ? 0.8 : 1, lachend ? 1.7 + Math.sin(t * 22) * 0.25 : isFout ? 0.8 : 1, 1);
             mond.rotation.z = isFout && !lachend ? 0 : Math.PI;
             mond.position.y = isFout && !lachend ? -0.3 : -0.12;
-            for (const o of it.demon.userData.ogen) o.scale.y = 1.1 * (lachend ? 0.55 : 1);
             const goedNu = huidigGoed === it.n;
             it.bordMat.map = goedNu ? it.tex.goed : isFout ? it.tex.fout : it.tex.norm;
             it.groep.children[it.groep.children.length - 1].scale.setScalar(goedNu ? 1 + Math.sin(t * 6) * 0.06 : 1);
@@ -162,7 +170,8 @@
     if (!podium || !hoofdGroep) return;
     const { THREE } = podium;
     for (const it of items) {
-      hoofdGroep.remove(it.groep);
+      hoofdGroep.remove(it.groep, it.schaduw);
+      it.schaduw.geometry.dispose();
       it.groep.traverse((o) => {
         const m = o as Mesh;
         m.geometry?.dispose?.();
@@ -187,7 +196,7 @@
       };
       const bordMat = new THREE.MeshBasicMaterial({ map: tex.norm, transparent: true, toneMapped: false });
       const bord = new THREE.Mesh(new THREE.PlaneGeometry(1.75, 1.16), bordMat);
-      bord.position.set(0, -0.58, 1.12);
+      bord.position.set(0, -0.86, 1.12);
       bord.rotation.x = -0.12;
       groep.add(bord);
       // Tikvlak
@@ -197,8 +206,9 @@
       // Het bord moet het laatste kind zijn (animatie op schaal)
       groep.remove(bord);
       groep.add(bord);
-      hoofdGroep.add(groep);
-      items.push({ n, i, demon, groep, bordMat, tex, start: t0 + i * 0.14, poef: 0, wiebel: -10, grijs: 0, lachtTot: -1, x });
+      const schaduw = maakSchaduw(THREE, 1.25, 0.55);
+      hoofdGroep.add(groep, schaduw);
+      items.push({ n, i, demon, groep, bordMat, tex, start: t0 + i * 0.14, poef: 0, wiebel: -10, grijs: 0, lachtTot: -1, x, schaduw });
     });
   }
 

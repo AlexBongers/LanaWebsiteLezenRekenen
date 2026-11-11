@@ -76,6 +76,10 @@ export type Voortgang = {
   gekocht: string[];
   /** Wereldtour: sterren per stad per podium. */
   tour: TourStand;
+  /** Stickers in het plakboek. */
+  stickers: string[];
+  /** Stickers die ze nog niet in het plakboek heeft bekeken. */
+  stickersNieuw: string[];
   instellingen: {
     /** Na zoveel minuten volgt na het concert een pauze (0 = geen grens). */
     sessieMinuten: number;
@@ -122,6 +126,8 @@ export function standaardVoortgang(): Voortgang {
     avatar: { ...STANDAARD_AVATAR },
     gekocht: [],
     tour: {},
+    stickers: [],
+    stickersNieuw: [],
     instellingen: {
       sessieMinuten: 15,
       volledigScherm: false,

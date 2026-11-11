@@ -2,7 +2,9 @@
   import { onMount, untrack } from 'svelte';
   import Heldin from '../art/Heldin.svelte';
   import Lana from '../art/Lana.svelte';
-  import { vg } from '../store/voortgang.svelte';
+  import { bewaar, vg } from '../store/voortgang.svelte';
+  import StickerZakje from '../ui/StickerZakje.svelte';
+  import { stickerBeloning } from '../engine/stickers';
   import { uitZak } from '../games/teksten';
   import { spreek } from '../audio/stem';
   import { speelFanfare } from '../audio/geluid';
@@ -24,6 +26,7 @@
     opNogEens,
     opTerug,
     opPauze = opTerug,
+    baasStad,
   }: {
     heldin: HeldinId | 'baas';
     goed: number;
@@ -40,6 +43,8 @@
     /** Speeltijd om: alleen nog een knop naar het pauzescherm. */
     pauze?: boolean;
     opPauze?: () => void;
+    /** De baas van deze stad is weggezongen: dan komt zijn baas-sticker erbij. */
+    baasStad?: string;
     opNogEens: () => void;
     opTerug: () => void;
   } = $props();
@@ -50,17 +55,33 @@
   const zin = untrack(() => gesproken ?? (melding ? teksten.auditie.klaar : uitZak('beloning', teksten.beloningen)));
   const blij = (h: HeldinId) => (h === heldin ? 'draai' : 'dans');
 
+  // Stickers voor dit concert: meteen in het plakboek, zodat ze nooit kwijtraken.
+  const nieuweStickers = untrack(() => {
+    const ids = stickerBeloning(vg.stickers, { sterren, baasStad });
+    if (ids.length) {
+      vg.stickers = [...vg.stickers, ...ids];
+      vg.stickersNieuw = [...vg.stickersNieuw, ...ids];
+      void bewaar();
+    }
+    return ids;
+  });
+
   onMount(() => {
     speelFanfare();
     grootFeest();
     void (async () => {
       await spreek(zin);
+      if (nieuweStickers.length > 1 && !baasStad) await spreek(teksten.stickers.twee);
+      else if (nieuweStickers.length) await spreek(uitZak('stickerNieuw', teksten.stickers.nieuw));
       if (pauze) await spreek(teksten.pauze.tijd);
     })();
   });
 </script>
 
 <div class="scherm">
+  {#if nieuweStickers.length}
+    <StickerZakje ids={nieuweStickers} />
+  {/if}
   <div class="kaart">
     <p class="lana">{kop}</p>
     <h2 class="goudtekst">{titel}</h2>

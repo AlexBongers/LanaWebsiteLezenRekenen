@@ -22,6 +22,9 @@ export type Demon3D = TypeThree.Group & {
     mond: TypeThree.Mesh;
     pupillen: TypeThree.Mesh[];
     ogen: TypeThree.Mesh[];
+    armen: TypeThree.Group[];
+    wenkbrauwen: TypeThree.Mesh[];
+    fase: number;
   };
 };
 
@@ -34,7 +37,19 @@ export function maakDemon3D(THREE: Three, soort: number): Demon3D {
   const scheel = n % 2 === 1;
   const g = new THREE.Group();
 
-  const lijfMat = new THREE.MeshStandardMaterial({ color: k[0], roughness: 0.45, metalness: 0.05, emissive: k[1], emissiveIntensity: 0.18 });
+  // Glanzend lijfje met een laagje lak en een zacht fluweel-randje
+  const lijfMat = new THREE.MeshPhysicalMaterial({
+    color: k[0],
+    roughness: 0.38,
+    metalness: 0.0,
+    clearcoat: 0.8,
+    clearcoatRoughness: 0.22,
+    sheen: 0.6,
+    sheenColor: new THREE.Color(0xffffff),
+    sheenRoughness: 0.5,
+    emissive: k[1],
+    emissiveIntensity: 0.14,
+  });
   const lijf = new THREE.Mesh(new THREE.SphereGeometry(1, 36, 28), lijfMat);
   lijf.scale.set(1, 1.08, 0.92);
   g.add(lijf);
@@ -56,8 +71,23 @@ export function maakDemon3D(THREE: Three, soort: number): Demon3D {
     g.add(v);
   }
 
+  // Armpjes met handjes
+  const armen: TypeThree.Group[] = [];
+  for (const kant of [-1, 1]) {
+    const arm = new THREE.Group();
+    arm.position.set(kant * 0.86, -0.12, 0.25);
+    const stuk = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.36, 6, 12), lijfMat);
+    stuk.position.y = -0.24;
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.16, 14, 12), voetMat);
+    hand.position.y = -0.5;
+    arm.add(stuk, hand);
+    arm.rotation.z = kant * 0.55;
+    g.add(arm);
+    armen.push(arm);
+  }
+
   // Hoorns
-  const hoornMat = new THREE.MeshStandardMaterial({ color: 0xfde68a, roughness: 0.35, emissive: 0xb45309, emissiveIntensity: 0.15 });
+  const hoornMat = new THREE.MeshPhysicalMaterial({ color: 0xfde68a, roughness: 0.25, metalness: 0.2, clearcoat: 1, emissive: 0xb45309, emissiveIntensity: 0.15 });
   const kegel = (r: number, h: number, x: number, y: number, rz: number) => {
     const m = new THREE.Mesh(new THREE.ConeGeometry(r, h, 16), hoornMat);
     m.position.set(x, y, 0.05);
@@ -91,8 +121,11 @@ export function maakDemon3D(THREE: Three, soort: number): Demon3D {
   }
 
   // Ogen
-  const oogMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
-  const pupilMat = new THREE.MeshBasicMaterial({ color: 0x1e1b4b });
+  const oogMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.1, clearcoat: 1 });
+  const pupilMat = new THREE.MeshBasicMaterial({ color: 0x120a2e });
+  const irisMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(k[1]).lerp(new THREE.Color(0x000000), 0.15) });
+  const wenkbrauwMat = new THREE.MeshBasicMaterial({ color: 0x1e1b4b });
+  const wenkbrauwen: TypeThree.Mesh[] = [];
   const ogen: TypeThree.Mesh[] = [];
   const pupillen: TypeThree.Mesh[] = [];
   for (const kant of [-1, 1]) {
@@ -101,10 +134,19 @@ export function maakDemon3D(THREE: Three, soort: number): Demon3D {
     oog.position.set(kant * 0.4, 0.22, 0.76);
     g.add(oog);
     ogen.push(oog);
-    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.15, 14, 12), pupilMat);
-    pupil.position.set(kant * (0.4 - (scheel ? 0.07 : 0)), 0.2, 0.96);
+    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.17, 16, 12), irisMat);
+    iris.scale.z = 0.5;
+    iris.position.set(kant * (0.4 - (scheel ? 0.07 : 0)), 0.2, 0.92);
+    g.add(iris);
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.1, 14, 12), pupilMat);
+    pupil.position.set(iris.position.x, 0.2, 0.99);
     g.add(pupil);
     pupillen.push(pupil);
+    const wb = new THREE.Mesh(new THREE.CapsuleGeometry(0.04, 0.2, 4, 8), wenkbrauwMat);
+    wb.position.set(kant * 0.42, 0.58, 0.82);
+    wb.rotation.z = Math.PI / 2 - kant * 0.22;
+    g.add(wb);
+    wenkbrauwen.push(wb);
     const glans = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
     glans.position.set(pupil.position.x - 0.05, 0.27, 1.08);
     g.add(glans);
@@ -128,7 +170,58 @@ export function maakDemon3D(THREE: Three, soort: number): Demon3D {
   d.userData.mond = mond;
   d.userData.pupillen = pupillen;
   d.userData.ogen = ogen;
+  d.userData.armen = armen;
+  d.userData.wenkbrauwen = wenkbrauwen;
+  d.userData.fase = (n * 1.37) % 6.28;
   return d;
+}
+
+/** Laat een demon leven: knipperen, armpjes zwaaien, juichen of boos kijken. */
+export function animeerDemon(d: Demon3D, t: number, stand: 'rust' | 'blij' | 'boos' | 'lacht' = 'rust') {
+  const f = d.userData.fase;
+  // Knipperen: elke paar seconden heel even
+  const knip = (t + f) % 4.2 < 0.12 ? 0.15 : 1;
+  for (const o of d.userData.ogen) o.scale.y = 1.1 * knip * (stand === 'lacht' ? 0.6 : 1);
+  for (const p of d.userData.pupillen) p.visible = knip > 0.5;
+  const [l, r] = d.userData.armen;
+  if (stand === 'blij' || stand === 'lacht') {
+    l.rotation.z = -2.3 + Math.sin(t * 14 + f) * 0.35;
+    r.rotation.z = 2.3 - Math.sin(t * 14 + f) * 0.35;
+  } else {
+    l.rotation.z = -0.55 - Math.sin(t * 2.2 + f) * 0.18;
+    r.rotation.z = 0.55 + Math.sin(t * 2.2 + f + 1) * 0.18;
+  }
+  const [wl, wr] = d.userData.wenkbrauwen;
+  const boos = stand === 'boos' ? 1 : 0;
+  // Vrolijk: binnenkant iets omhoog. Boos: binnenkant omlaag.
+  wl.rotation.z = Math.PI / 2 + 0.22 - boos * 0.6;
+  wr.rotation.z = Math.PI / 2 - 0.22 + boos * 0.6;
+  wl.position.y = wr.position.y = 0.63 + (stand === 'lacht' || stand === 'blij' ? 0.07 : 0) - boos * 0.06;
+}
+
+let schaduwTex: TypeThree.Texture | null = null;
+/** Zachte ronde schaduw om onder een voorwerp op de vloer te leggen. */
+export function maakSchaduw(THREE: Three, straal = 1, sterkte = 0.5) {
+  if (!schaduwTex) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const g = c.getContext('2d')!;
+    const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(12, 2, 30, 1)');
+    gr.addColorStop(0.45, 'rgba(12, 2, 30, 0.6)');
+    gr.addColorStop(1, 'rgba(12, 2, 30, 0)');
+    g.fillStyle = gr;
+    g.fillRect(0, 0, 128, 128);
+    schaduwTex = new THREE.CanvasTexture(c);
+  }
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(straal * 2, straal * 2),
+    new THREE.MeshBasicMaterial({ map: schaduwTex, transparent: true, opacity: sterkte, depthWrite: false, toneMapped: false }),
+  );
+  m.rotation.x = -Math.PI / 2;
+  m.renderOrder = 1;
+  m.raycast = () => {};
+  return m;
 }
 
 /** Zet een demon om naar grijs (fout) of terug naar zijn eigen kleur. */
@@ -297,9 +390,24 @@ export function maakVloer(p: Podium, opties: { x?: number; y?: number; z?: numbe
   const groep = new THREE.Group();
   const vloer = new THREE.Mesh(
     new THREE.CylinderGeometry(r, r + 0.4, 0.4, 64),
-    new THREE.MeshStandardMaterial({ color: opties.kleur ?? 0x4c1d95, metalness: 0.15, roughness: 0.45, emissive: 0x2e1065, emissiveIntensity: 0.5 }),
+    new THREE.MeshPhysicalMaterial({
+      color: opties.kleur ?? 0x4c1d95,
+      metalness: 0.1,
+      roughness: 0.6,
+      envMapIntensity: 0.3,
+      emissive: 0x2e1065,
+      emissiveIntensity: 0.5,
+    }),
   );
   vloer.position.y = -0.2;
+  // Gloeiende lichtplas in het midden van het podium
+  const plas = new THREE.Mesh(
+    new THREE.CircleGeometry(r * 0.85, 48),
+    new THREE.MeshBasicMaterial({ map: gloedTextuur(THREE, '#f0abfc'), transparent: true, opacity: 0.32, depthWrite: false, blending: THREE.AdditiveBlending }),
+  );
+  plas.rotation.x = -Math.PI / 2;
+  plas.position.y = 0.012;
+  plas.raycast = () => {};
   const randMat = new THREE.MeshBasicMaterial({ color: opties.randKleur ?? 0xf472b6 });
   const rand = new THREE.Mesh(new THREE.TorusGeometry(r + 0.2, 0.07, 12, 96), randMat);
   rand.rotation.x = Math.PI / 2;
@@ -308,7 +416,7 @@ export function maakVloer(p: Podium, opties: { x?: number; y?: number; z?: numbe
   const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.62, 0.035, 8, 96), ringMat);
   ring.rotation.x = Math.PI / 2;
   ring.position.y = 0.01;
-  groep.add(vloer, rand, ring);
+  groep.add(vloer, rand, ring, plas);
   groep.position.set(opties.x ?? 0, opties.y ?? 0, opties.z ?? 0);
   groep.scale.set(opties.schaalX ?? 1.1, 1, opties.schaalZ ?? 0.5);
   scene.add(groep);

@@ -12,9 +12,10 @@
   let {
     opStad,
     opKleedkamer,
+    opPlakboek,
     opOuder,
     opStoppen,
-  }: { opStad: (id: string) => void; opKleedkamer: () => void; opOuder: () => void; opStoppen: () => void } = $props();
+  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opOuder: () => void; opStoppen: () => void } = $props();
 
   // Posities van de steden op de kaart (procent van de kaart).
   const PLEK = [
@@ -118,7 +119,13 @@
     </div>
   </div>
 
-  <button class="knop-goud kleedkamer" onclick={opKleedkamer}>👗 Kleedkamer</button>
+  <div class="onderknoppen">
+    <button class="knop-goud" onclick={opKleedkamer}>👗 Kleedkamer</button>
+    <button class="knop-goud plakboek-knop" onclick={opPlakboek}>
+      📒 Plakboek
+      {#if vg.stickersNieuw.length}<span class="nieuw-teller">{vg.stickersNieuw.length}</span>{/if}
+    </button>
+  </div>
 </div>
 
 <style>
@@ -294,11 +301,34 @@
     pointer-events: none;
     transition: left 1s, top 1s;
   }
-  .kleedkamer {
+  .onderknoppen {
     position: absolute;
     left: 28px;
     bottom: 22px;
     z-index: 2;
+    display: flex;
+    gap: 16px;
+  }
+  .plakboek-knop {
+    position: relative;
+    background: linear-gradient(180deg, #fbcfe8, #f472b6);
+    box-shadow: 0 6px 0 #be185d, 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+  .nieuw-teller {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 8px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #ec4899;
+    color: #fff;
+    border: 3px solid #fff;
+    font-size: 18px;
+    animation: puls 1.2s ease-in-out infinite;
   }
   @keyframes puls {
     0%, 100% { transform: scale(1); }

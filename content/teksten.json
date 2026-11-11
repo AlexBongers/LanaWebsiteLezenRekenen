@@ -200,5 +200,18 @@
     "gekocht": "Gekocht! Wat staat dat mooi!",
     "teWeinig": "Je hebt nog niet genoeg gouden noten. Speel nog een concert!",
     "aan": "Mooi gekozen!"
+  },
+  "stickers": {
+    "nieuw": [
+      "Een nieuwe sticker voor je plakboek!",
+      "Kijk eens, een sticker! Tik op het zakje.",
+      "Hoera, een stickerzakje! Tik erop."
+    ],
+    "twee": "Twee stickers, omdat je drie sterren hebt!",
+    "baas": "Een glinsterende baas-sticker! Die krijg je alleen als je de baas wegzingt.",
+    "zeldzaam": "Wauw, een glitter-sticker! Die is heel zeldzaam.",
+    "welkom": "Dit is jouw plakboek. Tik op een sticker om hem goed te bekijken.",
+    "vol": "Wauw, je plakboek is helemaal vol! Wat een verzameling!",
+    "leeg": "Deze plek is nog leeg. Speel een concert, dan krijg je een sticker."
   }
 }

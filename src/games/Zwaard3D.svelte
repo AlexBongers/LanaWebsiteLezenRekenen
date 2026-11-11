@@ -6,7 +6,7 @@
   import { onMount, untrack } from 'svelte';
   import type { Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, Texture } from 'three';
   import { maakPodium, type Podium } from '../ui/drie-d';
-  import { bordTextuur, maakDeeltjes, maakSterren, maakVloer, veer, type Deeltjes } from '../ui/drie-d-bouw';
+  import { bordTextuur, maakDeeltjes, maakSchaduw, maakSterren, maakVloer, veer, type Deeltjes } from '../ui/drie-d-bouw';
 
   let {
     woord,
@@ -45,6 +45,7 @@
     klinker: Texture;
     x: number;
     start: number;
+    schaduw: Mesh;
   };
   type Spleet = { na: number; x: number; teken: Mesh; blad: Mesh; kader: Mesh };
 
@@ -121,6 +122,9 @@
             const hup = huidigGehakt ? Math.max(0, Math.sin(Math.min(1, Math.max(0, (sinds - 0.2) / 0.55)) * Math.PI)) * 0.35 : 0;
             b.groep.position.set(b.x + uitelkaar, (1 - Math.min(1, komt)) * 3 + hup + Math.sin(t * 1.6 + b.i * 0.7) * 0.03, 0);
             b.groep.scale.setScalar(s);
+            b.schaduw.position.set(b.groep.position.x * schaal, -0.93, 0.15);
+            b.schaduw.scale.set(s * schaal, s * schaal * 0.55, 1);
+            (b.schaduw.material as MeshBasicMaterial).opacity = 0.5 * Math.min(1, s) * Math.max(0.3, 1 - b.groep.position.y * 0.6);
             b.groep.rotation.z = Math.sin(t * 1.2 + b.i) * 0.015 + (huidigGehakt ? Math.sin((sinds - 0.2) * 9 + idx) * 0.06 * Math.max(0, 1 - sinds) : 0);
             const isK = huidigHint && 'aeiouy'.includes(woord[b.i] ?? '');
             b.mat[4].map = isK ? b.klinker : b.norm;
@@ -175,6 +179,8 @@
     if (!podium || !woordGroep) return;
     const { THREE } = podium;
     for (const b of blokken) {
+      podium.scene.remove(b.schaduw);
+      b.schaduw.geometry.dispose();
       woordGroep.remove(b.groep);
       b.groep.traverse((o) => {
         const m = o as Mesh;
@@ -205,20 +211,22 @@
     woordGroep.scale.setScalar(schaal);
     const t0 = performance.now() / 1000;
     const letterX = (i: number) => -totaal / 2 + BW / 2 + i * PITCH;
-    const zij = new THREE.MeshStandardMaterial({ color: 0xc4b5fd, roughness: 0.5, metalness: 0.1 });
+    const zij = new THREE.MeshPhysicalMaterial({ color: 0xc4b5fd, roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.2 });
 
     woord.split('').forEach((l, i) => {
       const font = "Andika, 'Fredoka', system-ui, sans-serif";
       const norm = bordTextuur(THREE, l, { breed: 200, hoog: 260, van: '#fffdf7', naar: '#ede9fe', rand: '#ddd6fe', inkt: '#2e1065', maat: 0.58, font });
       const klinker = bordTextuur(THREE, l, { breed: 200, hoog: 260, van: '#fffbe0', naar: '#fde68a', rand: '#fbbf24', inkt: '#422006', maat: 0.58, font });
-      const voor = new THREE.MeshStandardMaterial({ map: norm, roughness: 0.4, metalness: 0.05 });
+      const voor = new THREE.MeshPhysicalMaterial({ map: norm, roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.3 });
       const mats = [zij, zij, zij, zij, voor, zij] as MeshStandardMaterial[];
       const blok = new THREE.Mesh(new THREE.BoxGeometry(BW, 1.5, 0.5), mats);
       const g = new THREE.Group();
       g.add(blok);
       g.position.set(letterX(i), 0, 0);
       woordGroep.add(g);
-      blokken.push({ i, groep: g, mat: mats, norm, klinker, x: letterX(i), start: t0 + i * 0.07 });
+      const schaduw = maakSchaduw(THREE, 0.85, 0.5);
+      podium!.scene.add(schaduw);
+      blokken.push({ i, groep: g, mat: mats, norm, klinker, x: letterX(i), start: t0 + i * 0.07, schaduw });
     });
 
     // Spleten tussen de letters

@@ -7,7 +7,7 @@
   import { onMount, untrack } from 'svelte';
   import type { Group, Mesh, MeshBasicMaterial, Texture } from 'three';
   import { maakPodium, type Podium } from '../ui/drie-d';
-  import { bordTextuur, gloedTextuur, maakDeeltjes, maakSterren, maakVloer, type Deeltjes } from '../ui/drie-d-bouw';
+  import { bordTextuur, gloedTextuur, maakDeeltjes, maakSchaduw, maakSterren, maakVloer, type Deeltjes } from '../ui/drie-d-bouw';
 
   type Fase = 'klaar' | 'flits' | 'kiezen' | 'wacht' | 'goed' | 'onthuld';
 
@@ -33,6 +33,7 @@
   let deeltjes: Deeltjes | null = null;
 
   let ster: Group;
+  let sterSchaduw: Mesh;
   let woordVlak: Mesh;
   let woordMat: MeshBasicMaterial;
   let vraagVlak: Mesh;
@@ -89,7 +90,7 @@
         ster.add(
           new THREE.Mesh(
             sterGeo,
-            new THREE.MeshStandardMaterial({ color: 0xfde68a, emissive: 0xf59e0b, emissiveIntensity: 1.1, metalness: 0.35, roughness: 0.25 }),
+            new THREE.MeshPhysicalMaterial({ color: 0xfde68a, emissive: 0xf59e0b, emissiveIntensity: 0.8, metalness: 0.75, roughness: 0.18, clearcoat: 1 }),
           ),
         );
         const halo = new THREE.Mesh(
@@ -107,6 +108,9 @@
         ster.add(hit);
         ster.position.set(0, 1.7, 0);
         scene.add(ster);
+        sterSchaduw = maakSchaduw(THREE, 1.3, 0.55);
+        sterSchaduw.position.set(0, 0.03, 0);
+        scene.add(sterSchaduw);
 
         // Woord en vraagteken
         woordMat = new THREE.MeshBasicMaterial({ transparent: true, toneMapped: false, depthWrite: false });
@@ -130,6 +134,8 @@
           // Ster
           const zichtbaar = faseNu === 'klaar';
           ster.visible = zichtbaar;
+          sterSchaduw.visible = zichtbaar;
+          sterSchaduw.scale.setScalar(1 - Math.sin(t * 2.2) * 0.08);
           if (zichtbaar) {
             const pop = Math.min(1, sinds / 0.5);
             ster.position.y = 1.7 + Math.sin(t * 2.2) * 0.12;
