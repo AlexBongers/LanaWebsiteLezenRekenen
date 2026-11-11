@@ -10,6 +10,10 @@
   import GetallenSpring from '../games/GetallenSpring.svelte';
   import Dozen from '../games/Dozen.svelte';
   import TafelRitme from '../games/TafelRitme.svelte';
+  import Sterrenregen from '../games/Sterrenregen.svelte';
+  import BallonnenRij from '../games/BallonnenRij.svelte';
+  import KlokShow from '../games/KlokShow.svelte';
+  import BlokkenBouwer from '../games/BlokkenBouwer.svelte';
   import { SPEL, type SpelId } from '../games/spellen';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
@@ -81,6 +85,10 @@
     springen: GetallenSpring,
     dozen: Dozen,
     tafels: TafelRitme,
+    sterren: Sterrenregen,
+    ballonnen: BallonnenRij,
+    klok: KlokShow,
+    bouwen: BlokkenBouwer,
   } as const;
 
   // ---------- Het concert plannen ----------

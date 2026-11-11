@@ -213,5 +213,23 @@
     "welkom": "Dit is jouw plakboek. Tik op een sticker om hem goed te bekijken.",
     "vol": "Wauw, je plakboek is helemaal vol! Wat een verzameling!",
     "leeg": "Deze plek is nog leeg. Speel een concert, dan krijg je een sticker."
+  },
+  "sterren": {
+    "start": "Luister goed naar het woord. Tik op de ster met dat woord.",
+    "vraag": "Welk woord hoor je?"
+  },
+  "ballonnen": {
+    "start": "Tik de ballonnen van klein naar groot. Begin bij het kleinste getal.",
+    "hint": "Zoek het kleinste getal dat nog over is.",
+    "klaar": "Alle ballonnen staan op een rij!"
+  },
+  "klok": {
+    "start": "Kijk goed naar de klok. Hoe laat is het?",
+    "hint": "De korte wijzer wijst het uur aan. Staat de lange wijzer op de twaalf? Dan is het precies dat uur.",
+    "hintHalf": "Staat de lange wijzer op de zes? Dan is het half. Kijk naar welk uur de korte wijzer gaat."
+  },
+  "bouwen": {
+    "start": "Luister naar het woord. Tik de blokjes in de goede volgorde.",
+    "hint": "Zeg het woord langzaam. Welk stukje hoor je eerst?"
   }
 }

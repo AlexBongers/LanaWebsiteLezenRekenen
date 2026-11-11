@@ -15,6 +15,7 @@ import karaoke from '../../content/fase3/karaoke.json';
 import steden from '../../content/wereld/tour.json';
 import type { Spreeksoort } from './hash';
 import { STICKERS } from '../engine/stickers';
+import { ALLE_TIJDEN, klokZin } from '../engine/generator-fase5';
 
 export type TeSpreken = { tekst: string; soort: Spreeksoort };
 
@@ -72,6 +73,9 @@ export function alleTeksten(): TeSpreken[] {
   for (const w of [...klank.niveau1, ...klank.niveau2]) voeg(w.replace(/\|/g, ''), 'woord');
   for (const groep of zinnen.groepen) for (const [zin] of groep) voeg(zin, 'zin');
   for (const l of karaoke.liedjes) l.regels.forEach((r) => voeg(r, 'zin'));
+
+  // Klok-show: alle hele en halve uren
+  for (const t of ALLE_TIJDEN) voeg(klokZin(t), 'zin');
 
   // Plakboek: de naam van elke sticker
   for (const st of STICKERS) voeg(st.naam, 'woord');
