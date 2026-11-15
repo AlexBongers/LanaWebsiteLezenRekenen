@@ -327,5 +327,28 @@
   "sorteer": {
     "start": "Sorteer-show! Lees het woord op het pakje. Tik op de mand waar het in hoort.",
     "hint": "Lees het woord nog eens goed. Is het een dier, iets om te eten, of iets anders?"
+  },
+  "rekenschool": {
+    "welkom": "Welkom in de rekenschool! Hier oefenen we sommen, tafels en geld. Stap voor stap, tot je het snapt.",
+    "rekenrek": "Kijk naar het rekenrek. We rekenen slim, via de tien.",
+    "eerstNaarTien": "Eerst naar de tien. Hoeveel kralen moeten erbij?",
+    "eerstTerugNaarTien": "Eerst terug naar de tien. Hoeveel kralen moeten eraf?",
+    "telTotTien": "Tel de lege plekjes in de bovenste rij. Zoveel moeten erbij tot tien.",
+    "hoeveelNu": "Mooi! En hoeveel is het nu?",
+    "lijn": "Kijk naar de getallenlijn. Eerst springen we naar het hele tiental, dan de rest.",
+    "uitdaging": "Een uitdaging! Deze is wat moeilijker. Probeer het maar.",
+    "groepjes": "Tafels zijn groepjes. Drie keer vier betekent: drie groepjes van vier.",
+    "telGroepjes": "Tik de groepjes aan en tel in sprongen.",
+    "steunsom": "Gebruik een som die je al kent.",
+    "winkel": "Welkom in de winkel! Betaal precies het goede bedrag. Begin met het grootste geld.",
+    "terug": "Je betaalt met een briefje. Hoeveel geld krijg je terug?",
+    "teVeel": "Oeps, dat is te veel. Tik op geld op de toonbank om het terug te pakken.",
+    "teWeinig": "Nog niet genoeg. Doe er nog wat geld bij.",
+    "grootsteEerst": "Kijk, zo kan het. Eerst het grootste geld, dan de rest.",
+    "hintTerug": "Tel verder vanaf de prijs, tot je bij het briefje bent.",
+    "welkeSom": "Lees het verhaaltje. Welke som hoort erbij? Daarna reken je hem uit.",
+    "rekenUit": "Goed gekozen! Reken de som nu uit.",
+    "hintPlus": "Komt er iets bij? Dan is het een plussom.",
+    "hintMin": "Gaat er iets af of weg? Dan is het een minsom."
   }
 }

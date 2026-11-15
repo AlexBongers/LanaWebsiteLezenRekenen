@@ -37,7 +37,11 @@ export type VaardigheidId =
   | 'geld'
   | 'meten'
   | 'kampioen'
-  | 'sorteer';
+  | 'sorteer'
+  | 'rekenrek'
+  | 'groepjes'
+  | 'winkel'
+  | 'welkesom';
 
 export type Leestempo = { datum: string; liedje: string; ronde: number; seconden: number; woorden: number };
 
@@ -138,6 +142,10 @@ export function standaardVoortgang(): Voortgang {
       meten: { niveau: 0, recent: [] },
       kampioen: { niveau: 0, recent: [] },
       sorteer: { niveau: 0, recent: [] },
+      rekenrek: { niveau: 0, recent: [] },
+      groepjes: { niveau: 0, recent: [] },
+      winkel: { niveau: 0, recent: [] },
+      welkesom: { niveau: 0, recent: [] },
     },
     leestempo: [],
     gezongen: [],

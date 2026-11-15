@@ -25,7 +25,11 @@ export type SpelId =
   | 'harten'
   | 'geld'
   | 'meten'
-  | 'sorteer';
+  | 'sorteer'
+  | 'rekenrek'
+  | 'groepjes'
+  | 'winkel'
+  | 'welkesom';
 
 export type SpelDef = {
   id: SpelId;
@@ -39,6 +43,8 @@ export type SpelDef = {
   /** Rekenspel: rustigere regels voor omhoog/omlaag. */
   rekenen?: boolean;
   snel?: boolean;
+  /** Hoort bij de Rekenschool (eigen menu op de wereldtour), niet bij het menu van de heldin. */
+  school?: boolean;
 };
 
 export const SPELLEN: SpelDef[] = [
@@ -65,8 +71,15 @@ export const SPELLEN: SpelDef[] = [
   { id: 'dictee', heldin: 'zoey', naam: 'Letter-dictee', uitleg: 'Bouw het woord met losse letters', icoon: '✍️', vaardigheid: 'dictee', maxNiveau: 1 },
   { id: 'bouwen', heldin: 'zoey', naam: 'Blokken-bouwer', uitleg: 'Bouw het woord met klankblokjes', icoon: '🧱', vaardigheid: 'bouwen', maxNiveau: 1 },
   { id: 'verhaal', heldin: 'zoey', naam: 'Songtekst-verhaal', uitleg: 'Lees een verhaal, beantwoord vragen', icoon: '📖', vaardigheid: 'verhaal', maxNiveau: 0 },
+
+  // Rekenschool (oefenen met begrip: rekenrek, groepjes, geld, verhaaltjes)
+  { id: 'rekenrek', heldin: 'mira', naam: 'Rekenrek', uitleg: 'Rekenen via de tien', icoon: '🧮', vaardigheid: 'rekenrek', maxNiveau: 3, rekenen: true, school: true },
+  { id: 'groepjes', heldin: 'mira', naam: 'Tafel-groepjes', uitleg: 'Tafels snappen met groepjes', icoon: '🛍️', vaardigheid: 'groepjes', maxNiveau: 3, rekenen: true, school: true },
+  { id: 'winkel', heldin: 'mira', naam: 'Geldwinkel', uitleg: 'Betalen en wisselgeld', icoon: '🏪', vaardigheid: 'winkel', maxNiveau: 3, rekenen: true, school: true },
+  { id: 'welkesom', heldin: 'mira', naam: 'Welke som?', uitleg: 'Lees het verhaal, kies de som', icoon: '📝', vaardigheid: 'welkesom', maxNiveau: 2, rekenen: true, school: true },
 ];
 
 export const SPEL = Object.fromEntries(SPELLEN.map((s) => [s.id, s])) as Record<SpelId, SpelDef>;
 
-export const spellenVan = (h: HeldinId) => SPELLEN.filter((s) => s.heldin === h);
+export const spellenVan = (h: HeldinId) => SPELLEN.filter((s) => s.heldin === h && !s.school);
+export const schoolSpellen = () => SPELLEN.filter((s) => s.school);

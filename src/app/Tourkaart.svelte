@@ -14,9 +14,10 @@
     opKleedkamer,
     opPlakboek,
     opUitdaging,
+    opSchool,
     opOuder,
     opStoppen,
-  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opUitdaging: () => void; opOuder: () => void; opStoppen: () => void } = $props();
+  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opUitdaging: () => void; opSchool: () => void; opOuder: () => void; opStoppen: () => void } = $props();
 
   // Posities van de steden op de kaart (procent van de kaart).
   const PLEK = [
@@ -122,6 +123,7 @@
 
   <div class="onderknoppen">
     <button class="knop-goud" onclick={opKleedkamer}>👗 Kleedkamer</button>
+    <button class="knop-goud school-knop" onclick={opSchool}>🧮 Rekenschool</button>
     <button class="knop-goud plakboek-knop" onclick={opPlakboek}>
       📒 Plakboek
       {#if vg.stickersNieuw.length}<span class="nieuw-teller">{vg.stickersNieuw.length}</span>{/if}
@@ -360,6 +362,10 @@
   @keyframes glim {
     0%, 100% { box-shadow: 0 6px 0 #92400e, 0 0 20px rgba(251, 191, 36, 0.5); }
     50% { box-shadow: 0 6px 0 #92400e, 0 0 40px rgba(251, 191, 36, 0.95); }
+  }
+  .school-knop {
+    background: linear-gradient(180deg, #bae6fd, #38bdf8);
+    box-shadow: 0 6px 0 #0369a1, 0 10px 24px rgba(0, 0, 0, 0.35);
   }
   .plakboek-knop {
     position: relative;

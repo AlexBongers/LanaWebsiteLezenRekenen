@@ -9,7 +9,7 @@
   import NotenTeller from '../ui/NotenTeller.svelte';
   import Beloning from './Beloning.svelte';
   import characters from '../../content/characters.json';
-  import { maakSommen, REKEN_NIVEAUS, somId, somUitId, type Som } from '../engine/generator-rekenen';
+  import { maakSommen, REKEN_NIVEAUS, somId, somNiveau, somUitId, type Som } from '../engine/generator-rekenen';
   import {
     flitsUitId,
     groepSleutel,
@@ -89,6 +89,10 @@
     geld: () => import('../games/GeldTellen.svelte'),
     meten: () => import('../games/MetenWegen.svelte'),
     sorteer: () => import('../games/SorteerShow.svelte'),
+    rekenrek: () => import('../games/Rekenrek.svelte'),
+    groepjes: () => import('../games/TafelGroepjes.svelte'),
+    winkel: () => import('../games/Geldwinkel.svelte'),
+    welkesom: () => import('../games/WelkeSom.svelte'),
   };
 
   // ---------- Het concert plannen ----------
@@ -183,7 +187,11 @@
     let h = vg.herhaling;
     // Alleen sommen en flitswoorden komen terug via de doosjes (die spellen plannen herhaling).
     for (const r of resultaten) {
-      if (r.id.startsWith('som.') || r.id.startsWith('woord.')) h = verwerkAntwoord(h, r.id, r.goed, r.niveau, nu);
+      if (!r.id.startsWith('som.') && !r.id.startsWith('woord.')) continue;
+      // Sommen uit andere spellen (zoals het rekenrek) krijgen het rekenniveau dat bij de som hoort
+      const m = /^som\.(\d+)([+-])(\d+)$/.exec(r.id);
+      const n = sleutel !== 'rekenen' && m ? somNiveau(Number(m[1]), m[2] as '+' | '-', Number(m[3])) : r.niveau;
+      h = verwerkAntwoord(h, r.id, r.goed, n, nu);
     }
     vg.herhaling = h;
     vg.stats = werkStatsBij(vg.stats, resultaten);

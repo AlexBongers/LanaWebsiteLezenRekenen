@@ -6,21 +6,37 @@
   import Tekstballon from '../ui/Tekstballon.svelte';
   import characters from '../../content/characters.json';
   import teksten from '../../content/teksten.json';
-  import { spellenVan, type SpelId } from '../games/spellen';
+  import { spellenVan, type SpelDef, type SpelId } from '../games/spellen';
   import { vg, type HeldinId } from '../store/voortgang.svelte';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelTik } from '../audio/geluid';
 
-  let { heldin, opKies, opTerug }: { heldin: HeldinId; opKies: (s: SpelId) => void; opTerug: () => void } = $props();
+  let {
+    heldin,
+    opKies,
+    opTerug,
+    lijst,
+    titel,
+    zin,
+  }: {
+    heldin: HeldinId;
+    opKies: (s: SpelId) => void;
+    opTerug: () => void;
+    /** Eigen lijst spellen (Rekenschool) in plaats van die van de heldin. */
+    lijst?: SpelDef[];
+    titel?: string;
+    /** Wat de stem bij binnenkomst zegt. */
+    zin?: string;
+  } = $props();
 
   // svelte-ignore state_referenced_locally
-  const spellen = spellenVan(heldin);
+  const spellen = lijst ?? spellenVan(heldin);
   // svelte-ignore state_referenced_locally
   const c = characters[heldin];
   let gekozen: SpelId | null = $state(null);
 
   onMount(() => {
-    void spreek(teksten.spelkeuze);
+    void spreek(zin ?? teksten.spelkeuze);
   });
 
   function kies(s: SpelId) {
@@ -38,7 +54,7 @@
         <path d="M15 5 L8 12 L15 19" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </button>
-    <h1>{c.naam}: kies een spel</h1>
+    <h1>{titel ?? `${c.naam}: kies een spel`}</h1>
     <NotenTeller aantal={vg.noten} />
   </header>
 
