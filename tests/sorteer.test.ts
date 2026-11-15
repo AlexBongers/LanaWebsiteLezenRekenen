@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { BAKKEN, SOORTEN, maakSorteer } from '../src/engine/generator-sorteer';
 import { zaadRnd } from '../src/engine/toeval';
-import plaatjes from '../content/fase3/plaatjes.json';
+import { alleTeksten } from '../src/audio/alle-teksten';
 
 describe('Sorteer-show', () => {
   it('alle woorden zijn ingesproken en staan maar in één mand', () => {
-    const ingesproken = new Set((plaatjes.woorden as [string, string][]).map(([w]) => w));
+    const ingesproken = new Set(alleTeksten().filter((t) => t.soort === 'woord').map((t) => t.tekst));
     const gezien = new Set<string>();
     for (const b of BAKKEN) {
       for (const w of SOORTEN[b.id]) {

@@ -82,7 +82,7 @@ export function alleTeksten(): TeSpreken[] {
   for (const t of ALLE_TIJDEN) voeg(klokZin(t), 'zin');
 
   // Plakboek: de naam van elke sticker
-  for (const st of STICKERS) voeg(st.naam, 'woord');
+  for (const st of STICKERS) voeg(st.spraak ?? st.naam, 'woord');
 
   for (let n = 0; n <= 100; n++) voeg(String(n), 'getal');
   SOM_WOORDEN.forEach((w) => voeg(w, 'getal'));

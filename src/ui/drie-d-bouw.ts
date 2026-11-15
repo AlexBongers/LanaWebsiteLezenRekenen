@@ -305,8 +305,12 @@ export function bordTextuur(THREE: Three, tekst: string, o: BordOpties = {}) {
   return t;
 }
 
-/** Zachte lichtvlek als textuur voor glinsterdeeltjes en gloed. */
+const gloedCache = new Map<string, TypeThree.CanvasTexture>();
+
+/** Zachte lichtvlek als textuur; per kleur maar één keer getekend en daarna hergebruikt. */
 export function gloedTextuur(THREE: Three, kleur = '#ffffff') {
+  const bewaard = gloedCache.get(kleur);
+  if (bewaard) return bewaard;
   const c = document.createElement('canvas');
   c.width = c.height = 64;
   const g = c.getContext('2d')!;
@@ -318,6 +322,7 @@ export function gloedTextuur(THREE: Three, kleur = '#ffffff') {
   g.fillRect(0, 0, 64, 64);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
+  gloedCache.set(kleur, t);
   return t;
 }
 

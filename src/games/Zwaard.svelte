@@ -105,7 +105,7 @@
       </div>
     {/if}
     {#key ronde.nummer}
-      <div class="woord" class:onzichtbaar={drieD} class:gehakt bind:this={woordEl} style="--maat:{maat}px">
+      <div class="woord" class:onzichtbaar-3d={drieD} class:gehakt bind:this={woordEl} style="--maat:{maat}px">
         {#each o.woord.split('') as letter, i}
           <span class="letter" class:klinker={ronde.pogingen > 0 && klinker(letter)}>{letter}</span>
           {#if i < o.woord.length - 1}
@@ -131,16 +131,6 @@
     height: 330px;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  }
-  /* De platte letters blijven voor voorlezers en toetsenbord bruikbaar, maar de 3D-blokjes nemen het zicht over. */
-  .woord.onzichtbaar {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    opacity: 0;
-    animation: none;
   }
   .woord {
     display: flex;

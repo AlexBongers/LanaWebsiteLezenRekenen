@@ -11,6 +11,12 @@ export type Three = typeof TypeThree;
 
 let geladen: Promise<Three> | null = null;
 
+/** Zolang dit boven 0 is, tekent geen enkel 3D-podium (er ligt bijvoorbeeld een beloningsscherm overheen). */
+let rustTeller = 0;
+export function rust3D(aan: boolean) {
+  rustTeller = Math.max(0, rustTeller + (aan ? 1 : -1));
+}
+
 export function heeftWebGL(): boolean {
   try {
     const c = document.createElement('canvas');
@@ -134,7 +140,8 @@ export async function maakPodium(canvas: HTMLCanvasElement, opties: PodiumOpties
     if (gestopt) return;
     const dt = Math.min(0.1, (nu - vorige) / 1000);
     vorige = nu;
-    if (zichtbaar && dt > 0) {
+    const tekenen = zichtbaar && rustTeller === 0;
+    if (tekenen && dt > 0) {
       gemeten++;
       if (dt > 0.034) traag++;
       if (gemeten >= 45) {
@@ -146,7 +153,7 @@ export async function maakPodium(canvas: HTMLCanvasElement, opties: PodiumOpties
         traag = 0;
       }
     }
-    if (zichtbaar) {
+    if (tekenen) {
       for (const f of frames) f(nu / 1000, dt);
       teken();
     }

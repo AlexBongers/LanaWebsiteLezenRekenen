@@ -9,6 +9,7 @@
   import { spreek } from '../audio/stem';
   import { speelFanfare } from '../audio/geluid';
   import { grootFeest } from '../ui/feest';
+  import { rust3D } from '../ui/drie-d';
   import teksten from '../../content/teksten.json';
   import type { HeldinId } from '../store/voortgang.svelte';
 
@@ -67,6 +68,8 @@
   });
 
   onMount(() => {
+    // Het spel ligt eronder: 3D even stilzetten, dan loopt het feest soepel.
+    rust3D(true);
     speelFanfare();
     grootFeest();
     void (async () => {
@@ -75,6 +78,7 @@
       else if (nieuweStickers.length) await spreek(uitZak('stickerNieuw', teksten.stickers.nieuw));
       if (pauze) await spreek(teksten.pauze.tijd);
     })();
+    return () => rust3D(false);
   });
 </script>
 

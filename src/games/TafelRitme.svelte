@@ -128,7 +128,7 @@
         <div class="tegel vraag" class:goed={ronde.onthuld}>{ronde.onthuld ? o.antwoord : '?'}</div>
         <div class="luid"><Luidspreker opTik={speelReeks} /></div>
       </div>
-      <div class="keuzerij" class:onzichtbaar={drieD}>
+      <div class="keuzerij" class:onzichtbaar-3d={drieD}>
         {#each o.keuzes as k, i (k)}
           <button
             class="keuzeknop getalknop"
@@ -222,15 +222,6 @@
     width: 900px;
     height: 290px;
     margin: -6px 0;
-  }
-  /* Blijft voor voorlezers en toetsenbord bruikbaar, maar de 3D-drums nemen het zicht over. */
-  .keuzerij.onzichtbaar {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    opacity: 0;
   }
   .getalknop {
     min-width: 170px;

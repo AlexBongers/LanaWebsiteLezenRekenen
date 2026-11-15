@@ -66,7 +66,7 @@
     nieuw = nieuw.filter((x) => x !== s.id);
     await Promise.resolve();
     glitterOp(grootEl ?? null);
-    void spreek(s.naam, 'woord');
+    void spreek(s.spraak ?? s.naam, 'woord');
   }
 </script>
 
@@ -208,16 +208,16 @@
   .tabs {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     margin: 8px 0 6px;
   }
   .tab {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 16px;
+    gap: 4px;
+    padding: 5px 9px;
+    border-radius: 14px;
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     font-size: 18px;
@@ -229,7 +229,7 @@
     box-shadow: 0 0 16px color-mix(in srgb, var(--kleur) 70%, transparent);
   }
   .tab-icoon {
-    font-size: 26px;
+    font-size: 24px;
   }
   .stip {
     position: absolute;

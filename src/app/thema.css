@@ -269,3 +269,11 @@ button {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
 }
+
+/* Levende 3D-achtergrond achter spellen met veel tekst; alles wat je leest en aantikt staat ervoor */
+.achter3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}

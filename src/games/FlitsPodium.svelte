@@ -154,7 +154,7 @@
       {/if}
       {#if toon3d}
         {#if fase === 'klaar'}
-          <button class="verborgen" onclick={() => flits(vg.flitstijd)} aria-label="Laat het woord zien"></button>
+          <button class="onzichtbaar-3d" onclick={() => flits(vg.flitstijd)} aria-label="Laat het woord zien"></button>
         {:else if fase === 'onthuld'}
           <div class="luid"><Luidspreker opTik={() => spreek(opgave.woord, 'woord')} /></div>
         {/if}
@@ -279,14 +279,6 @@
     /* Zachte randen: het 3D-beeld gaat vanzelf over in de achtergrond. */
     -webkit-mask-image: radial-gradient(ellipse 54% 60% at 50% 52%, #000 62%, transparent 100%);
     mask-image: radial-gradient(ellipse 54% 60% at 50% 52%, #000 62%, transparent 100%);
-  }
-  .verborgen {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    opacity: 0;
   }
   .podium::after {
     content: '';

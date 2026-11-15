@@ -107,8 +107,7 @@
     position: absolute;
     inset: 0 -20%;
     pointer-events: none;
-    background: radial-gradient(ellipse 30% 55% at 50% 35%, rgba(255, 255, 255, 0.55), transparent 70%);
-    mix-blend-mode: soft-light;
+    background: radial-gradient(ellipse 30% 55% at 50% 35%, rgba(255, 255, 255, 0.22), transparent 70%);
     animation: spot 9s ease-in-out infinite;
     animation-delay: var(--vertraging);
   }

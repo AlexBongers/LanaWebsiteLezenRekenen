@@ -19,6 +19,8 @@ export type Sticker = {
   zeldzaam: Zeldzaam;
   /** Alleen te krijgen door de baas-demon van deze stad weg te zingen. */
   baasStad?: string;
+  /** Wat de stem zegt, als dat anders is dan de naam (bijv. het ingesproken losse woord). */
+  spraak?: string;
 };
 
 export type StickerSet = { id: string; naam: string; kleur: string; icoon: string };
@@ -31,7 +33,20 @@ export const STICKER_SETS: StickerSet[] = [
   { id: 'podium', naam: 'Op het podium', kleur: '#ec4899', icoon: '🎹' },
   { id: 'glitter', naam: 'Glitter', kleur: '#d946ef', icoon: '💎' },
   { id: 'lekker', naam: 'Lekker!', kleur: '#f97316', icoon: '🍡' },
+  { id: 'zee', naam: 'Zeewereld', kleur: '#0ea5e9', icoon: '🐬' },
+  { id: 'boerderij', naam: 'Boerderij', kleur: '#84cc16', icoon: '🐄' },
+  { id: 'dierentuin', naam: 'Dierentuin', kleur: '#eab308', icoon: '🦁' },
 ];
+
+/** Sticker met een ingesproken los woord als naam ('dolfijn' wordt 'Dolfijn' op het scherm). */
+const woordSticker = (woord: string, set: string, teken: string, zeldzaam: Zeldzaam = 'gewoon'): Sticker => ({
+  id: `${set}-${woord}`,
+  naam: woord[0].toUpperCase() + woord.slice(1),
+  set,
+  beeld: { soort: 'emoji', teken },
+  zeldzaam,
+  spraak: woord,
+});
 
 const e = (id: string, naam: string, set: string, teken: string, zeldzaam: Zeldzaam = 'gewoon'): Sticker => ({
   id,
@@ -112,6 +127,19 @@ export const STICKERS: Sticker[] = [
   e('ijsje', 'IJsje', 'lekker', '🍦'),
   e('donut', 'Donut', 'lekker', '🍩'),
   e('lolly', 'Lolly', 'lekker', '🍭', 'glans'),
+  // Zeewereld, boerderij en dierentuin: de namen zijn al ingesproken als los woord
+  ...([
+    ['dolfijn', '🐬', 'holo'], ['walvis', '🐋', 'glans'], ['octopus', '🐙'], ['krab', '🦀'],
+    ['haai', '🦈'], ['schildpad', '🐢', 'glans'], ['vis', '🐠'], ['zeehond', '🦭'],
+  ] as [string, string, Zeldzaam?][]).map(([w, t, z]) => woordSticker(w, 'zee', t, z)),
+  ...([
+    ['koe', '🐄'], ['paard', '🐴', 'glans'], ['schaap', '🐑'], ['varken', '🐷'],
+    ['kip', '🐔'], ['haan', '🐓'], ['tractor', '🚜', 'glans'], ['konijn', '🐰'],
+  ] as [string, string, Zeldzaam?][]).map(([w, t, z]) => woordSticker(w, 'boerderij', t, z)),
+  ...([
+    ['leeuw', '🦁', 'holo'], ['tijger', '🐯', 'glans'], ['olifant', '🐘'], ['giraf', '🦒'],
+    ['zebra', '🦓'], ['panda', '🐼', 'glans'], ['aap', '🐒'], ['krokodil', '🐊'],
+  ] as [string, string, Zeldzaam?][]).map(([w, t, z]) => woordSticker(w, 'dierentuin', t, z)),
 ];
 
 export const STICKER = Object.fromEntries(STICKERS.map((s) => [s.id, s])) as Record<string, Sticker>;

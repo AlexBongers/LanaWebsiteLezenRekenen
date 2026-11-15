@@ -183,13 +183,6 @@
 </div>
 
 <style>
-  /* Levende 3D-achtergrond; alles wat je leest en aantikt staat ervoor */
-  .achter3d {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
   .spelvlak > :global(.heldin-plek),
   .spelvlak > :global(.speelveld) {
     position: relative;

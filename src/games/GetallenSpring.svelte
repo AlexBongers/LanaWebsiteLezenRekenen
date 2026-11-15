@@ -142,7 +142,7 @@
             opFout={() => (drieD = false)}
           />
           <!-- Onzichtbare knoppen: toetsenbord, schermlezers en tests -->
-          <div class="verborgen">
+          <div class="onzichtbaar-3d">
             {#each streepjes as n (n)}
               <button onclick={() => tik(n)} aria-label="Getal {n}">{n}</button>
             {/each}
@@ -208,13 +208,6 @@
     background: radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.22), rgba(10, 2, 30, 0.5) 70%);
     border: 3px solid rgba(249, 168, 212, 0.3);
     overflow: hidden;
-  }
-  .verborgen {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
   }
   .lijn {
     position: relative;

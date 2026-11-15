@@ -23,7 +23,7 @@
     fase = 'open';
     speelFanfare();
     glitterOp(plekEl ?? null);
-    await spreek(huidig.naam, 'woord');
+    await spreek(huidig.spraak ?? huidig.naam, 'woord');
     if (huidig.baasStad) await spreek(teksten.stickers.baas);
     else if (huidig.zeldzaam === 'holo') await spreek(teksten.stickers.zeldzaam);
   }

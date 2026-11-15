@@ -163,7 +163,7 @@
         />
       </div>
     {/if}
-    <div class="demonen" class:onzichtbaar={drieD}>
+    <div class="demonen" class:onzichtbaar-3d={drieD}>
       {#each som.keuzes as keuze, i (index + '-' + keuze)}
         <button
           class="demon"
@@ -282,14 +282,6 @@
     margin-top: auto;
   }
   /* Blijft voor voorlezers en toetsenbord bruikbaar, maar de 3D-demonnen nemen het zicht over. */
-  .demonen.onzichtbaar {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    opacity: 0;
-  }
   .demonen {
     margin-top: auto;
     display: flex;
