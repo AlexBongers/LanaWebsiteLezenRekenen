@@ -91,6 +91,8 @@ export type Voortgang = {
   stickers: string[];
   /** Stickers die ze nog niet in het plakboek heeft bekeken. */
   stickersNieuw: string[];
+  /** Per spel de laatst geziene opgaven, voor afwisseling (zie games/vers.ts). */
+  gezienRecent: Record<string, string[]>;
   instellingen: {
     /** Na zoveel minuten volgt na het concert een pauze (0 = geen grens). */
     sessieMinuten: number;
@@ -150,6 +152,7 @@ export function standaardVoortgang(): Voortgang {
     tour: {},
     stickers: [],
     stickersNieuw: [],
+    gezienRecent: {},
     instellingen: {
       sessieMinuten: 15,
       volledigScherm: false,

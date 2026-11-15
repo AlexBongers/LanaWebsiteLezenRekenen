@@ -12,6 +12,7 @@
   import { glitterOp } from '../ui/feest';
   import { teksten, compliment, bijna, wacht } from './teksten';
   import { Ronde } from './ronde.svelte';
+  import { kiesVers } from './vers';
   import type { SpelProps } from './types';
 
   let { opNoten, opVoortgang, opKlaar, niveau = 0, aantal = 8 }: SpelProps = $props();
@@ -19,9 +20,12 @@
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<TafelOpgave>(
     // Gesorteerd per tafel: dan hoort ze de tafel een paar keer achter elkaar.
-    maakTafels(niveau, aantal)
-      .sort((a, b) => a.tafel - b.tafel)
-      .map((o) => ({ opgave: o, id: `tafel.${o.tafel}x${o.antwoord / o.tafel}` })),
+    kiesVers(
+      'tafels',
+      maakTafels(niveau, aantal * 3).map((o) => ({ opgave: o, id: `tafel.${o.tafel}x${o.antwoord / o.tafel}` })),
+      (x) => x.id,
+      aantal,
+    ).sort((a, b) => a.opgave.tafel - b.opgave.tafel),
     niveau,
     { opKlaar, opVoortgang },
   );

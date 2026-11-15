@@ -15,6 +15,7 @@
   import { heeftWebGL } from '../ui/drie-d';
   import { kampioenDelen, kampioenHint, kampioenId, maakKampioen, maakPoortSom, type KampioenOpgave } from '../engine/generator-kampioen';
   import { Ronde } from '../games/ronde.svelte';
+  import { kiesVers } from '../games/vers';
   import { teksten, compliment, bijna, wacht } from '../games/teksten';
   import { somDelen, spreek } from '../audio/stem';
   import { speelBijna, speelFanfare, speelGoed } from '../audio/geluid';
@@ -91,7 +92,7 @@
 
   function start() {
     ronde = new Ronde<KampioenOpgave>(
-      maakKampioen(niveau, AANTAL).map((x) => ({ opgave: x, id: kampioenId(x) })),
+      kiesVers('kampioen', maakKampioen(niveau, AANTAL * 4).map((x) => ({ opgave: x, id: kampioenId(x) })), (x) => x.id, AANTAL),
       niveau,
       { opKlaar: klaar, opVoortgang: (f) => (voortgang = f) },
     );

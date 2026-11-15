@@ -28,3 +28,19 @@ describe('Sorteer-show', () => {
     }
   });
 });
+
+describe('afwisseling (vers)', () => {
+  it('kiest eerst wat nog niet gezien is, daarna het langst geleden geziene', async () => {
+    const { vg } = await import('../src/store/voortgang.svelte');
+    const { kiesVers } = await import('../src/games/vers');
+    vg.gezienRecent = {};
+    const pool = ['a', 'b', 'c', 'd', 'e', 'f'];
+    const eerste = kiesVers('test', pool, (x) => x, 3);
+    const tweede = kiesVers('test', pool, (x) => x, 3);
+    // De tweede keer krijgt ze de drie die ze nog niet had
+    expect(new Set([...eerste, ...tweede]).size).toBe(6);
+    // Daarna komen de eerste drie weer (die zijn het langst geleden)
+    const derde = kiesVers('test', pool, (x) => x, 3);
+    expect([...derde].sort()).toEqual([...eerste].sort());
+  });
+});

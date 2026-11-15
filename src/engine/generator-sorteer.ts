@@ -15,11 +15,11 @@ export const BAKKEN: Bak[] = [
 ];
 
 export const SOORTEN: Record<string, string[]> = {
-  dieren: ['vis', 'kat', 'hond', 'muis', 'uil', 'eend', 'kip', 'koe', 'paard', 'schaap', 'beer', 'vos', 'aap', 'bij', 'spin', 'slak', 'haai', 'krab', 'slang', 'leeuw', 'olifant', 'giraf', 'zebra', 'krokodil', 'schildpad', 'vlinder', 'kikker', 'walvis', 'varken'],
-  eten: ['peer', 'kaas', 'brood', 'taart', 'ei', 'melk', 'druif', 'appel', 'banaan', 'aardbei', 'wortel', 'pizza', 'ijsje'],
-  vervoer: ['bus', 'boot', 'trein', 'fiets', 'auto', 'raket', 'vliegtuig'],
-  kleren: ['hoed', 'sok', 'jas', 'schoen', 'bril'],
-  natuur: ['maan', 'zon', 'ster', 'wolk', 'boom', 'bloem', 'berg', 'vuur'],
+  dieren: ['vis', 'kat', 'hond', 'muis', 'uil', 'eend', 'kip', 'koe', 'paard', 'schaap', 'beer', 'vos', 'aap', 'bij', 'spin', 'slak', 'haai', 'krab', 'slang', 'leeuw', 'olifant', 'giraf', 'zebra', 'krokodil', 'schildpad', 'vlinder', 'kikker', 'walvis', 'varken', 'tijger', 'panda', 'koala', 'egel', 'vleermuis', 'dolfijn', 'octopus', 'haan', 'zwaan', 'papegaai', 'flamingo'],
+  eten: ['peer', 'kaas', 'brood', 'taart', 'ei', 'melk', 'druif', 'appel', 'banaan', 'aardbei', 'wortel', 'pizza', 'ijsje', 'citroen', 'kers', 'meloen', 'tomaat', 'ananas', 'koekje', 'soep'],
+  vervoer: ['bus', 'boot', 'trein', 'fiets', 'auto', 'raket', 'vliegtuig', 'taxi', 'tractor', 'helikopter', 'step'],
+  kleren: ['hoed', 'sok', 'jas', 'schoen', 'bril', 'jurk', 'pet', 'handschoen', 'sjaal'],
+  natuur: ['maan', 'zon', 'ster', 'wolk', 'boom', 'bloem', 'berg', 'vuur', 'regenboog', 'sneeuw', 'blad', 'paddenstoel'],
 };
 
 export type SorteerOpgave = { woord: string; bakken: Bak[]; goed: number };

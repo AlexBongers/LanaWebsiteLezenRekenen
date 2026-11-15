@@ -50,6 +50,26 @@
         "Zoey rapt een rijm, Mira springt heel hoog,",
         "en Lana leest het lied van de regenboog."
       ]
+    },
+    {
+      "id": "wereldtour",
+      "titel": "Op wereldtour",
+      "regels": [
+        "We pakken de koffer en gaan op reis.",
+        "Van Seoel naar Parijs, wat een mooie reis.",
+        "In elke stad zingen wij een lied.",
+        "Een demon die blijft? Nee, dat doet hij niet!"
+      ]
+    },
+    {
+      "id": "vriendinnen",
+      "titel": "Vier vriendinnen",
+      "regels": [
+        "Rumi, Mira, Zoey en ik.",
+        "Wij dansen samen, tik tik tik.",
+        "Valt er een van ons, dan helpen wij.",
+        "Samen zijn we sterk en heel erg blij."
+      ]
     }
   ]
 }

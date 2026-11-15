@@ -11,13 +11,14 @@
   import { glitterOp } from '../ui/feest';
   import { teksten, compliment, bijna, wacht } from './teksten';
   import { Ronde } from './ronde.svelte';
+  import { kiesVers } from './vers';
   import type { SpelProps } from './types';
 
   let { opNoten, opVoortgang, opKlaar, niveau = 0, aantal = 8 }: SpelProps = $props();
 
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<SorteerOpgave>(
-    maakSorteer(niveau, aantal).map((o) => ({ opgave: o, id: `sorteer.${o.woord}` })),
+    kiesVers('sorteer', maakSorteer(niveau, aantal * 4).map((o) => ({ opgave: o, id: `sorteer.${o.woord}` })), (x) => x.id, aantal),
     niveau,
     { opKlaar, opVoortgang },
   );

@@ -31,7 +31,17 @@
     "Gouden antwoord!",
     "Top gedaan!",
     "Het schild glimt helemaal!",
-    "Dat was een mooie noot!"
+    "Dat was een mooie noot!",
+    "Knap gedaan!",
+    "Wat ben jij goed bezig!",
+    "Jij kunt het echt!",
+    "Wauw, wat snel!",
+    "Daar word ik blij van!",
+    "Jij bent een kanjer!",
+    "Dat zag ik goed!",
+    "Wat een slimme keuze!",
+    "Hoppa, raak!",
+    "Dat ging als een speer!"
   ],
   "bijna": [
     "Bijna! Probeer het nog eens.",
@@ -53,7 +63,15 @@
     "Hmm, kijk nog even goed, Lana.",
     "Nog niet, maar je bent er bijna!",
     "Oeps, mis! Nog een kans.",
-    "Niet erg! Fouten maken hoort erbij."
+    "Niet erg! Fouten maken hoort erbij.",
+    "Net niet. Probeer het nog eens.",
+    "Bijna goed! Nog een poging.",
+    "Geeft niks. Probeer nog eens.",
+    "Oeps! Jij kunt het, probeer opnieuw.",
+    "Rustig aan. Kijk nog eens goed.",
+    "Bijna! Denk nog even na.",
+    "Hmm, nog een keertje kijken.",
+    "Dat was dichtbij! Nog een keer."
   ],
   "hetIs": "Het goede antwoord is",
   "verder": "Tik op verder.",
@@ -149,7 +167,14 @@
     "Lana, het publiek roept jouw naam!",
     "Precies goed, Lana!",
     "Lana, jij laat het schild stralen!",
-    "Daar is Lana weer met een gouden antwoord!"
+    "Daar is Lana weer met een gouden antwoord!",
+    "Lana, wat ben jij slim!",
+    "Goed gedaan, Lana!",
+    "Lana, jij bent een topper!",
+    "Wauw Lana, dat was snel!",
+    "Lana, je wordt steeds beter!",
+    "Yes Lana, helemaal goed!",
+    "Lana, de groep is trots op jou!"
   ],
   "beloningen": [
     "Het concert is gewonnen! Het schild is weer helemaal sterk!",
@@ -160,7 +185,11 @@
     "Het schild is weer sterk. Goed gedaan, Lana!",
     "Wat een applaus! Jij bent een echte ster, Lana!",
     "Concert gewonnen! De hele zaal staat te juichen!",
-    "Lana, de groep is supertrots op jou!"
+    "Lana, de groep is supertrots op jou!",
+    "Wat een concert, Lana! Het publiek juicht!",
+    "Jij hebt het schild weer sterker gemaakt!",
+    "Top gedaan! De demonen rennen weg!",
+    "Wat ben jij gegroeid, Lana!"
   ],
   "beloningKoppen": [
     "Goed gedaan, Lana!",

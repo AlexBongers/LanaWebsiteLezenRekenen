@@ -14,8 +14,8 @@ const EMOJI = Object.fromEntries(plaatjes.woorden as [string, string][]) as Reco
 // ---------------------------------------------------------------- Klanken
 /** Klankzuivere woorden: wat je hoort, schrijf je. Niveau 1 heeft lastigere klanken (ui, ij, ng, sch). */
 export const DICTEE_WOORDEN: string[][] = [
-  ['maan', 'zon', 'ster', 'wolk', 'boom', 'tent', 'vuur', 'ring', 'sok', 'jas', 'bril', 'lamp', 'bel', 'boot', 'bus', 'peer', 'vis', 'kat', 'kip', 'koe', 'vos', 'aap', 'kaas', 'melk', 'slak', 'spin', 'krab', 'boek', 'deur', 'voet', 'neus', 'klok'],
-  ['bloem', 'schoen', 'fiets', 'trein', 'druif', 'kroon', 'schaap', 'slang', 'draak', 'berg', 'hart', 'taart', 'beer', 'haai', 'bij', 'muis', 'uil', 'oor', 'kikker'],
+  ['maan', 'zon', 'ster', 'wolk', 'boom', 'tent', 'vuur', 'ring', 'sok', 'jas', 'bril', 'lamp', 'bel', 'boot', 'bus', 'peer', 'vis', 'kat', 'kip', 'koe', 'vos', 'aap', 'kaas', 'melk', 'slak', 'spin', 'krab', 'boek', 'deur', 'voet', 'neus', 'klok', 'pet', 'soep', 'kers', 'haan', 'jurk', 'step'],
+  ['bloem', 'schoen', 'fiets', 'trein', 'druif', 'kroon', 'schaap', 'slang', 'draak', 'berg', 'hart', 'taart', 'beer', 'haai', 'bij', 'muis', 'uil', 'oor', 'kikker', 'zwaan', 'egel', 'tijger', 'meloen', 'sjaal'],
 ];
 
 /** Knip een woord in klanken: "schoen" → sch-oe-n, "maan" → m-aa-n. */
