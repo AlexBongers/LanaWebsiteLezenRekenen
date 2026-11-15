@@ -8,6 +8,8 @@
   import { onMount } from 'svelte';
   import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
+  import Arena3D from './Arena3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import karaoke from '../../content/fase3/karaoke.json';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelGoed, speelTik, speelFanfare } from '../audio/geluid';
@@ -38,6 +40,9 @@
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('dans');
   let podiumEl: HTMLElement | undefined = $state();
   let gestopt = false;
+  let drieD = $state(heeftWebGL());
+  let feest = $state(0);
+  let energie = $derived(fase === 'voorzingen' ? 0.5 : fase === 'klaarzetten' ? 0.3 : fase === 'lezen' ? 0.85 : 1);
 
   onMount(() => {
     void zingVoor();
@@ -106,6 +111,7 @@
     ];
     void bewaar();
     fase = 'uitslag';
+    feest++;
     speelGoed();
     glitterOp(podiumEl ?? null);
     stemming = Math.random() < 0.5 ? 'juich' : 'draai';
@@ -129,6 +135,9 @@
 </script>
 
 <div class="spelvlak">
+  {#if drieD}
+    <div class="achter3d"><Arena3D soort="concert" {energie} {feest} puls={regel + ronde * 10} opFout={() => (drieD = false)} /></div>
+  {/if}
   <div class="heldin-plek">
     <Tekstballon kleur="#8b5cf6" />
     <Duo wie="rumi" {stemming} hoogte={420} />
@@ -174,6 +183,19 @@
 </div>
 
 <style>
+  /* Levende 3D-achtergrond; alles wat je leest en aantikt staat ervoor */
+  .achter3d {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .spelvlak > :global(.heldin-plek),
+  .spelvlak > :global(.speelveld) {
+    position: relative;
+    z-index: 1;
+  }
+
   .titel {
     font-size: 28px;
     font-weight: 700;

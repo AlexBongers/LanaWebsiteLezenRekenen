@@ -4,6 +4,8 @@
   import Duo from '../art/Duo.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
+  import Arena3D from './Arena3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import verhalen from '../../content/lezen/verhalen-E4.json';
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed } from '../audio/geluid';
@@ -38,6 +40,8 @@
   let knopEls: HTMLElement[] = $state([]);
   let klaarKnop: HTMLElement | undefined = $state();
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
+  let drieD = $state(heeftWebGL());
+  let feest = $state(0);
 
   let vraag = $derived(verhaal.vragen[vraagIndex]);
 
@@ -88,6 +92,7 @@
     opNoten(3, klaarKnop);
     opVoortgang(1 / stappen);
     fase = 'vragen';
+    feest++;
     stemming = Math.random() < 0.5 ? 'juich' : 'draai';
     await wacht(400);
     void zegVraag();
@@ -101,6 +106,7 @@
     if (goedGekozen || onthuld || fout.includes(i)) return;
     if (i === vraag.goed) {
       goedGekozen = true;
+      feest++;
       speelGoed();
       glitterOp(knopEls[i]);
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
@@ -144,6 +150,9 @@
 </script>
 
 <div class="spel" class:vragen={fase === 'vragen'}>
+  {#if drieD}
+    <div class="achter3d"><Arena3D soort="droom" {feest} puls={pagina + vraagIndex * 20} opFout={() => (drieD = false)} /></div>
+  {/if}
   <div class="heldin">
     {#if fase === 'lezen'}<Tekstballon kleur="#06b6d4" />{/if}
     <Duo wie="zoey" {stemming} hoogte={fase === 'vragen' ? 260 : 360} />
@@ -229,6 +238,18 @@
 </div>
 
 <style>
+  /* Levende 3D-achtergrond; alles wat je leest en aantikt staat ervoor */
+  .achter3d {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .spel > :global(:not(.achter3d)) {
+    position: relative;
+    z-index: 1;
+  }
+
   .spel {
     position: absolute;
     inset: 0;

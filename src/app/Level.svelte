@@ -19,6 +19,7 @@
   import VerliefdeHarten from '../games/VerliefdeHarten.svelte';
   import GeldTellen from '../games/GeldTellen.svelte';
   import MetenWegen from '../games/MetenWegen.svelte';
+  import SorteerShow from '../games/SorteerShow.svelte';
   import { SPEL, type SpelId } from '../games/spellen';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
@@ -99,6 +100,7 @@
     harten: VerliefdeHarten,
     geld: GeldTellen,
     meten: MetenWegen,
+    sorteer: SorteerShow,
   } as const;
 
   // ---------- Het concert plannen ----------

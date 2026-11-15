@@ -24,7 +24,8 @@ export type SpelId =
   | 'klinker'
   | 'harten'
   | 'geld'
-  | 'meten';
+  | 'meten'
+  | 'sorteer';
 
 export type SpelDef = {
   id: SpelId;
@@ -60,6 +61,7 @@ export const SPELLEN: SpelDef[] = [
 
   { id: 'rijm', heldin: 'zoey', naam: 'Rijm-rap', uitleg: 'Welk woord rijmt erop?', icoon: '🎧', vaardigheid: 'rijm', maxNiveau: 1, snel: true },
   { id: 'zinnen', heldin: 'zoey', naam: 'Zinnen-show', uitleg: 'Lees de zin, kies het plaatje', icoon: '🎬', vaardigheid: 'zinnen', maxNiveau: 0, snel: true },
+  { id: 'sorteer', heldin: 'zoey', naam: 'Sorteer-show', uitleg: 'Lees het woord, kies de goede mand', icoon: '🧺', vaardigheid: 'sorteer', maxNiveau: 1, snel: true },
   { id: 'dictee', heldin: 'zoey', naam: 'Letter-dictee', uitleg: 'Bouw het woord met losse letters', icoon: '✍️', vaardigheid: 'dictee', maxNiveau: 1 },
   { id: 'bouwen', heldin: 'zoey', naam: 'Blokken-bouwer', uitleg: 'Bouw het woord met klankblokjes', icoon: '🧱', vaardigheid: 'bouwen', maxNiveau: 1 },
   { id: 'verhaal', heldin: 'zoey', naam: 'Songtekst-verhaal', uitleg: 'Lees een verhaal, beantwoord vragen', icoon: '📖', vaardigheid: 'verhaal', maxNiveau: 0 },

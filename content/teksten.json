@@ -266,5 +266,9 @@
     "start": "Typ het antwoord met de cijfers. Tik daarna op het groene vinkje.",
     "hint": "Kijk naar het hulpje. Reken via een tafel die je al kent.",
     "klaar": "Jij bent een echte tafel-kampioen!"
+  },
+  "sorteer": {
+    "start": "Sorteer-show! Lees het woord op het pakje. Tik op de mand waar het in hoort.",
+    "hint": "Lees het woord nog eens goed. Is het een dier, iets om te eten, of iets anders?"
   }
 }

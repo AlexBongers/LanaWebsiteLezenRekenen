@@ -11,6 +11,8 @@
   import Cijferpad from '../ui/Cijferpad.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
   import Beloning from './Beloning.svelte';
+  import Arena3D from '../games/Arena3D.svelte';
+  import { heeftWebGL } from '../ui/drie-d';
   import { kampioenDelen, kampioenHint, kampioenId, maakKampioen, maakPoortSom, type KampioenOpgave } from '../engine/generator-kampioen';
   import { Ronde } from '../games/ronde.svelte';
   import { teksten, compliment, bijna, wacht } from '../games/teksten';
@@ -25,6 +27,8 @@
   type Fase = 'poort' | 'open' | 'spel' | 'klaar';
   let fase: Fase = $state('poort');
   let stemming: 'rust' | 'dans' | 'juich' | 'denk' | 'draai' = $state('rust');
+  let drieD = $state(heeftWebGL());
+  let feest = $state(0);
 
   // ---------- De poort ----------
   let poort = $state(maakPoortSom());
@@ -45,6 +49,7 @@
   async function probeerPoort() {
     if (Number(poortWaarde) === poort.antwoord) {
       fase = 'open';
+      feest++;
       stemming = 'juich';
       speelFanfare();
       glitterOp(deurEl ?? null);
@@ -108,6 +113,7 @@
       speelGoed();
       glitterOp(kaartEl ?? null);
       stemming = Math.random() < 0.5 ? 'juich' : 'draai';
+      feest++;
       const n = ronde.goed();
       vg.noten += n;
       verdiend += n;
@@ -169,6 +175,11 @@
 </script>
 
 <div class="uitdaging">
+  {#if drieD}
+    <div class="achter3d">
+      <Arena3D soort="arena" energie={fase === 'spel' ? 0.7 : 0.35} vulling={fase === 'klaar' ? 1 : voortgang} {feest} opFout={() => (drieD = false)} />
+    </div>
+  {/if}
   <header>
     <button class="knop-rond" onclick={opTerug} aria-label="Terug naar de wereldtour">
       <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
@@ -248,6 +259,19 @@
 </div>
 
 <style>
+  /* Levende 3D-achtergrond; alles wat je leest en aantikt staat ervoor */
+  .achter3d {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .uitdaging > header,
+  .uitdaging > .inhoud {
+    position: relative;
+    z-index: 1;
+  }
+
   .uitdaging {
     position: relative;
     z-index: 1;

@@ -36,7 +36,8 @@ export type VaardigheidId =
   | 'harten'
   | 'geld'
   | 'meten'
-  | 'kampioen';
+  | 'kampioen'
+  | 'sorteer';
 
 export type Leestempo = { datum: string; liedje: string; ronde: number; seconden: number; woorden: number };
 
@@ -134,6 +135,7 @@ export function standaardVoortgang(): Voortgang {
       geld: { niveau: 0, recent: [] },
       meten: { niveau: 0, recent: [] },
       kampioen: { niveau: 0, recent: [] },
+      sorteer: { niveau: 0, recent: [] },
     },
     leestempo: [],
     gezongen: [],
