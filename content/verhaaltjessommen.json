@@ -96,6 +96,78 @@
       "op": "-",
       "b": 4,
       "tekst": "Er zijn 13 demonen. Zoey zingt er 4 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 8,
+      "op": "+",
+      "b": 7,
+      "tekst": "Lana heeft 8 gouden noten. Ze verdient er nog 7. Hoeveel gouden noten heeft Lana nu?"
+    },
+    {
+      "a": 3,
+      "op": "+",
+      "b": 9,
+      "tekst": "Zoey plakt 3 stickers in haar boek. Daarna plakt ze er nog 9. Hoeveel stickers zijn het samen?"
+    },
+    {
+      "a": 11,
+      "op": "-",
+      "b": 4,
+      "tekst": "Zoey heeft 11 snoepjes. Ze eet er 4 op. Hoeveel snoepjes heeft Zoey nog?"
+    },
+    {
+      "a": 14,
+      "op": "-",
+      "b": 6,
+      "tekst": "Op het plein staan 14 demonen. Rumi jaagt er 6 weg. Hoeveel demonen staan er nog?"
+    },
+    {
+      "a": 18,
+      "op": "-",
+      "b": 9,
+      "tekst": "Lana heeft 18 gouden noten. Ze koopt een kroontje van 9 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 9,
+      "op": "+",
+      "b": 4,
+      "tekst": "In de bus zitten 9 fans. Bij de halte stappen er 4 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 17,
+      "op": "-",
+      "b": 5,
+      "tekst": "Er branden 17 lampen. Er gaan er 5 uit. Hoeveel lampen branden er nog?"
+    },
+    {
+      "a": 8,
+      "op": "+",
+      "b": 4,
+      "tekst": "Mira bakt 8 koekjes. Oma bakt er 4. Hoeveel koekjes zijn het samen?"
+    },
+    {
+      "a": 11,
+      "op": "+",
+      "b": 8,
+      "tekst": "Lana heeft 11 gouden noten. Ze verdient er nog 8. Hoeveel gouden noten heeft Lana nu?"
+    },
+    {
+      "a": 6,
+      "op": "+",
+      "b": 9,
+      "tekst": "Zoey plakt 6 stickers in haar boek. Daarna plakt ze er nog 9. Hoeveel stickers zijn het samen?"
+    },
+    {
+      "a": 11,
+      "op": "-",
+      "b": 9,
+      "tekst": "Zoey heeft 11 snoepjes. Ze eet er 9 op. Hoeveel snoepjes heeft Zoey nog?"
+    },
+    {
+      "a": 14,
+      "op": "-",
+      "b": 5,
+      "tekst": "Op het plein staan 14 demonen. Rumi jaagt er 5 weg. Hoeveel demonen staan er nog?"
     }
   ],
   "R2": [
@@ -194,6 +266,78 @@
       "op": "-",
       "b": 2,
       "tekst": "Er zijn 24 demonen. Zoey zingt er 2 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 44,
+      "op": "-",
+      "b": 3,
+      "tekst": "Lana heeft 44 gouden noten. Ze koopt een kroontje van 3 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 66,
+      "op": "-",
+      "b": 4,
+      "tekst": "Zoey heeft 66 snoepjes. Ze eet er 4 op. Hoeveel snoepjes heeft Zoey nog?"
+    },
+    {
+      "a": 30,
+      "op": "+",
+      "b": 5,
+      "tekst": "Zoey plakt 30 stickers in haar boek. Daarna plakt ze er nog 5. Hoeveel stickers zijn het samen?"
+    },
+    {
+      "a": 99,
+      "op": "-",
+      "b": 2,
+      "tekst": "Mira heeft 99 kaartjes voor het concert. Ze deelt er 2 uit. Hoeveel kaartjes heeft Mira nog?"
+    },
+    {
+      "a": 50,
+      "op": "-",
+      "b": 40,
+      "tekst": "In de bus zitten 50 fans. Bij de halte stappen er 40 uit. Hoeveel fans zitten er nog in de bus?"
+    },
+    {
+      "a": 18,
+      "op": "-",
+      "b": 4,
+      "tekst": "Er branden 18 lampen. Er gaan er 4 uit. Hoeveel lampen branden er nog?"
+    },
+    {
+      "a": 30,
+      "op": "+",
+      "b": 60,
+      "tekst": "In de bus zitten 30 fans. Bij de halte stappen er 60 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 50,
+      "op": "-",
+      "b": 10,
+      "tekst": "Lana heeft 50 gouden noten. Ze koopt een kroontje van 10 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 20,
+      "op": "+",
+      "b": 50,
+      "tekst": "Mira bakt 20 koekjes. Oma bakt er 50. Hoeveel koekjes zijn het samen?"
+    },
+    {
+      "a": 80,
+      "op": "+",
+      "b": 4,
+      "tekst": "Lana heeft 80 gouden noten. Ze verdient er nog 4. Hoeveel gouden noten heeft Lana nu?"
+    },
+    {
+      "a": 23,
+      "op": "+",
+      "b": 3,
+      "tekst": "Zoey plakt 23 stickers in haar boek. Daarna plakt ze er nog 3. Hoeveel stickers zijn het samen?"
+    },
+    {
+      "a": 32,
+      "op": "+",
+      "b": 4,
+      "tekst": "Mira bakt 32 koekjes. Oma bakt er 4. Hoeveel koekjes zijn het samen?"
     }
   ],
   "R3": [
@@ -292,6 +436,78 @@
       "op": "-",
       "b": 5,
       "tekst": "Er zijn 96 demonen. Zoey zingt er 5 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 23,
+      "op": "-",
+      "b": 2,
+      "tekst": "Lana heeft 23 gouden noten. Ze koopt een kroontje van 2 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 61,
+      "op": "+",
+      "b": 23,
+      "tekst": "In de bus zitten 61 fans. Bij de halte stappen er 23 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 73,
+      "op": "+",
+      "b": 5,
+      "tekst": "Op het podium staan 73 lampen. De lichtman zet er 5 bij. Hoeveel lampen staan er nu?"
+    },
+    {
+      "a": 35,
+      "op": "+",
+      "b": 3,
+      "tekst": "Er dansen 35 kinderen. Er komen nog 3 kinderen meedansen. Hoeveel kinderen dansen er nu?"
+    },
+    {
+      "a": 32,
+      "op": "-",
+      "b": 21,
+      "tekst": "Mira heeft 32 kaartjes voor het concert. Ze deelt er 21 uit. Hoeveel kaartjes heeft Mira nog?"
+    },
+    {
+      "a": 28,
+      "op": "-",
+      "b": 6,
+      "tekst": "In de bus zitten 28 fans. Bij de halte stappen er 6 uit. Hoeveel fans zitten er nog in de bus?"
+    },
+    {
+      "a": 41,
+      "op": "+",
+      "b": 17,
+      "tekst": "Op het podium staan 41 lampen. De lichtman zet er 17 bij. Hoeveel lampen staan er nu?"
+    },
+    {
+      "a": 57,
+      "op": "-",
+      "b": 4,
+      "tekst": "Op het plein staan 57 demonen. Rumi jaagt er 4 weg. Hoeveel demonen staan er nog?"
+    },
+    {
+      "a": 45,
+      "op": "-",
+      "b": 21,
+      "tekst": "Lana heeft 45 gouden noten. Ze koopt een kroontje van 21 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 54,
+      "op": "+",
+      "b": 22,
+      "tekst": "In de bus zitten 54 fans. Bij de halte stappen er 22 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 78,
+      "op": "-",
+      "b": 66,
+      "tekst": "Er branden 78 lampen. Er gaan er 66 uit. Hoeveel lampen branden er nog?"
+    },
+    {
+      "a": 75,
+      "op": "+",
+      "b": 2,
+      "tekst": "Mira bakt 75 koekjes. Oma bakt er 2. Hoeveel koekjes zijn het samen?"
     }
   ],
   "R4": [
@@ -390,6 +606,78 @@
       "op": "-",
       "b": 8,
       "tekst": "Er zijn 24 demonen. Zoey zingt er 8 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 34,
+      "op": "-",
+      "b": 8,
+      "tekst": "Lana heeft 34 gouden noten. Ze koopt een kroontje van 8 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 84,
+      "op": "+",
+      "b": 7,
+      "tekst": "In de bus zitten 84 fans. Bij de halte stappen er 7 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 25,
+      "op": "-",
+      "b": 8,
+      "tekst": "Er branden 25 lampen. Er gaan er 8 uit. Hoeveel lampen branden er nog?"
+    },
+    {
+      "a": 40,
+      "op": "-",
+      "b": 3,
+      "tekst": "Mira heeft 40 kaartjes voor het concert. Ze deelt er 3 uit. Hoeveel kaartjes heeft Mira nog?"
+    },
+    {
+      "a": 94,
+      "op": "-",
+      "b": 9,
+      "tekst": "In de bus zitten 94 fans. Bij de halte stappen er 9 uit. Hoeveel fans zitten er nog in de bus?"
+    },
+    {
+      "a": 25,
+      "op": "-",
+      "b": 7,
+      "tekst": "Er branden 25 lampen. Er gaan er 7 uit. Hoeveel lampen branden er nog?"
+    },
+    {
+      "a": 69,
+      "op": "+",
+      "b": 7,
+      "tekst": "In de bus zitten 69 fans. Bij de halte stappen er 7 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 45,
+      "op": "-",
+      "b": 8,
+      "tekst": "Lana heeft 45 gouden noten. Ze koopt een kroontje van 8 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 58,
+      "op": "+",
+      "b": 9,
+      "tekst": "Mira bakt 58 koekjes. Oma bakt er 9. Hoeveel koekjes zijn het samen?"
+    },
+    {
+      "a": 59,
+      "op": "+",
+      "b": 7,
+      "tekst": "Lana heeft 59 gouden noten. Ze verdient er nog 7. Hoeveel gouden noten heeft Lana nu?"
+    },
+    {
+      "a": 82,
+      "op": "+",
+      "b": 9,
+      "tekst": "Zoey plakt 82 stickers in haar boek. Daarna plakt ze er nog 9. Hoeveel stickers zijn het samen?"
+    },
+    {
+      "a": 36,
+      "op": "+",
+      "b": 6,
+      "tekst": "Mira bakt 36 koekjes. Oma bakt er 6. Hoeveel koekjes zijn het samen?"
     }
   ],
   "R5": [
@@ -488,6 +776,78 @@
       "op": "-",
       "b": 9,
       "tekst": "Er zijn 25 demonen. Zoey zingt er 9 weg. Hoeveel demonen zijn er nog?"
+    },
+    {
+      "a": 59,
+      "op": "+",
+      "b": 3,
+      "tekst": "Lana heeft 59 gouden noten. Ze verdient er nog 3. Hoeveel gouden noten heeft Lana nu?"
+    },
+    {
+      "a": 22,
+      "op": "-",
+      "b": 4,
+      "tekst": "In de bus zitten 22 fans. Bij de halte stappen er 4 uit. Hoeveel fans zitten er nog in de bus?"
+    },
+    {
+      "a": 22,
+      "op": "+",
+      "b": 39,
+      "tekst": "Op het podium staan 22 lampen. De lichtman zet er 39 bij. Hoeveel lampen staan er nu?"
+    },
+    {
+      "a": 57,
+      "op": "-",
+      "b": 19,
+      "tekst": "Op het plein staan 57 demonen. Rumi jaagt er 19 weg. Hoeveel demonen staan er nog?"
+    },
+    {
+      "a": 84,
+      "op": "-",
+      "b": 7,
+      "tekst": "Lana heeft 84 gouden noten. Ze koopt een kroontje van 7 noten. Hoeveel noten heeft ze nog?"
+    },
+    {
+      "a": 26,
+      "op": "+",
+      "b": 57,
+      "tekst": "In de bus zitten 26 fans. Bij de halte stappen er 57 in. Hoeveel fans zitten er nu in de bus?"
+    },
+    {
+      "a": 95,
+      "op": "-",
+      "b": 29,
+      "tekst": "Er branden 95 lampen. Er gaan er 29 uit. Hoeveel lampen branden er nog?"
+    },
+    {
+      "a": 26,
+      "op": "+",
+      "b": 7,
+      "tekst": "Mira bakt 26 koekjes. Oma bakt er 7. Hoeveel koekjes zijn het samen?"
+    },
+    {
+      "a": 24,
+      "op": "+",
+      "b": 58,
+      "tekst": "Lana heeft 24 gouden noten. Ze verdient er nog 58. Hoeveel gouden noten heeft Lana nu?"
+    },
+    {
+      "a": 19,
+      "op": "+",
+      "b": 19,
+      "tekst": "Zoey plakt 19 stickers in haar boek. Daarna plakt ze er nog 19. Hoeveel stickers zijn het samen?"
+    },
+    {
+      "a": 93,
+      "op": "-",
+      "b": 9,
+      "tekst": "Zoey heeft 93 snoepjes. Ze eet er 9 op. Hoeveel snoepjes heeft Zoey nog?"
+    },
+    {
+      "a": 43,
+      "op": "-",
+      "b": 9,
+      "tekst": "Op het plein staan 43 demonen. Rumi jaagt er 9 weg. Hoeveel demonen staan er nog?"
     }
   ]
 }

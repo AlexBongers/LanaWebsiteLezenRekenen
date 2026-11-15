@@ -7,7 +7,7 @@
   import Arena3D from './Arena3D.svelte';
   import { heeftWebGL } from '../ui/drie-d';
   import verhalen from '../../content/lezen/verhalen-E4.json';
-  import { spreek, stopSpreken } from '../audio/stem';
+  import { heeftOpname, spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
   import { vg } from '../store/voortgang.svelte';
@@ -20,10 +20,18 @@
   type Verhaal = (typeof verhalen)[number];
 
   function kiesVerhaal(): Verhaal {
-    const nieuw = verhalen.find((v) => !vg.gelezenVerhalen.includes(v.id));
+    // Alleen verhalen die helemaal ingesproken zijn
+    const klaar = verhalen.filter(
+      (v) =>
+        heeftOpname(v.titel, 'zin') &&
+        v.zinnen.every((z) => heeftOpname(z, 'zin')) &&
+        v.vragen.every((q) => heeftOpname(q.vraag, 'zin') && q.keuzes.every((k) => heeftOpname(k, 'zin'))),
+    );
+    const lijst = klaar.length ? klaar : verhalen;
+    const nieuw = lijst.find((v) => !vg.gelezenVerhalen.includes(v.id));
     if (nieuw) return nieuw;
     // Alles gelezen: het verhaal dat het langst geleden is (herhaald lezen maakt vlotter).
-    return verhalen.find((v) => v.id === vg.gelezenVerhalen[0]) ?? verhalen[0];
+    return lijst.find((v) => v.id === vg.gelezenVerhalen[0]) ?? lijst[0];
   }
 
   const verhaal = kiesVerhaal();

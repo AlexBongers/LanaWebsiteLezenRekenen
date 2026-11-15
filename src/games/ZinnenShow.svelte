@@ -7,7 +7,7 @@
   import Keuze3D from './Keuze3D.svelte';
   import { heeftWebGL } from '../ui/drie-d';
   import { maakZinnen, type ZinOpgave } from '../engine/generator-fase3';
-  import { spreek, stopSpreken } from '../audio/stem';
+  import { heeftOpname, spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
   import { teksten, compliment, bijna, wacht } from './teksten';
@@ -19,7 +19,7 @@
 
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<ZinOpgave>(
-    kiesVers('zinnen', maakZinnen(aantal * 4).map((o) => ({ opgave: o, id: `zin.${o.zin}` })), (x) => x.id, aantal),
+    kiesVers('zinnen', maakZinnen(aantal * 4).filter((o) => heeftOpname(o.zin, 'zin')).map((o) => ({ opgave: o, id: `zin.${o.zin}` })), (x) => x.id, aantal),
     niveau,
     { opKlaar, opVoortgang },
   );

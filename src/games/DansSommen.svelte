@@ -10,7 +10,7 @@
   import Tekstballon from '../ui/Tekstballon.svelte';
   import type { Som } from '../engine/generator-rekenen';
   import type { Gepland, Resultaat } from '../engine/sessie';
-  import { spreek, somDelen, stopSpreken } from '../audio/stem';
+  import { heeftOpname, spreek, somDelen, stopSpreken } from '../audio/stem';
   import { speelBijna, speelGoed, speelPoef } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
   import { teksten, compliment, bijna, wacht } from './teksten';
@@ -38,13 +38,15 @@
 
   let item = $derived(rij[index]);
   let som = $derived(item.opgave);
+  // Een verhaaltje alleen als het ingesproken is; anders gewoon de kale som
+  let verhaal = $derived(som.verhaal && heeftOpname(som.verhaal, 'zin') ? som.verhaal : undefined);
   let toonHint = $derived(pogingen >= 1);
 
   function zegSom() {
     return spreek(somDelen(som.a, som.op, som.b), 'getal');
   }
   function zegVerhaal() {
-    return som.verhaal ? spreek(som.verhaal, 'zin') : zegSom();
+    return verhaal ? spreek(verhaal, 'zin') : zegSom();
   }
 
   onMount(() => {
@@ -112,7 +114,7 @@
     onthuld = false;
     bezig = false;
     stemming = 'dans';
-    void (som.verhaal ? zegVerhaal() : zegSom());
+    void (verhaal ? zegVerhaal() : zegSom());
   }
 </script>
 
@@ -124,9 +126,9 @@
 
   <div class="podium">
     {#key index}
-      <div class="kaart" class:verhaal={!!som.verhaal}>
-        {#if som.verhaal}
-          <p class="verhaaltekst">{som.verhaal}</p>
+      <div class="kaart" class:verhaal={!!verhaal}>
+        {#if verhaal}
+          <p class="verhaaltekst">{verhaal}</p>
         {/if}
         <div class="som">
           <span>{som.a}</span>
@@ -135,7 +137,7 @@
           <span class="op">=</span>
           <span class="antwoord" class:onthuld>{onthuld ? som.antwoord : '?'}</span>
         </div>
-        <div class="luid"><Luidspreker opTik={som.verhaal ? zegVerhaal : zegSom} /></div>
+        <div class="luid"><Luidspreker opTik={verhaal ? zegVerhaal : zegSom} /></div>
       </div>
     {/key}
 

@@ -1,6 +1,7 @@
 import teksten from '../../content/teksten.json';
 import characters from '../../content/characters.json';
 import { schud } from '../engine/toeval';
+import { heeftOpname } from '../audio/stem';
 
 export { teksten };
 
@@ -13,7 +14,9 @@ const zakjes = new Map<string, { inhoud: string[]; laatste?: string }>();
 export function uitZak(naam: string, lijst: readonly string[]): string {
   let zak = zakjes.get(naam);
   if (!zak || zak.inhoud.length === 0) {
-    let nieuw = schud(lijst);
+    // Alleen zinnen die al ingesproken zijn (nieuwe zinnen doen mee zodra hun opname er is)
+    const ingesproken = lijst.filter((z) => heeftOpname(z));
+    let nieuw = schud(ingesproken.length ? ingesproken : lijst);
     if (zak?.laatste && nieuw[0] === zak.laatste && nieuw.length > 1) nieuw = [...nieuw.slice(1), nieuw[0]];
     zak = { inhoud: nieuw, laatste: zak?.laatste };
     zakjes.set(naam, zak);

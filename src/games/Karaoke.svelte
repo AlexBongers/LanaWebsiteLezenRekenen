@@ -11,7 +11,7 @@
   import Arena3D from './Arena3D.svelte';
   import { heeftWebGL } from '../ui/drie-d';
   import karaoke from '../../content/fase3/karaoke.json';
-  import { spreek, stopSpreken } from '../audio/stem';
+  import { heeftOpname, spreek, stopSpreken } from '../audio/stem';
   import { speelGoed, speelTik, speelFanfare } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
   import { bewaar, vg } from '../store/voortgang.svelte';
@@ -21,10 +21,10 @@
   let { opNoten, opVoortgang, opKlaar }: SpelProps = $props();
 
   // Het liedje dat het langst niet gezongen is.
+  // Alleen liedjes waarvan alle regels ingesproken zijn
+  const liedjes = karaoke.liedjes.filter((l) => l.regels.every((r) => heeftOpname(r, 'zin')));
   const liedje =
-    karaoke.liedjes.find((l) => !vg.gezongen.includes(l.id)) ??
-    karaoke.liedjes.find((l) => l.id === vg.gezongen[0]) ??
-    karaoke.liedjes[0];
+    liedjes.find((l) => !vg.gezongen.includes(l.id)) ?? liedjes.find((l) => l.id === vg.gezongen[0]) ?? liedjes[0] ?? karaoke.liedjes[0];
   vg.gezongen = [...vg.gezongen.filter((id) => id !== liedje.id), liedje.id];
 
   const regels = liedje.regels;

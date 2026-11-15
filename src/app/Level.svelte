@@ -1,25 +1,9 @@
 <script lang="ts">
+  import type { Component } from 'svelte';
+  import type { SpelProps } from '../games/types';
   import DansSommen from '../games/DansSommen.svelte';
   import FlitsPodium from '../games/FlitsPodium.svelte';
   import Verhaal from '../games/Verhaal.svelte';
-  import WoordPlaatje from '../games/WoordPlaatje.svelte';
-  import Zwaard from '../games/Zwaard.svelte';
-  import Karaoke from '../games/Karaoke.svelte';
-  import RijmRap from '../games/RijmRap.svelte';
-  import ZinnenShow from '../games/ZinnenShow.svelte';
-  import GetallenSpring from '../games/GetallenSpring.svelte';
-  import Dozen from '../games/Dozen.svelte';
-  import TafelRitme from '../games/TafelRitme.svelte';
-  import Sterrenregen from '../games/Sterrenregen.svelte';
-  import BallonnenRij from '../games/BallonnenRij.svelte';
-  import KlokShow from '../games/KlokShow.svelte';
-  import BlokkenBouwer from '../games/BlokkenBouwer.svelte';
-  import LetterDictee from '../games/LetterDictee.svelte';
-  import KlinkerKristallen from '../games/KlinkerKristallen.svelte';
-  import VerliefdeHarten from '../games/VerliefdeHarten.svelte';
-  import GeldTellen from '../games/GeldTellen.svelte';
-  import MetenWegen from '../games/MetenWegen.svelte';
-  import SorteerShow from '../games/SorteerShow.svelte';
   import { SPEL, type SpelId } from '../games/spellen';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
@@ -82,26 +66,30 @@
     pauze: boolean;
   } | null = $state(null);
 
-  const NIEUW = {
-    plaatje: WoordPlaatje,
-    zwaard: Zwaard,
-    karaoke: Karaoke,
-    rijm: RijmRap,
-    zinnen: ZinnenShow,
-    springen: GetallenSpring,
-    dozen: Dozen,
-    tafels: TafelRitme,
-    sterren: Sterrenregen,
-    ballonnen: BallonnenRij,
-    klok: KlokShow,
-    bouwen: BlokkenBouwer,
-    dictee: LetterDictee,
-    klinker: KlinkerKristallen,
-    harten: VerliefdeHarten,
-    geld: GeldTellen,
-    meten: MetenWegen,
-    sorteer: SorteerShow,
-  } as const;
+  /**
+   * De overige spellen worden pas geladen als Lana ze kiest: dan start de app sneller.
+   * (Offline werken ze gewoon: alles staat al op de tablet.)
+   */
+  const NIEUW: Record<string, () => Promise<{ default: Component<SpelProps> }>> = {
+    plaatje: () => import('../games/WoordPlaatje.svelte'),
+    zwaard: () => import('../games/Zwaard.svelte'),
+    karaoke: () => import('../games/Karaoke.svelte'),
+    rijm: () => import('../games/RijmRap.svelte'),
+    zinnen: () => import('../games/ZinnenShow.svelte'),
+    springen: () => import('../games/GetallenSpring.svelte'),
+    dozen: () => import('../games/Dozen.svelte'),
+    tafels: () => import('../games/TafelRitme.svelte'),
+    sterren: () => import('../games/Sterrenregen.svelte'),
+    ballonnen: () => import('../games/BallonnenRij.svelte'),
+    klok: () => import('../games/KlokShow.svelte'),
+    bouwen: () => import('../games/BlokkenBouwer.svelte'),
+    dictee: () => import('../games/LetterDictee.svelte'),
+    klinker: () => import('../games/KlinkerKristallen.svelte'),
+    harten: () => import('../games/VerliefdeHarten.svelte'),
+    geld: () => import('../games/GeldTellen.svelte'),
+    meten: () => import('../games/MetenWegen.svelte'),
+    sorteer: () => import('../games/SorteerShow.svelte'),
+  };
 
   // ---------- Het concert plannen ----------
   let auditie = $state(false);
@@ -306,8 +294,10 @@
       {:else if spel === 'verhaal'}
         <Verhaal {opNoten} opVoortgang={zetVoortgang} {opKlaar} {intro} />
       {:else}
-        {@const Spel = NIEUW[spel]}
-        <Spel {opNoten} opVoortgang={zetVoortgang} {opKlaar} {niveau} aantal={vg.instellingen.opgavenPerSessie} />
+        {#await NIEUW[spel]() then mod}
+          {@const Spel = mod.default}
+          <Spel {opNoten} opVoortgang={zetVoortgang} {opKlaar} {niveau} aantal={vg.instellingen.opgavenPerSessie} />
+        {/await}
       {/if}
     {/key}
   </main>

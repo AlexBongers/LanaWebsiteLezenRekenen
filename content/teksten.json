@@ -41,7 +41,17 @@
     "Dat zag ik goed!",
     "Wat een slimme keuze!",
     "Hoppa, raak!",
-    "Dat ging als een speer!"
+    "Dat ging als een speer!",
+    "Wow, dat ging goed!",
+    "Jij bent op dreef!",
+    "Mooi zo, ga zo door!",
+    "Wat een topantwoord!",
+    "Dat heb je slim gedaan!",
+    "Knap hoor, helemaal goed!",
+    "Hup, weer goed!",
+    "Daar klapt iedereen voor!",
+    "Jij bent een echte ster!",
+    "Prima gedaan!"
   ],
   "bijna": [
     "Bijna! Probeer het nog eens.",
@@ -71,7 +81,13 @@
     "Rustig aan. Kijk nog eens goed.",
     "Bijna! Denk nog even na.",
     "Hmm, nog een keertje kijken.",
-    "Dat was dichtbij! Nog een keer."
+    "Dat was dichtbij! Nog een keer.",
+    "Oei, nog niet helemaal. Kijk nog eens.",
+    "Dat was dichtbij! Probeer het nog een keer.",
+    "Bijna! Lees het nog eens rustig.",
+    "Geen probleem, nog een poging.",
+    "Hmm, net mis. Jij kunt dit!",
+    "Nog een keertje, ik weet dat je het kan."
   ],
   "hetIs": "Het goede antwoord is",
   "verder": "Tik op verder.",
@@ -174,7 +190,12 @@
     "Wauw Lana, dat was snel!",
     "Lana, je wordt steeds beter!",
     "Yes Lana, helemaal goed!",
-    "Lana, de groep is trots op jou!"
+    "Lana, de groep is trots op jou!",
+    "Lana, jij bent geweldig!",
+    "Lana, jouw hersentjes werken hard!",
+    "Lana, dat was precies goed!",
+    "Ga zo door, Lana!",
+    "Lana, iedereen juicht voor jou!"
   ],
   "beloningen": [
     "Het concert is gewonnen! Het schild is weer helemaal sterk!",
@@ -189,7 +210,11 @@
     "Wat een concert, Lana! Het publiek juicht!",
     "Jij hebt het schild weer sterker gemaakt!",
     "Top gedaan! De demonen rennen weg!",
-    "Wat ben jij gegroeid, Lana!"
+    "Wat ben jij gegroeid, Lana!",
+    "Wat een optreden! De demonen hebben geen kans!",
+    "Het publiek zingt jouw naam, Lana!",
+    "Het gouden schild glimt als nooit tevoren!",
+    "Jij en de groep zijn onverslaanbaar!"
   ],
   "beloningKoppen": [
     "Goed gedaan, Lana!",
@@ -199,7 +224,10 @@
     "Super gespeeld!",
     "Hoera voor Lana!",
     "Lana rockt het podium!",
-    "Geweldig gedaan!"
+    "Geweldig gedaan!",
+    "Wat een kanjer!",
+    "Jij bent een ster!",
+    "Fantastisch gedaan!"
   ],
   "tour": {
     "start": "Kies een stad op de wereldtour!",

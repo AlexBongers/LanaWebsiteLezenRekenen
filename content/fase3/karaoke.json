@@ -70,6 +70,36 @@
         "Valt er een van ons, dan helpen wij.",
         "Samen zijn we sterk en heel erg blij."
       ]
+    },
+    {
+      "id": "verjaardag",
+      "titel": "Feest op het podium",
+      "regels": [
+        "Vandaag is het feest, de taart staat klaar.",
+        "We zingen een lied voor iedereen hier.",
+        "Met slingers en ballonnen in de zaal.",
+        "Wij dansen en lachen, allemaal!"
+      ]
+    },
+    {
+      "id": "sterrennacht",
+      "titel": "De sterrennacht",
+      "regels": [
+        "De maan is wit, de lucht is zwart.",
+        "Een ster schijnt fel, recht in mijn hart.",
+        "Ik doe mijn ogen langzaam dicht.",
+        "En droom van zingen in het licht."
+      ]
+    },
+    {
+      "id": "regenboog",
+      "titel": "De regenboog",
+      "regels": [
+        "Na de regen komt de zon.",
+        "Een regenboog, daar begon.",
+        "Rood en geel en groen en blauw.",
+        "Al die kleuren zing ik voor jou."
+      ]
     }
   ]
 }

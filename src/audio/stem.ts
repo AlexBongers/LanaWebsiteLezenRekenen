@@ -30,6 +30,16 @@ export async function laadStemManifest() {
   }
 }
 
+/**
+ * Is deze tekst ingesproken? Zo kunnen nieuwe zinnen alvast in de inhoud staan:
+ * ze doen pas mee als hun opname er is (nooit de tabletstem).
+ * Zonder manifest (bijv. in tests) telt alles als ingesproken.
+ */
+export function heeftOpname(tekst: string, soort: Spreeksoort = 'instructie'): boolean {
+  if (!beschikbaar.size) return true;
+  return bestandVoor(tekst, soort) !== null;
+}
+
 export function aantalStemBestanden() {
   return beschikbaar.size;
 }

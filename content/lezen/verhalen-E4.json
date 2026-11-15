@@ -249,5 +249,101 @@
         "goed": 1
       }
     ]
+  },
+  {
+    "id": "zoek-de-kat",
+    "titel": "Waar is de kat?",
+    "zinnen": [
+      "Lana heeft een kat.",
+      "De kat heet Pip.",
+      "Pip is klein en grijs.",
+      "Op een dag is Pip weg.",
+      "Lana zoekt in de tuin.",
+      "Daar is Pip niet.",
+      "Lana zoekt onder het bed.",
+      "Daar is Pip ook niet.",
+      "Dan hoort Lana een zacht geluid.",
+      "Het komt uit de kast.",
+      "Lana doet de kast open.",
+      "Daar ligt Pip, in een mand met sokken.",
+      "Lana lacht en geeft Pip een aai."
+    ],
+    "vragen": [
+      {
+        "vraag": "Hoe heet de kat?",
+        "keuzes": [
+          "Pip",
+          "Pop",
+          "Pim"
+        ],
+        "goed": 0
+      },
+      {
+        "vraag": "Waar zoekt Lana eerst?",
+        "keuzes": [
+          "In de kast",
+          "In de tuin",
+          "Onder het bed"
+        ],
+        "goed": 1
+      },
+      {
+        "vraag": "Waar ligt Pip?",
+        "keuzes": [
+          "In de tuin",
+          "Onder het bed",
+          "In de kast"
+        ],
+        "goed": 2
+      }
+    ]
+  },
+  {
+    "id": "regen-op-tour",
+    "titel": "Regen in Tokio",
+    "zinnen": [
+      "De groep is in Tokio.",
+      "Ze gaan zingen op een groot plein.",
+      "Maar dan begint het te regenen.",
+      "Het regent heel hard.",
+      "Mira kijkt boos naar de lucht.",
+      "Zoey heeft een idee.",
+      "Ze pakt vijf grote paraplu's.",
+      "Iedereen krijgt een paraplu.",
+      "Ook Lana krijgt er een.",
+      "De paraplu van Lana is roze.",
+      "Ze zingen onder de paraplu's.",
+      "Het publiek danst in de regen.",
+      "Het wordt het mooiste concert ooit."
+    ],
+    "vragen": [
+      {
+        "vraag": "In welke stad is de groep?",
+        "keuzes": [
+          "Parijs",
+          "Tokio",
+          "Seoel"
+        ],
+        "goed": 1
+      },
+      {
+        "vraag": "Wie heeft een idee?",
+        "keuzes": [
+          "Zoey",
+          "Mira",
+          "Rumi"
+        ],
+        "goed": 0
+      },
+      {
+        "vraag": "Welke kleur heeft de paraplu van Lana?",
+        "keuzes": [
+          "Blauw",
+          "Geel",
+          "Roze"
+        ],
+        "goed": 2
+      }
+    ]
   }
 ]

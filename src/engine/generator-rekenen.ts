@@ -181,11 +181,23 @@ export const VERHALEN_PLUS = [
   (a: number, b: number) => `Mira heeft ${a} lichtstokken. Zoey geeft er ${b} bij. Hoeveel lichtstokken heeft Mira nu?`,
   (a: number, b: number) => `In de zaal zitten ${a} kinderen. Er komen nog ${b} kinderen bij. Hoeveel kinderen zitten er nu?`,
   (a: number, b: number) => `Rumi zingt ${a} liedjes. Daarna zingt ze er nog ${b}. Hoeveel liedjes zingt Rumi?`,
+  (a: number, b: number) => `Lana heeft ${a} gouden noten. Ze verdient er nog ${b}. Hoeveel gouden noten heeft Lana nu?`,
+  (a: number, b: number) => `In de bus zitten ${a} fans. Bij de halte stappen er ${b} in. Hoeveel fans zitten er nu in de bus?`,
+  (a: number, b: number) => `Zoey plakt ${a} stickers in haar boek. Daarna plakt ze er nog ${b}. Hoeveel stickers zijn het samen?`,
+  (a: number, b: number) => `Op het podium staan ${a} lampen. De lichtman zet er ${b} bij. Hoeveel lampen staan er nu?`,
+  (a: number, b: number) => `Mira bakt ${a} koekjes. Oma bakt er ${b}. Hoeveel koekjes zijn het samen?`,
+  (a: number, b: number) => `Er dansen ${a} kinderen. Er komen nog ${b} kinderen meedansen. Hoeveel kinderen dansen er nu?`,
 ];
 export const VERHALEN_MIN = [
   (a: number, b: number) => `Rumi heeft ${a} stickers. Ze geeft er ${b} weg. Hoeveel stickers heeft Rumi nog?`,
   (a: number, b: number) => `Er zijn ${a} demonen. Zoey zingt er ${b} weg. Hoeveel demonen zijn er nog?`,
   (a: number, b: number) => `Mira heeft ${a} ballonnen. Er knappen er ${b}. Hoeveel ballonnen heeft Mira nog?`,
+  (a: number, b: number) => `Lana heeft ${a} gouden noten. Ze koopt een kroontje van ${b} noten. Hoeveel noten heeft ze nog?`,
+  (a: number, b: number) => `In de bus zitten ${a} fans. Bij de halte stappen er ${b} uit. Hoeveel fans zitten er nog in de bus?`,
+  (a: number, b: number) => `Zoey heeft ${a} snoepjes. Ze eet er ${b} op. Hoeveel snoepjes heeft Zoey nog?`,
+  (a: number, b: number) => `Er branden ${a} lampen. Er gaan er ${b} uit. Hoeveel lampen branden er nog?`,
+  (a: number, b: number) => `Op het plein staan ${a} demonen. Rumi jaagt er ${b} weg. Hoeveel demonen staan er nog?`,
+  (a: number, b: number) => `Mira heeft ${a} kaartjes voor het concert. Ze deelt er ${b} uit. Hoeveel kaartjes heeft Mira nog?`,
 ];
 
 /** Een som opbouwen uit a, op en b (keuzes en sprongen erbij). */

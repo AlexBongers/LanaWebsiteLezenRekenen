@@ -14,7 +14,8 @@
     "deploy": "npm run build && wrangler deploy",
     "deploy:proef": "npm run build && wrangler deploy --dry-run",
     "verhaalsommen": "tsx tools/maak-verhaalsommen.ts",
-    "audio:volume": "tsx tools/normaliseer-audio.ts"
+    "audio:volume": "tsx tools/normaliseer-audio.ts",
+    "verhaalsommen:meer": "tsx tools/meer-verhaalsommen.ts"
   },
   "devDependencies": {
     "@elevenlabs/elevenlabs-js": "^2.76.0",
