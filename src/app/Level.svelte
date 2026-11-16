@@ -4,7 +4,7 @@
   import DansSommen from '../games/DansSommen.svelte';
   import FlitsPodium from '../games/FlitsPodium.svelte';
   import Verhaal from '../games/Verhaal.svelte';
-  import { DAGDOEL, SCHOOL_VOLGORDE, SPEL, schoolVandaag, type SpelId } from '../games/spellen';
+  import { DAGDOEL, SPEL, schoolVandaag, telVoorDagdoel, type SpelId } from '../games/spellen';
   import teksten from '../../content/teksten.json';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
@@ -85,18 +85,17 @@
     tafels: () => import('../games/TafelRitme.svelte'),
     sterren: () => import('../games/Sterrenregen.svelte'),
     ballonnen: () => import('../games/BallonnenRij.svelte'),
-    klok: () => import('../games/KlokShow.svelte'),
-    bouwen: () => import('../games/BlokkenBouwer.svelte'),
     dictee: () => import('../games/LetterDictee.svelte'),
     klinker: () => import('../games/KlinkerKristallen.svelte'),
     harten: () => import('../games/VerliefdeHarten.svelte'),
-    geld: () => import('../games/GeldTellen.svelte'),
     meten: () => import('../games/MetenWegen.svelte'),
     sorteer: () => import('../games/SorteerShow.svelte'),
     rekenrek: () => import('../games/Rekenrek.svelte'),
     groepjes: () => import('../games/TafelGroepjes.svelte'),
-    winkel: () => import('../games/Geldwinkel.svelte'),
     welkesom: () => import('../games/WelkeSom.svelte'),
+    rekenlab: () => import('../games/Rekenlab.svelte'),
+    eurobank: () => import('../games/Eurobank.svelte'),
+    kloktoren: () => import('../games/Klokkentoren.svelte'),
   };
 
   // ---------- Het concert plannen ----------
@@ -215,7 +214,7 @@
     } else {
       // Alleen opgaven op haar eigen niveau tellen mee voor omhoog of omlaag.
       // In de Rekenschool tellen sommen uit de doosjes ook niet mee: die zijn er om te herhalen.
-      const eigen = resultaten.filter((r) => r.niveau === voor && !(def.school && r.bron === 'herhaling')).map((r) => r.goed);
+      const eigen = resultaten.filter((r) => r.niveau === voor && !((def.school || def.lana) && r.bron === 'herhaling')).map((r) => r.goed);
       vg.vaardigheden[sleutel] = verwerkSessie(
         vg.vaardigheden[sleutel],
         eigen,
@@ -245,7 +244,7 @@
     ];
     // Dagdoel van de Rekenschool: bij het derde rekenspel van vandaag een extra beloning
     let gesproken: string | undefined;
-    if (!auditie && SCHOOL_VOLGORDE.includes(spel) && schoolVandaag(vg.sessies) === DAGDOEL) {
+    if (!auditie && telVoorDagdoel(spel) && schoolVandaag(vg.sessies) === DAGDOEL) {
       vg.noten += DAGDOEL_BONUS;
       verdiend += DAGDOEL_BONUS;
       titel = 'Rekenster van de dag!';

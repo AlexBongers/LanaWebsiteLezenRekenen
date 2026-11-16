@@ -29,19 +29,18 @@ export type VaardigheidId =
   | 'tafels'
   | 'sterren'
   | 'ballonnen'
-  | 'klok'
-  | 'bouwen'
   | 'dictee'
   | 'klinker'
   | 'harten'
-  | 'geld'
   | 'meten'
   | 'kampioen'
   | 'sorteer'
   | 'rekenrek'
   | 'groepjes'
-  | 'winkel'
-  | 'welkesom';
+  | 'welkesom'
+  | 'rekenlab'
+  | 'eurobank'
+  | 'kloktoren';
 
 export type Leestempo = { datum: string; liedje: string; ronde: number; seconden: number; woorden: number };
 
@@ -133,19 +132,18 @@ export function standaardVoortgang(): Voortgang {
       tafels: { niveau: 0, recent: [] },
       sterren: { niveau: 0, recent: [] },
       ballonnen: { niveau: 0, recent: [] },
-      klok: { niveau: 0, recent: [] },
-      bouwen: { niveau: 0, recent: [] },
       dictee: { niveau: 0, recent: [] },
       klinker: { niveau: 0, recent: [] },
       harten: { niveau: 0, recent: [] },
-      geld: { niveau: 0, recent: [] },
       meten: { niveau: 0, recent: [] },
       kampioen: { niveau: 0, recent: [] },
       sorteer: { niveau: 0, recent: [] },
       rekenrek: { niveau: 0, recent: [] },
       groepjes: { niveau: 0, recent: [] },
-      winkel: { niveau: 0, recent: [] },
       welkesom: { niveau: 0, recent: [] },
+      rekenlab: { niveau: 0, recent: [] },
+      eurobank: { niveau: 0, recent: [] },
+      kloktoren: { niveau: 0, recent: [] },
     },
     leestempo: [],
     gezongen: [],
@@ -200,7 +198,7 @@ function samenvoegen(basis: Voortgang, data: Partial<Voortgang>): Voortgang {
   return {
     ...basis,
     ...data,
-    vaardigheden: { ...basis.vaardigheden, ...(data.vaardigheden ?? {}) },
+    vaardigheden: { ...basis.vaardigheden, ...neemNiveauMee(data.vaardigheden ?? {}) },
     auditie: data.auditie ?? {
       rekenen: gespeeld(data.vaardigheden?.rekenen),
       flits: gespeeld(data.vaardigheden?.flits),
@@ -209,6 +207,23 @@ function samenvoegen(basis: Voortgang, data: Partial<Voortgang>): Voortgang {
     avatar: { ...basis.avatar, ...(data.avatar ?? {}) },
     instellingen: { ...basis.instellingen, ...(data.instellingen ?? {}) },
   };
+}
+
+/**
+ * Klok-show, Geld tellen en de Geldwinkel zijn opgegaan in Lana's Klokkentoren en Eurobank.
+ * Wat ze daar al kon, hoeft ze niet opnieuw te doen: het niveau gaat één keer mee.
+ */
+function neemNiveauMee(v: Record<string, Vaardigheid>): Record<string, Vaardigheid> {
+  const uit = { ...v };
+  const start = (niveau: number): Vaardigheid => ({ niveau, recent: [], opNiveau: [] });
+  // Klok-show: niveau 0 = hele uren, 1 = halve uren (hetzelfde als in de Klokkentoren)
+  if (!uit.kloktoren && v.klok?.niveau) uit.kloktoren = start(Math.min(1, v.klok.niveau));
+  // Geld tellen: 0 = tot € 10, 1 = tot € 20, 2 = centen. Geldwinkel vanaf niveau 2: wisselgeld (Eurobank 3).
+  if (!uit.eurobank) {
+    const bank = Math.max(Math.min(2, v.geld?.niveau ?? 0), (v.winkel?.niveau ?? 0) >= 2 ? 3 : 0);
+    if (bank > 0) uit.eurobank = start(bank);
+  }
+  return uit;
 }
 
 export async function laadVoortgang() {

@@ -36,6 +36,7 @@ export const STICKER_SETS: StickerSet[] = [
   { id: 'zee', naam: 'Zeewereld', kleur: '#0ea5e9', icoon: '🐬' },
   { id: 'boerderij', naam: 'Boerderij', kleur: '#84cc16', icoon: '🐄' },
   { id: 'dierentuin', naam: 'Dierentuin', kleur: '#eab308', icoon: '🦁' },
+  { id: 'school', naam: 'Rekenschool', kleur: '#38bdf8', icoon: '🧮' },
 ];
 
 /** Sticker met een ingesproken los woord als naam ('dolfijn' wordt 'Dolfijn' op het scherm). */
@@ -140,6 +141,10 @@ export const STICKERS: Sticker[] = [
     ['leeuw', '🦁', 'holo'], ['tijger', '🐯', 'glans'], ['olifant', '🐘'], ['giraf', '🦒'],
     ['zebra', '🦓'], ['panda', '🐼', 'glans'], ['aap', '🐒'], ['krokodil', '🐊'],
   ] as [string, string, Zeldzaam?][]).map(([w, t, z]) => woordSticker(w, 'dierentuin', t, z)),
+  ...([
+    ['rekenrek', '🧮', 'glans'], ['spaarpot', '🐷'], ['portemonnee', '👛'], ['kassa', '🏧'],
+    ['wekker', '⏰'], ['klokkentoren', '🕰️', 'holo'], ['liniaal', '📏'], ['weegschaal', '⚖️'],
+  ] as [string, string, Zeldzaam?][]).map(([w, t, z]) => woordSticker(w, 'school', t, z)),
 ];
 
 export const STICKER = Object.fromEntries(STICKERS.map((s) => [s.id, s])) as Record<string, Sticker>;

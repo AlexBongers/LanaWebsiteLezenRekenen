@@ -3,7 +3,6 @@
  *  - Letter-dictee: hoor een woord, bouw het uit losse klanken (zoals bij een dictee)
  *  - Klinker-kiezer: welke klank mist er in het woord?
  *  - Verliefde harten: splitsen tot 10 en tot 20
- *  - Geld tellen: euro's en centen
  *  - Meten en wegen: zwaarder/lichter, centimeters op de liniaal, kilo's op de weegschaal
  */
 import plaatjes from '../../content/fase3/plaatjes.json';
@@ -100,41 +99,6 @@ export function maakHarten(niveau: number, aantal: number, rnd: Rnd = standaardR
   }
   return lijst;
 }
-
-// ---------------------------------------------------------------- Geld tellen
-export type Munt = { waarde: number; soort: 'munt' | 'briefje' };
-export type GeldOpgave = { eenheid: 'euro' | 'cent'; geld: Munt[]; totaal: number; keuzes: number[] };
-
-/** Niveau 0: euro's tot 10. Niveau 1: euro's tot 20 (met een briefje van 10). Niveau 2: centen tot 100. */
-export function maakGeld(niveau: number, aantal: number, rnd: Rnd = standaardRnd): GeldOpgave[] {
-  const soorten =
-    niveau === 0 ? [1, 2, 5] : niveau === 1 ? [1, 2, 5, 10] : [5, 10, 20, 50];
-  const max = niveau === 0 ? 10 : niveau === 1 ? 20 : 100;
-  const lijst: GeldOpgave[] = [];
-  for (let n = 0; n < aantal; n++) {
-    let geld: Munt[];
-    let totaal: number;
-    do {
-      const stuks = getal(2, niveau === 0 ? 4 : 5, rnd);
-      geld = Array.from({ length: stuks }, () => {
-        const w = kies(soorten, rnd);
-        return { waarde: w, soort: niveau < 2 && w >= 5 ? ('briefje' as const) : ('munt' as const) };
-      });
-      totaal = geld.reduce((s, m) => s + m.waarde, 0);
-    } while (totaal > max || totaal < 3);
-    geld.sort((a, b) => b.waarde - a.waarde);
-    const stap = niveau === 2 ? 5 : 1;
-    const keuzes = new Set([totaal]);
-    for (const k of schud([totaal + stap, totaal - stap, totaal + 2 * stap, totaal - 2 * stap, totaal + 10], rnd)) {
-      if (keuzes.size >= 3) break;
-      if (k > 0 && k <= max + 10) keuzes.add(k);
-    }
-    lijst.push({ eenheid: niveau === 2 ? 'cent' : 'euro', geld, totaal, keuzes: schud([...keuzes], rnd) });
-  }
-  return lijst;
-}
-
-export const geldTekst = (bedrag: number, eenheid: 'euro' | 'cent') => (eenheid === 'euro' ? `€ ${bedrag}` : `${bedrag} cent`);
 
 // ---------------------------------------------------------------- Meten en wegen
 export type Ding = { naam: string; emoji: string; gewicht: number };

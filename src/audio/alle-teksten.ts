@@ -15,8 +15,8 @@ import karaoke from '../../content/fase3/karaoke.json';
 import steden from '../../content/wereld/tour.json';
 import type { Spreeksoort } from './hash';
 import { STICKERS } from '../engine/stickers';
-import { ALLE_TIJDEN, klokZin } from '../engine/generator-fase5';
 import { BAKKEN } from '../engine/generator-sorteer';
+import { ALLE_KLOKTIJDEN, tijdZin } from '../engine/generator-lana';
 
 export type TeSpreken = { tekst: string; soort: Spreeksoort };
 
@@ -78,8 +78,8 @@ export function alleTeksten(): TeSpreken[] {
   // Sorteer-show: de namen van de manden
   for (const b of BAKKEN) voeg(b.naam, 'woord');
 
-  // Klok-show: alle hele en halve uren
-  for (const t of ALLE_TIJDEN) voeg(klokZin(t), 'zin');
+  // Klokkentoren: alle tijden op vijf minuten
+  for (const t of ALLE_KLOKTIJDEN) voeg(tijdZin(t), 'zin');
 
   // Plakboek: de naam van elke sticker
   for (const st of STICKERS) voeg(st.spraak ?? st.naam, 'woord');

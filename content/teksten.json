@@ -280,15 +280,6 @@
     "hint": "Zoek het kleinste getal dat nog over is.",
     "klaar": "Alle ballonnen staan op een rij!"
   },
-  "klok": {
-    "start": "Kijk goed naar de klok. Hoe laat is het?",
-    "hint": "De korte wijzer wijst het uur aan. Staat de lange wijzer op de twaalf? Dan is het precies dat uur.",
-    "hintHalf": "Staat de lange wijzer op de zes? Dan is het half. Kijk naar welk uur de korte wijzer gaat."
-  },
-  "bouwen": {
-    "start": "Luister naar het woord. Tik de blokjes in de goede volgorde.",
-    "hint": "Zeg het woord langzaam. Welk stukje hoor je eerst?"
-  },
   "dictee": {
     "start": "Dictee! Luister naar het woord en bouw het met de letters.",
     "hint": "Zeg het woord heel langzaam. Welke klank hoor je nu?",
@@ -302,10 +293,6 @@
     "start": "Verliefde harten! Welk getal hoort erbij? Samen maken ze het grote getal.",
     "hint": "Tel verder vanaf het kleine getal, tot je bij het grote getal bent.",
     "samen": "Samen zijn ze verliefd!"
-  },
-  "geld": {
-    "start": "Hoeveel geld is het samen? Tel alle munten en briefjes.",
-    "hint": "Begin bij het grootste geld. Tel de rest er steeds bij."
   },
   "meten": {
     "zwaarder": "Welke is zwaarder? Kijk goed naar de weegschaal.",
@@ -340,7 +327,6 @@
     "groepjes": "Tafels zijn groepjes. Drie keer vier betekent: drie groepjes van vier.",
     "telGroepjes": "Tik de groepjes aan en tel in sprongen.",
     "steunsom": "Gebruik een som die je al kent.",
-    "winkel": "Welkom in de winkel! Betaal precies het goede bedrag. Begin met het grootste geld.",
     "terug": "Je betaalt met een briefje. Hoeveel geld krijg je terug?",
     "teVeel": "Oeps, dat is te veel. Tik op geld op de toonbank om het terug te pakken.",
     "teWeinig": "Nog niet genoeg. Doe er nog wat geld bij.",
@@ -352,5 +338,55 @@
     "hintMin": "Gaat er iets af of weg? Dan is het een minsom.",
     "dagdoel": "Wauw Lana! Drie rekenspellen op één dag. Jij bent de rekenster van de dag!",
     "samenMin": "Deze doen we nog even samen."
+  },
+  "lana": {
+    "menu": "Dit zijn Lana's eigen spellen: rekenen, geld en de klok. Kies er maar een!",
+    "lab": {
+      "start": "Welkom in het rekenlab! Typ zelf het antwoord. Weet je het niet? Tik dan op het lampje.",
+      "gat": "Welk getal mist er?",
+      "keer": "Nu een tafelsom.",
+      "telKralen": "Kijk naar de kralen en tel maar."
+    },
+    "bank": {
+      "start": "Welkom bij de eurobank! Hier leer je alles over geld.",
+      "centen": "Let op: honderd cent is samen één euro.",
+      "tel": "Hoeveel geld is dit samen?",
+      "telHint": "Begin bij het grootste geld en tel dan verder. De groene getallen helpen je.",
+      "maak": "Maak dit bedrag met je geld.",
+      "weinig": "Knap! Dat is met zo weinig mogelijk geld.",
+      "genoeg": "Heb je genoeg geld om dit te kopen?",
+      "genoegHint": "Tel eerst je geld. Is dat meer of minder dan de prijs?",
+      "over": "Ja, je hebt genoeg! Hoeveel houd je over?",
+      "tekort": "Nee, dat is niet genoeg. Hoeveel kom je te kort?",
+      "verschilHint": "Tel verder van het kleinste bedrag naar het grootste bedrag."
+    },
+    "toren": {
+      "start": "Welkom in de klokkentoren!",
+      "niveau": [
+        "De korte wijzer wijst het uur aan. Staat de lange wijzer op de twaalf? Dan is het precies een heel uur.",
+        "Staat de lange wijzer op de zes? Dan is het half. De korte wijzer staat dan tussen twee cijfers in.",
+        "Een kwartier is vijftien minuten. Lange wijzer op de drie: kwart over. Lange wijzer op de negen: kwart voor.",
+        "Op een digitale klok staan alleen cijfers. Eerst het uur, dan de minuten.",
+        "Elk cijfer op de klok is vijf minuten verder. Tel maar mee: vijf, tien, vijftien."
+      ],
+      "vraag": {
+        "lees": "Kijk goed naar de klok. Hoe laat is het?",
+        "kies": "Welke klok hoort erbij?",
+        "naarDigitaal": "Hoe staat deze tijd op de digitale klok?",
+        "vanDigitaal": "Hoe zeg je deze tijd?",
+        "koppel": "Welke klok laat dezelfde tijd zien?"
+      },
+      "hint": {
+        "heel": "De korte wijzer wijst het uur aan. Staat de lange wijzer op de twaalf? Dan is het precies dat uur.",
+        "half": "Staat de lange wijzer op de zes? Dan is het half. Kijk naar welk uur de korte wijzer gaat.",
+        "kwartOver": "De lange wijzer staat op de drie. Dat is kwart over.",
+        "kwartVoor": "De lange wijzer staat op de negen. Dat is kwart voor het volgende uur.",
+        "over": "De lange wijzer is net voorbij de twaalf. Dat is over het uur. Elk cijfer is vijf minuten.",
+        "voor": "De lange wijzer is bijna bij de twaalf. Dat is voor het volgende uur.",
+        "voorHalf": "De lange wijzer is bijna bij de zes. Dat is voor half.",
+        "overHalf": "De lange wijzer is net voorbij de zes. Dat is over half.",
+        "digitaal": "Voor de dubbele punt staat het uur. Erachter staan de minuten. Dertig minuten is half."
+      }
+    }
   }
 }

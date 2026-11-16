@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DICTEE_WOORDEN, klanken, maakDictee, maakGeld, maakHarten, maakKlinker, maakMeten } from '../src/engine/generator-fase6';
+import { DICTEE_WOORDEN, klanken, maakDictee, maakHarten, maakKlinker, maakMeten } from '../src/engine/generator-fase6';
 import { zaadRnd } from '../src/engine/toeval';
 import plaatjes from '../content/fase3/plaatjes.json';
 
@@ -43,17 +43,6 @@ describe('rekenen', () => {
         if (niveau === 2) expect(o.totaal).toBeGreaterThan(10);
         expect(new Set(o.keuzes).size).toBe(3);
         expect(o.keuzes).toContain(o.antwoord);
-      }
-    }
-  });
-
-  it('geld: het totaal klopt en past bij het niveau', () => {
-    for (const niveau of [0, 1, 2]) {
-      for (const o of maakGeld(niveau, 20, zaadRnd(niveau + 11))) {
-        expect(o.geld.reduce((s, m) => s + m.waarde, 0)).toBe(o.totaal);
-        expect(o.totaal).toBeLessThanOrEqual(niveau === 0 ? 10 : niveau === 1 ? 20 : 100);
-        expect(o.keuzes).toContain(o.totaal);
-        expect(o.eenheid).toBe(niveau === 2 ? 'cent' : 'euro');
       }
     }
   });

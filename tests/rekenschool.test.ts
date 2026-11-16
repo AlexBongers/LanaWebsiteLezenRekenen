@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { brugVan, maakGroepjes, maakRekenrek, maakWelkeSom, maakWinkel, steunVoor } from '../src/engine/generator-rekenschool';
+import { brugVan, maakGroepjes, maakRekenrek, maakWelkeSom, steunVoor } from '../src/engine/generator-rekenschool';
 import { zaadRnd } from '../src/engine/toeval';
 
 describe('Rekenschool', () => {
@@ -37,15 +37,6 @@ describe('Rekenschool', () => {
     }
     expect(steunVoor(6, 7).tekst).toBe('5 × 7 = 35, en dan nog 7 erbij');
     expect(steunVoor(9, 7).tekst).toBe('10 × 7 = 70, en dan 7 eraf');
-  });
-
-  it('geldwinkel: wisselgeld klopt, bedragen passen bij het niveau', () => {
-    for (const o of maakWinkel(2, 20, zaadRnd(5))) {
-      if (o.uitdaging) continue;
-      expect(o.soort).toBe('terug');
-      expect(o.keuzes).toContain(o.betaald - o.prijs);
-    }
-    for (const o of maakWinkel(0, 20, zaadRnd(6))) if (!o.uitdaging) expect(o.prijs).toBeLessThanOrEqual(10);
   });
 
   it('welke som: de goede som staat tussen drie verschillende keuzes', () => {
@@ -89,6 +80,6 @@ describe('pedagogische nalooppunten', () => {
     ];
     expect(schoolVandaag(sessies, nu)).toBe(2);
     expect(DAGDOEL).toBe(3);
-    expect(schoolSpellen().map((s) => s.id)).toEqual(['harten', 'rekenrek', 'sommen', 'groepjes', 'winkel', 'welkesom']);
+    expect(schoolSpellen().map((s) => s.id)).toEqual(['harten', 'rekenrek', 'sommen', 'groepjes', 'eurobank', 'welkesom']);
   });
 });

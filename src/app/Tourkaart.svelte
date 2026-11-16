@@ -18,9 +18,10 @@
     opPlakboek,
     opUitdaging,
     opSchool,
+    opLana,
     opOuder,
     opStoppen,
-  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opUitdaging: () => void; opSchool: () => void; opOuder: () => void; opStoppen: () => void } = $props();
+  }: { opStad: (id: string) => void; opKleedkamer: () => void; opPlakboek: () => void; opUitdaging: () => void; opSchool: () => void; opLana: () => void; opOuder: () => void; opStoppen: () => void } = $props();
 
   // Posities van de steden op de kaart (procent van de kaart).
   const PLEK = [
@@ -119,9 +120,10 @@
       </button>
     {/each}
 
-    <div class="lana" style="left:{PLEK[huidigIndex].x}%; top:{PLEK[huidigIndex].y}%">
+    <button class="lana" style="left:{PLEK[huidigIndex].x}%; top:{PLEK[huidigIndex].y}%" onclick={opLana} aria-label="Lana's eigen spellen: rekenen, geld en de klok">
+      <span class="lana-label">⭐ Mijn spellen</span>
       <Lana avatar={vg.avatar} hoogte={175} stemming="dans" />
-    </div>
+    </button>
   </div>
 
   <div class="onderknoppen">
@@ -313,8 +315,26 @@
   .lana {
     position: absolute;
     translate: 18px -96%;
-    pointer-events: none;
+    display: grid;
+    justify-items: center;
+    z-index: 2;
     transition: left 1s, top 1s;
+  }
+  .lana-label {
+    margin-bottom: -6px;
+    padding: 3px 14px;
+    border-radius: 999px;
+    font-size: 19px;
+    font-weight: 700;
+    color: #422006;
+    white-space: nowrap;
+    background: linear-gradient(180deg, #fde68a, #f59e0b);
+    box-shadow: 0 4px 0 #b45309, 0 0 16px rgba(251, 191, 36, 0.8);
+    animation: lana-wip 1.6s ease-in-out infinite;
+  }
+  @keyframes lana-wip {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
   }
   .onderknoppen {
     position: absolute;

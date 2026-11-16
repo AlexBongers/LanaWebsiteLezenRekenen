@@ -14,7 +14,7 @@
   import Ouderhoek from './Ouderhoek.svelte';
   import Einde from './Einde.svelte';
   import SpelKeuze from './SpelKeuze.svelte';
-  import { SPEL, schoolSpellen, type SpelId } from '../games/spellen';
+  import { SPEL, lanaSpellen, schoolSpellen, type SpelId } from '../games/spellen';
   import characters from '../../content/characters.json';
   import teksten from '../../content/teksten.json';
   import { bewaar, laadVoortgang, vg, type HeldinId } from '../store/voortgang.svelte';
@@ -23,7 +23,7 @@
   import { laadStemManifest, spreek, stopSpreken, zetApparaatStem } from '../audio/stem';
   import { ontgrendelGeluid, zetEffectenAan } from '../audio/geluid';
 
-  type Scherm = 'start' | 'tour' | 'stad' | 'spellen' | 'level' | 'baas' | 'kleedkamer' | 'plakboek' | 'uitdaging' | 'school' | 'ouder' | 'einde';
+  type Scherm = 'start' | 'tour' | 'stad' | 'spellen' | 'level' | 'baas' | 'kleedkamer' | 'plakboek' | 'uitdaging' | 'school' | 'lana' | 'ouder' | 'einde';
   let scherm = $state<Scherm>('start');
   let heldin = $state<HeldinId>('rumi');
   let spel = $state<SpelId>('flits');
@@ -32,6 +32,8 @@
   let vraagStop = $state(false);
   /** Kwam het spel uit de Rekenschool? Dan gaat terug ook naar de Rekenschool. */
   let vanSchool = $state(false);
+  /** Kwam het spel uit Lana's eigen menu? */
+  let vanLana = $state(false);
   let wakeLock: WakeLockSentinel | null = null;
   /** Begin van deze speelbeurt (voor de pauze na 10, 15 of 20 minuten). */
   let speelStart = $state(Date.now());
@@ -97,8 +99,8 @@
       }
       history.pushState({ app: true }, '');
       if (scherm === 'level' || scherm === 'baas') vraagStop = true;
-      else if (scherm === 'spellen') scherm = vanSchool ? 'tour' : 'stad';
-      else if (scherm === 'stad' || scherm === 'kleedkamer' || scherm === 'plakboek' || scherm === 'uitdaging' || scherm === 'school' || scherm === 'ouder') scherm = 'tour';
+      else if (scherm === 'spellen') scherm = 'stad';
+      else if (scherm === 'stad' || scherm === 'kleedkamer' || scherm === 'plakboek' || scherm === 'uitdaging' || scherm === 'school' || scherm === 'lana' || scherm === 'ouder') scherm = 'tour';
       else if (scherm === 'tour') vraagAfsluiten = true;
     };
     addEventListener('popstate', opTerugknop);
@@ -154,6 +156,7 @@
     }
     heldin = p;
     vanSchool = false;
+    vanLana = false;
     scherm = 'spellen';
   }
 
@@ -198,7 +201,7 @@
   function naarSpellen() {
     stopSpreken();
     vraagStop = false;
-    scherm = vanSchool ? 'school' : 'spellen';
+    scherm = vanLana ? 'lana' : vanSchool ? 'school' : 'spellen';
   }
 </script>
 
@@ -215,8 +218,14 @@
           opKleedkamer={() => (scherm = 'kleedkamer')}
           opPlakboek={() => (scherm = 'plakboek')}
           opUitdaging={() => (scherm = 'uitdaging')}
+          opLana={() => {
+            vanLana = true;
+            vanSchool = false;
+            scherm = 'lana';
+          }}
           opSchool={() => {
             vanSchool = true;
+            vanLana = false;
             heldin = 'mira';
             scherm = 'school';
           }}
@@ -227,6 +236,8 @@
         <Stad {stadId} opKies={kies} opTerug={naarTour} />
       {:else if scherm === 'spellen'}
         <SpelKeuze {heldin} opKies={kiesSpel} opTerug={() => naarStad()} />
+      {:else if scherm === 'lana'}
+        <SpelKeuze heldin="mira" lana lijst={lanaSpellen()} titel="⭐ Lana's eigen spellen" zin={teksten.lana.menu} opKies={kiesSpel} opTerug={naarTour} />
       {:else if scherm === 'school'}
         <SpelKeuze
           heldin="mira"

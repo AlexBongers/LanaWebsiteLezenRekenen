@@ -6,6 +6,7 @@
   import Tekstballon from '../ui/Tekstballon.svelte';
   import characters from '../../content/characters.json';
   import teksten from '../../content/teksten.json';
+  import Lana from '../art/Lana.svelte';
   import { spellenVan, type SpelDef, type SpelId } from '../games/spellen';
   import { vg, type HeldinId } from '../store/voortgang.svelte';
   import { spreek, stopSpreken } from '../audio/stem';
@@ -18,6 +19,7 @@
     lijst,
     titel,
     zin,
+    lana = false,
   }: {
     heldin: HeldinId;
     opKies: (s: SpelId) => void;
@@ -27,6 +29,8 @@
     titel?: string;
     /** Wat de stem bij binnenkomst zegt. */
     zin?: string;
+    /** Lana staat er zelf (haar eigen spellen), zonder heldin. */
+    lana?: boolean;
   } = $props();
 
   // svelte-ignore state_referenced_locally
@@ -47,7 +51,7 @@
   }
 </script>
 
-<div class="keuze" style="--kleur:{c.kleur}">
+<div class="keuze" style="--kleur:{lana ? '#f59e0b' : c.kleur}">
   <header>
     <button class="knop-rond" onclick={opTerug} aria-label="Terug">
       <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
@@ -60,8 +64,12 @@
 
   <div class="midden">
     <div class="heldin">
-      <Tekstballon kleur={c.kleur} />
-      <Duo wie={heldin} stemming={gekozen ? 'juich' : 'rust'} hoogte={470} />
+      <Tekstballon kleur={lana ? '#f59e0b' : c.kleur} />
+      {#if lana}
+        <Lana avatar={vg.avatar} stemming={gekozen ? 'juich' : 'dans'} hoogte={440} />
+      {:else}
+        <Duo wie={heldin} stemming={gekozen ? 'juich' : 'rust'} hoogte={470} />
+      {/if}
     </div>
 
     <div class="spellen" class:drie={spellen.length === 3} class:veel={spellen.length > 6}>

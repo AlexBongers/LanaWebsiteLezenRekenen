@@ -6,7 +6,6 @@
  *    tot 100 met sprongen over de getallenlijn naar het hele tiental (47 + 8 = 47 + 3 + 5).
  *  - Tafel-groepjes: vermenigvuldigen als herhaald optellen (3 × 4 = 3 groepjes van 4), eerst de
  *    ankertafels 2, 5 en 10, daarna afleiden met steunsommen (6 × 7 = 5 × 7 + 7, 9 × 7 = 10 × 7 − 7).
- *  - Geldwinkel: bedragen samenstellen (betalen) en teruggeven door aan te vullen.
  *  - Welke som?: een verhaaltje lezen en de bewerking kiezen (taal + rekenen).
  *
  * Af en toe zit er een uitdaging tussen: een opgave van het volgende niveau (met een gouden ster).
@@ -143,61 +142,6 @@ export function opgaveVoorTafel(groepen: number, per: number, rnd: Rnd = standaa
     if (x > 0 && x <= 100) keuzes.add(x);
   }
   return { groepen, per, antwoord, keuzes: schud([...keuzes], rnd), steun: steunVoor(groepen, per), uitdaging };
-}
-
-// ---------------------------------------------------------------- Geldwinkel
-export type Artikel = { naam: string; emoji: string };
-export const ARTIKELEN: Artikel[] = [
-  { naam: 'ijsje', emoji: '🍦' }, { naam: 'lolly', emoji: '🍭' }, { naam: 'boek', emoji: '📖' }, { naam: 'bal', emoji: '⚽' },
-  { naam: 'knuffel', emoji: '🧸' }, { naam: 'microfoon', emoji: '🎤' }, { naam: 'zonnebril', emoji: '🕶️' }, { naam: 'taart', emoji: '🎂' },
-  { naam: 'cd', emoji: '💿' }, { naam: 'pet', emoji: '🧢' }, { naam: 'lightstick', emoji: '🪄' }, { naam: 'poster', emoji: '🖼️' },
-];
-
-export type WinkelOpgave = {
-  artikel: Artikel;
-  prijs: number;
-  eenheid: 'euro' | 'cent';
-  /** 'betalen': leg zelf het bedrag neer. 'terug': hoeveel wisselgeld krijg je? */
-  soort: 'betalen' | 'terug';
-  /** Munten en briefjes in de portemonnee (betalen) */
-  munten: number[];
-  /** Waarmee je betaalt (terug) */
-  betaald: number;
-  keuzes: number[];
-  uitdaging: boolean;
-};
-
-/** Niveau 0: betalen tot €10. 1: betalen tot €20. 2: wisselgeld terug van €10 of €20. 3: betalen met centen tot 100 cent. */
-export function maakWinkel(niveau: number, aantal: number, rnd: Rnd = standaardRnd): WinkelOpgave[] {
-  const lijst: WinkelOpgave[] = [];
-  let vorige = '';
-  for (let p = 0; lijst.length < aantal && p < aantal * 50; p++) {
-    const o = metUitdaging(niveau, 3, rnd, (n): Omit<WinkelOpgave, 'uitdaging'> => {
-      const artikel = kies(ARTIKELEN, rnd);
-      if (n <= 1) {
-        const prijs = n === 0 ? getal(3, 10, rnd) : getal(8, 20, rnd);
-        return { artikel, prijs, eenheid: 'euro', soort: 'betalen', munten: n === 0 ? [1, 2, 5] : [1, 2, 5, 10], betaald: 0, keuzes: [] };
-      }
-      if (n === 2) {
-        const betaald = rnd() < 0.5 ? 10 : 20;
-        const prijs = getal(betaald === 10 ? 3 : 11, betaald - 1, rnd);
-        const terug = betaald - prijs;
-        const keuzes = new Set([terug]);
-        for (const x of schud([terug + 1, terug - 1, terug + 2, prijs], rnd)) {
-          if (keuzes.size >= 3) break;
-          if (x > 0 && x !== betaald) keuzes.add(x);
-        }
-        return { artikel, prijs, eenheid: 'euro', soort: 'terug', munten: [], betaald, keuzes: schud([...keuzes], rnd) };
-      }
-      const prijs = getal(3, 19, rnd) * 5;
-      return { artikel, prijs, eenheid: 'cent', soort: 'betalen', munten: [5, 10, 20, 50], betaald: 0, keuzes: [] };
-    });
-    const k = `${o.soort}${o.prijs}`;
-    if (k === vorige) continue;
-    vorige = k;
-    lijst.push(o);
-  }
-  return lijst;
 }
 
 // ---------------------------------------------------------------- Welke som?
