@@ -329,7 +329,7 @@
     "hint": "Lees het woord nog eens goed. Is het een dier, iets om te eten, of iets anders?"
   },
   "rekenschool": {
-    "welkom": "Welkom in de rekenschool! Hier oefenen we sommen, tafels en geld. Stap voor stap, tot je het snapt.",
+    "welkom": "Welkom in de rekenschool! Doe elke dag drie spellen, dan word je de rekenster van de dag.",
     "rekenrek": "Kijk naar het rekenrek. We rekenen slim, via de tien.",
     "eerstNaarTien": "Eerst naar de tien. Hoeveel kralen moeten erbij?",
     "eerstTerugNaarTien": "Eerst terug naar de tien. Hoeveel kralen moeten eraf?",
@@ -349,6 +349,8 @@
     "welkeSom": "Lees het verhaaltje. Welke som hoort erbij? Daarna reken je hem uit.",
     "rekenUit": "Goed gekozen! Reken de som nu uit.",
     "hintPlus": "Komt er iets bij? Dan is het een plussom.",
-    "hintMin": "Gaat er iets af of weg? Dan is het een minsom."
+    "hintMin": "Gaat er iets af of weg? Dan is het een minsom.",
+    "dagdoel": "Wauw Lana! Drie rekenspellen op één dag. Jij bent de rekenster van de dag!",
+    "samenMin": "Deze doen we nog even samen."
   }
 }

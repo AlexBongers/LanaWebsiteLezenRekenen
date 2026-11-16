@@ -21,7 +21,7 @@
 
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<WinkelOpgave>(
-    kiesVers('winkel', maakWinkel(niveau, aantal * 4).map((o) => ({ opgave: o, id: `winkel.${o.soort}.${o.prijs}${o.eenheid}` })), (x) => x.id, aantal),
+    kiesVers('winkel', maakWinkel(niveau, aantal * 4).map((o) => ({ opgave: o, id: `winkel.${o.soort}.${o.prijs}${o.eenheid}`, niveau: o.uitdaging ? niveau + 1 : niveau })), (x) => x.id, aantal),
     niveau,
     { opKlaar, opVoortgang },
   );

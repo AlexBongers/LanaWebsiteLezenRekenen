@@ -4,7 +4,8 @@
   import DansSommen from '../games/DansSommen.svelte';
   import FlitsPodium from '../games/FlitsPodium.svelte';
   import Verhaal from '../games/Verhaal.svelte';
-  import { SPEL, type SpelId } from '../games/spellen';
+  import { DAGDOEL, SCHOOL_VOLGORDE, SPEL, schoolVandaag, type SpelId } from '../games/spellen';
+  import teksten from '../../content/teksten.json';
   import SchildBalk from '../ui/SchildBalk.svelte';
   import NotenTeller from '../ui/NotenTeller.svelte';
   import Beloning from './Beloning.svelte';
@@ -55,6 +56,8 @@
   let ronde = $state(0);
   let voortgang = $state(0);
   let verdiend = $state(0);
+  /** Extra noten voor het dagdoel van de Rekenschool. */
+  const DAGDOEL_BONUS = 15;
   let eerste = $state(true);
   let start = Date.now();
   let uitslag: {
@@ -63,6 +66,7 @@
     omhoog: boolean;
     titel?: string;
     melding?: string;
+    gesproken?: string;
     pauze: boolean;
   } | null = $state(null);
 
@@ -187,7 +191,7 @@
     let h = vg.herhaling;
     // Alleen sommen en flitswoorden komen terug via de doosjes (die spellen plannen herhaling).
     for (const r of resultaten) {
-      if (!r.id.startsWith('som.') && !r.id.startsWith('woord.')) continue;
+      if (!r.id.startsWith('som.') && !r.id.startsWith('woord.') && !r.id.startsWith('keer.')) continue;
       // Sommen uit andere spellen (zoals het rekenrek) krijgen het rekenniveau dat bij de som hoort
       const m = /^som\.(\d+)([+-])(\d+)$/.exec(r.id);
       const n = sleutel !== 'rekenen' && m ? somNiveau(Number(m[1]), m[2] as '+' | '-', Number(m[3])) : r.niveau;
@@ -210,7 +214,8 @@
       melding = `⭐ Jij begint op level ${niveau + 1}!`;
     } else {
       // Alleen opgaven op haar eigen niveau tellen mee voor omhoog of omlaag.
-      const eigen = resultaten.filter((r) => r.niveau === voor).map((r) => r.goed);
+      // In de Rekenschool tellen sommen uit de doosjes ook niet mee: die zijn er om te herhalen.
+      const eigen = resultaten.filter((r) => r.niveau === voor && !(def.school && r.bron === 'herhaling')).map((r) => r.goed);
       vg.vaardigheden[sleutel] = verwerkSessie(
         vg.vaardigheden[sleutel],
         eigen,
@@ -238,12 +243,21 @@
         auditie,
       },
     ];
+    // Dagdoel van de Rekenschool: bij het derde rekenspel van vandaag een extra beloning
+    let gesproken: string | undefined;
+    if (!auditie && SCHOOL_VOLGORDE.includes(spel) && schoolVandaag(vg.sessies) === DAGDOEL) {
+      vg.noten += DAGDOEL_BONUS;
+      verdiend += DAGDOEL_BONUS;
+      titel = 'Rekenster van de dag!';
+      melding = `⭐ ${DAGDOEL} rekenspellen gedaan: ${DAGDOEL_BONUS} noten extra!`;
+      gesproken = teksten.rekenschool.dagdoel;
+    }
     void bewaar();
     voortgang = 1;
     const omhoog = !auditie && vg.vaardigheden[sleutel].niveau > voor;
     const pauze = pauzeNodig();
     setTimeout(() => {
-      uitslag = { goed, totaal: resultaten.length, omhoog, titel, melding, pauze };
+      uitslag = { goed, totaal: resultaten.length, omhoog, titel, melding, gesproken, pauze };
     }, 700);
   }
 

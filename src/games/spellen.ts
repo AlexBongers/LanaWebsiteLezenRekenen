@@ -82,4 +82,17 @@ export const SPELLEN: SpelDef[] = [
 export const SPEL = Object.fromEntries(SPELLEN.map((s) => [s.id, s])) as Record<SpelId, SpelDef>;
 
 export const spellenVan = (h: HeldinId) => SPELLEN.filter((s) => s.heldin === h && !s.school);
-export const schoolSpellen = () => SPELLEN.filter((s) => s.school);
+/**
+ * De Rekenschool als leerlijn, in de volgorde waarin het op school wordt opgebouwd:
+ * splitsen → via de tien → veel sommen → tafels → geld → verhaaltjes.
+ */
+export const SCHOOL_VOLGORDE: SpelId[] = ['harten', 'rekenrek', 'sommen', 'groepjes', 'winkel', 'welkesom'];
+export const schoolSpellen = () => SCHOOL_VOLGORDE.map((id) => SPEL[id]);
+
+/** Dagdoel van de Rekenschool: zoveel rekenspellen op een dag. */
+export const DAGDOEL = 3;
+/** Hoeveel rekenspellen uit de Rekenschool zijn er vandaag gespeeld? */
+export function schoolVandaag(sessies: { datum: string; spel?: string }[], nu = new Date()): number {
+  const dag = nu.toDateString();
+  return sessies.filter((s) => SCHOOL_VOLGORDE.includes(s.spel as SpelId) && new Date(s.datum).toDateString() === dag).length;
+}

@@ -9,7 +9,9 @@
   import Duo from '../art/Duo.svelte';
   import Tekstballon from '../ui/Tekstballon.svelte';
   import Luidspreker from '../ui/Luidspreker.svelte';
-  import { maakGroepjes, type GroepjesOpgave } from '../engine/generator-rekenschool';
+  import { HERHAAL_KANS, maakGroepjes, opgaveVoorTafel, type GroepjesOpgave } from '../engine/generator-rekenschool';
+  import { aanDeBeurt } from '../engine/herhaling';
+  import { vg } from '../store/voortgang.svelte';
   import { spreek } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
@@ -20,9 +22,33 @@
 
   let { opNoten, opVoortgang, opKlaar, niveau = 0, aantal = 8 }: SpelProps = $props();
 
+  const sleutel = (o: { groepen: number; per: number }) => `keer.${o.groepen}x${o.per}`;
+
+  /** Tafelsommen die eerder fout gingen komen terug (doosjes: na 1, 3, 7 en 14 dagen). Hooguit twee per keer. */
+  const terug = aanDeBeurt(vg.herhaling, 'keer.', Date.now())
+    .map(({ id }) => /^keer\.(\d+)x(\d+)$/.exec(id))
+    .filter((m) => m !== null)
+    .slice(0, 2)
+    .map((m) => {
+      const opgave = opgaveVoorTafel(Number(m[1]), Number(m[2]));
+      return { opgave, id: sleutel(opgave), uitDoos: true };
+    });
+
+  // svelte-ignore state_referenced_locally
+  const aantalOud = niveau === 1 || niveau === 2 ? Math.round((aantal - terug.length) * HERHAAL_KANS) : 0;
+  const kandidaten = (herhaalKans: number, n: number) =>
+    maakGroepjes(niveau, n, undefined, herhaalKans)
+      .filter((o) => !terug.some((t) => t.id === sleutel(o)))
+      .map((o) => ({ opgave: o, id: sleutel(o), niveau: o.uitdaging ? niveau + 1 : niveau }));
+
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<GroepjesOpgave>(
-    kiesVers('groepjes', maakGroepjes(niveau, aantal * 4).map((o) => ({ opgave: o, id: `tafel.${o.groepen}x${o.per}` })), (x) => x.id, aantal),
+    [
+      ...terug,
+      ...kiesVers('groepjes', kandidaten(0, aantal * 4), (x) => x.id, aantal - terug.length - aantalOud),
+      // Onderhoud: een paar sommen uit tafels die ze al kent (apart gekozen, zodat het echt ongeveer 30% blijft)
+      ...kiesVers('groepjes-oud', kandidaten(1, aantalOud * 4).filter((x) => !x.opgave.uitdaging), (x) => x.id, aantalOud),
+    ],
     niveau,
     { opKlaar, opVoortgang },
   );

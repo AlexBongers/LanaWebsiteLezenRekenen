@@ -55,3 +55,40 @@ describe('Rekenschool', () => {
     }
   });
 });
+
+import { HERHAAL_KANS, opgaveVoorTafel } from '../src/engine/generator-rekenschool';
+import { DAGDOEL, schoolSpellen, schoolVandaag } from '../src/games/spellen';
+
+describe('pedagogische nalooppunten', () => {
+  it('herhaalt vanaf niveau 1 ook de tafels die ze al kent', () => {
+    const nieuw = maakGroepjes(1, 12, zaadRnd(7), 0).filter((o) => !o.uitdaging);
+    expect(nieuw.every((o) => [3, 4].includes(o.per))).toBe(true);
+    const oud = maakGroepjes(1, 12, zaadRnd(7), 1).filter((o) => !o.uitdaging);
+    expect(oud.every((o) => [2, 5, 10].includes(o.per))).toBe(true);
+    const oud2 = maakGroepjes(2, 12, zaadRnd(7), 1).filter((o) => !o.uitdaging);
+    expect(oud2.every((o) => [2, 3, 4, 5, 10].includes(o.per))).toBe(true);
+    expect(HERHAAL_KANS).toBeGreaterThan(0.2);
+  });
+
+  it('bouwt een tafelsom uit de doosjes terug op', () => {
+    const o = opgaveVoorTafel(6, 7);
+    expect(o.antwoord).toBe(42);
+    expect(o.keuzes).toContain(42);
+    expect(o.steun.soort).toBe('afleiden');
+  });
+
+  it('telt de rekenspellen van vandaag voor het dagdoel', () => {
+    const nu = new Date('2026-11-16T15:00:00');
+    const gisteren = new Date('2026-11-15T15:00:00').toISOString();
+    const sessies = [
+      { datum: gisteren, spel: 'rekenrek' },
+      { datum: nu.toISOString(), spel: 'rekenrek' },
+      { datum: nu.toISOString(), spel: 'flits' },
+      { datum: nu.toISOString(), spel: 'sommen' },
+      { datum: nu.toISOString() },
+    ];
+    expect(schoolVandaag(sessies, nu)).toBe(2);
+    expect(DAGDOEL).toBe(3);
+    expect(schoolSpellen().map((s) => s.id)).toEqual(['harten', 'rekenrek', 'sommen', 'groepjes', 'winkel', 'welkesom']);
+  });
+});

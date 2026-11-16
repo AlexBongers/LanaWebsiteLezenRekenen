@@ -23,7 +23,7 @@
   const ronde = new Ronde<WelkeSomOpgave>(
     kiesVers(
       'welkesom',
-      maakWelkeSom(niveau, aantal * 3, undefined, (t) => heeftOpname(t, 'zin')).map((o) => ({ opgave: o, id: `welkesom.${o.goed}` })),
+      maakWelkeSom(niveau, aantal * 3, undefined, (t) => heeftOpname(t, 'zin')).map((o) => ({ opgave: o, id: `welkesom.${o.goed}`, niveau: o.uitdaging ? niveau + 1 : niveau })),
       (x) => x.id,
       aantal,
     ),

@@ -89,6 +89,9 @@ export type GroepjesOpgave = { groepen: number; per: number; antwoord: number; k
 
 const TAFELS_PER_NIVEAU = [[2, 5, 10], [3, 4], [6, 7, 8, 9], [2, 3, 4, 5, 6, 7, 8, 9, 10]];
 
+/** Kans dat een tafelsom uit een eerder geleerde tafel komt. */
+export const HERHAAL_KANS = 0.3;
+
 /** De steunsom bij "groepen × per": via een ankertafel (1, 2, 5 of 10 keer). */
 export function steunVoor(groepen: number, per: number): Steun {
   const keer = (x: number) => `${x} × ${per}`;
@@ -111,12 +114,14 @@ export function steunVoor(groepen: number, per: number): Steun {
   }
 }
 
-export function maakGroepjes(niveau: number, aantal: number, rnd: Rnd = standaardRnd): GroepjesOpgave[] {
+export function maakGroepjes(niveau: number, aantal: number, rnd: Rnd = standaardRnd, herhaalKans = HERHAAL_KANS): GroepjesOpgave[] {
   const lijst: GroepjesOpgave[] = [];
   const gezien = new Set<string>();
   for (let p = 0; lijst.length < aantal && p < aantal * 50; p++) {
     const o = metUitdaging(niveau, 3, rnd, (n) => {
-      const per = kies(TAFELS_PER_NIVEAU[Math.min(3, n)], rnd);
+      // Vanaf niveau 1 komt ongeveer een op de drie sommen uit een tafel die ze al kent (onderhouden)
+      const oud = (n === 1 || n === 2) && rnd() < herhaalKans;
+      const per = kies(oud ? TAFELS_PER_NIVEAU.slice(0, n).flat() : TAFELS_PER_NIVEAU[Math.min(3, n)], rnd);
       // Op het eerste niveau weinig groepjes, zodat ze ze echt kan tellen
       const groepen = n === 0 ? getal(2, 6, rnd) : getal(2, 10, rnd);
       return { groepen, per };
@@ -124,15 +129,20 @@ export function maakGroepjes(niveau: number, aantal: number, rnd: Rnd = standaar
     const k = `${o.groepen}x${o.per}`;
     if (gezien.has(k)) continue;
     gezien.add(k);
-    const antwoord = o.groepen * o.per;
-    const keuzes = new Set([antwoord]);
-    for (const x of schud([antwoord + o.per, antwoord - o.per, antwoord + 1, antwoord - 1, antwoord + 2], rnd)) {
-      if (keuzes.size >= 4) break;
-      if (x > 0 && x <= 100) keuzes.add(x);
-    }
-    lijst.push({ ...o, antwoord, keuzes: schud([...keuzes], rnd), steun: steunVoor(o.groepen, o.per) });
+    lijst.push(opgaveVoorTafel(o.groepen, o.per, rnd, o.uitdaging));
   }
   return lijst;
+}
+
+/** Eén tafelsom met keuzes en steunsom (ook voor sommen die uit de herhalingsdoosjes terugkomen). */
+export function opgaveVoorTafel(groepen: number, per: number, rnd: Rnd = standaardRnd, uitdaging = false): GroepjesOpgave {
+  const antwoord = groepen * per;
+  const keuzes = new Set([antwoord]);
+  for (const x of schud([antwoord + per, antwoord - per, antwoord + 1, antwoord - 1, antwoord + 2], rnd)) {
+    if (keuzes.size >= 4) break;
+    if (x > 0 && x <= 100) keuzes.add(x);
+  }
+  return { groepen, per, antwoord, keuzes: schud([...keuzes], rnd), steun: steunVoor(groepen, per), uitdaging };
 }
 
 // ---------------------------------------------------------------- Geldwinkel

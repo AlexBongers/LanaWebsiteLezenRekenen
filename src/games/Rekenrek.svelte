@@ -13,8 +13,10 @@
   import Luidspreker from '../ui/Luidspreker.svelte';
   import RekenrekBeeld from '../ui/RekenrekBeeld.svelte';
   import GetallenLijn from '../ui/GetallenLijn.svelte';
-  import { maakRekenrek, type RekOpgave } from '../engine/generator-rekenschool';
-  import { somId } from '../engine/generator-rekenen';
+  import { brugVan, maakRekenrek, type RekOpgave } from '../engine/generator-rekenschool';
+  import { somId, somUitId } from '../engine/generator-rekenen';
+  import { aanDeBeurt } from '../engine/herhaling';
+  import { vg } from '../store/voortgang.svelte';
   import { somDelen, spreek } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
@@ -25,12 +27,48 @@
 
   let { opNoten, opVoortgang, opKlaar, niveau = 0, aantal = 8 }: SpelProps = $props();
 
+  /** Past een som uit de doosjes bij dit niveau van het rekenrek? */
+  const pastHier = (s: { a: number; op: '+' | '-'; b: number; antwoord: number }, n: number) => {
+    const top = Math.max(s.a, s.antwoord);
+    if (n <= 0) return top <= 10;
+    if (n === 1) return top <= 20 && s.op === '+';
+    if (n === 2) return top <= 20;
+    return s.b < 10;
+  };
+
+  /** Sommen die eerder fout gingen (ook in Dans-sommen) komen hier terug, mét het rekenrek erbij. Hooguit twee per keer. */
+  function uitDoosjes(n: number): { opgave: RekOpgave; id: string; uitDoos: boolean }[] {
+    const uit: { opgave: RekOpgave; id: string; uitDoos: boolean }[] = [];
+    for (const { id } of aanDeBeurt(vg.herhaling, 'som.', Date.now())) {
+      const s = somUitId(id);
+      if (!s || !pastHier(s, n)) continue;
+      uit.push({ opgave: { ...s, uitdaging: false, brug: brugVan(s.a, s.op, s.b) }, id, uitDoos: true });
+      if (uit.length >= 2) break;
+    }
+    return uit;
+  }
+
+  // svelte-ignore state_referenced_locally
+  const terug = uitDoosjes(niveau);
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<RekOpgave>(
-    kiesVers('rekenrek', maakRekenrek(niveau, aantal * 4).map((o) => ({ opgave: o, id: somId(o) })), (x) => x.id, aantal),
+    [
+      ...terug,
+      ...kiesVers(
+        'rekenrek',
+        maakRekenrek(niveau, aantal * 4)
+          .filter((o) => !terug.some((t) => t.id === somId(o)))
+          .map((o) => ({ opgave: o, id: somId(o), niveau: o.uitdaging ? niveau + 1 : niveau })),
+        (x) => x.id,
+        aantal - terug.length,
+      ),
+    ],
     niveau,
     { opKlaar, opVoortgang },
   );
+  /** Op niveau 2 doet Mira de eerste minsommen via de 10 nog samen met haar; daarna zelf. */
+  const SAMEN_MIN = 3;
+  let samenGedaan = 0;
   let o = $derived(ronde.huidig);
   let fase: 'splits' | 'antwoord' | 'klaar' = $state('antwoord');
   let erbij = $state(0);
@@ -65,13 +103,17 @@
     juist = false;
     toonLijn = false;
     // Niveau 0: de kralen van b staan er al bij (zien en tellen); niveau 1: stappen via de 10
-    toonStappen = niveau <= 1 && !!o.brug && !o.uitdaging;
+    const samenMin = niveau === 2 && o.op === '-' && samenGedaan < SAMEN_MIN;
+    toonStappen = !!o.brug && !o.uitdaging && (niveau <= 1 || samenMin);
+    const samen = toonStappen && samenMin;
+    if (samen) samenGedaan++;
     if (niveau === 0 && !o.brug && o.op === '+') erbij = o.b;
     if (niveau === 0 && !o.brug && o.op === '-') eraf = o.b;
     fase = toonStappen ? 'splits' : 'antwoord';
     bezig = false;
     if (o.uitdaging) await spreek(teksten.rekenschool.uitdaging);
     await zegSom();
+    if (samen) await spreek(teksten.rekenschool.samenMin);
     if (toonStappen) await spreek(o.op === '+' ? teksten.rekenschool.eerstNaarTien : teksten.rekenschool.eerstTerugNaarTien);
   }
 

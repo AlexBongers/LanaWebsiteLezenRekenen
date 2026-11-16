@@ -8,6 +8,9 @@
   import { spreek, stopSpreken } from '../audio/stem';
   import { speelBijna, speelTik } from '../audio/geluid';
   import teksten from '../../content/teksten.json';
+  import { DAGDOEL, schoolVandaag } from '../games/spellen';
+
+  let schoolGedaan = $derived(schoolVandaag(vg.sessies));
 
   let {
     opStad,
@@ -123,7 +126,10 @@
 
   <div class="onderknoppen">
     <button class="knop-goud" onclick={opKleedkamer}>👗 Kleedkamer</button>
-    <button class="knop-goud school-knop" onclick={opSchool}>🧮 Rekenschool</button>
+    <button class="knop-goud school-knop" onclick={opSchool}>
+      🧮 Rekenschool
+      <span class="dagdoel" class:gehaald={schoolGedaan >= DAGDOEL} aria-label="Vandaag {schoolGedaan} van {DAGDOEL} rekenspellen">{schoolGedaan >= DAGDOEL ? '⭐' : `${schoolGedaan}/${DAGDOEL}`}</span>
+    </button>
     <button class="knop-goud plakboek-knop" onclick={opPlakboek}>
       📒 Plakboek
       {#if vg.stickersNieuw.length}<span class="nieuw-teller">{vg.stickersNieuw.length}</span>{/if}
@@ -364,8 +370,29 @@
     50% { box-shadow: 0 6px 0 #92400e, 0 0 40px rgba(251, 191, 36, 0.95); }
   }
   .school-knop {
+    position: relative;
     background: linear-gradient(180deg, #bae6fd, #38bdf8);
     box-shadow: 0 6px 0 #0369a1, 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+  .dagdoel {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    min-width: 44px;
+    height: 34px;
+    padding: 0 8px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0c4a6e;
+    background: #fff;
+    border: 3px solid #0369a1;
+  }
+  .dagdoel.gehaald {
+    background: linear-gradient(180deg, #fde68a, #f59e0b);
+    border-color: #b45309;
   }
   .plakboek-knop {
     position: relative;

@@ -7,7 +7,8 @@
 import type { Resultaat } from '../engine/sessie';
 import type { SpelProps } from './types';
 
-export type Opgave<T> = { opgave: T; id: string };
+/** `niveau`: alleen invullen als de opgave van een ander niveau is dan het spel (uitdaging of herhaling). */
+export type Opgave<T> = { opgave: T; id: string; niveau?: number; /** Komt uit de herhalingsdoosjes. */ uitDoos?: boolean };
 
 export class Ronde<T> {
   rij: (Opgave<T> & { herhaling: boolean })[] = $state([]);
@@ -26,6 +27,13 @@ export class Ronde<T> {
     this.rij = opgaven.map((o) => ({ ...o, herhaling: false }));
   }
 
+  /** Opgaven van een ander niveau tellen niet mee voor omhoog of omlaag (zie Level). */
+  private bron(item: Opgave<T>) {
+    if (item.uitDoos) return 'herhaling';
+    const n = item.niveau ?? this.niveau;
+    return n > this.niveau ? 'uitdaging' : n < this.niveau ? 'herhaling' : 'niveau';
+  }
+
   get huidig(): T {
     return this.rij[this.index].opgave;
   }
@@ -38,7 +46,7 @@ export class Ronde<T> {
   goed(): number {
     const item = this.rij[this.index];
     if (!item.herhaling && !this.onthuld) {
-      this.resultaten.push({ id: item.id, niveau: this.niveau, bron: 'niveau', goed: this.pogingen === 0, gekozen: this.eersteFout });
+      this.resultaten.push({ id: item.id, niveau: item.niveau ?? this.niveau, bron: this.bron(item), goed: this.pogingen === 0, gekozen: this.eersteFout });
     }
     return this.pogingen === 0 ? 2 : 1;
   }
@@ -51,7 +59,7 @@ export class Ronde<T> {
     if (this.pogingen < 2) return 'hint';
     this.onthuld = true;
     if (!item.herhaling) {
-      this.resultaten.push({ id: item.id, niveau: this.niveau, bron: 'niveau', goed: false, gekozen: this.eersteFout });
+      this.resultaten.push({ id: item.id, niveau: item.niveau ?? this.niveau, bron: this.bron(item), goed: false, gekozen: this.eersteFout });
       this.rij = [...this.rij, { ...item, herhaling: true }];
     }
     return 'onthuld';
