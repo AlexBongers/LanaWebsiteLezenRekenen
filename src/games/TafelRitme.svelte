@@ -223,11 +223,6 @@
     height: 290px;
     margin: -6px 0;
   }
-  .getalknop {
-    min-width: 170px;
-    font-size: 64px;
-    font-family: var(--font-titel);
-  }
   .getalknop:disabled {
     opacity: 0.6;
   }

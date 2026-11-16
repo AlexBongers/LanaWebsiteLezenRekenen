@@ -240,6 +240,15 @@ button {
   opacity: 0.28 !important;
   animation: none !important;
 }
+/* Animaties die elke frame opnieuw getekend moeten worden */
+.licht .pad-gedaan,
+.licht .pad-toekomst,
+.licht .uitdaging-knop::after,
+.licht .gat::after,
+.licht .sticker,
+.licht .sticker * {
+  animation: none !important;
+}
 .licht .achtergrond .vallend,
 .licht .achtergrond .schild {
   display: none;
@@ -276,4 +285,57 @@ button {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- Gedeeld door de rekenspellen */
+/* De som bovenaan: "8 + 5 = ?" */
+.somkaart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 18px 8px 30px;
+  border-radius: 26px;
+  font-size: 62px;
+  font-weight: 700;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+  border: 3px solid rgba(253, 230, 138, 0.6);
+  animation: pop-in 0.4s ease-out;
+}
+.somkaart .op {
+  color: var(--goud);
+}
+/* Keuzeknop met een getal */
+.keuzeknop.getalknop {
+  min-width: 140px;
+  font-size: 56px;
+  font-family: var(--font-titel);
+}
+/* Labeltje op een opgave: "⭐ Uitdaging" (goud) of "🔁 Nog een keer" (blauw) */
+.opgave-label {
+  position: absolute;
+  top: -18px;
+  left: 18px;
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #422006;
+  background: linear-gradient(180deg, #fde68a, #f59e0b);
+}
+.opgave-label.terug {
+  color: #082f49;
+  background: linear-gradient(180deg, #bae6fd, #38bdf8);
+}
+/* Hint of steunsom: "💡 5 × 7 = 35, en dan nog 7 erbij" */
+.tipvak {
+  margin: 0;
+  padding: 6px 18px;
+  border-radius: 14px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fef3c7;
+  background: rgba(251, 191, 36, 0.18);
+  border: 2px solid rgba(251, 191, 36, 0.6);
 }

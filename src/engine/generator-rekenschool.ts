@@ -17,7 +17,8 @@ import { getal, kies, schud, standaardRnd, type Rnd } from './toeval';
 /** Kans op een uitdaging (opgave van het volgende niveau). */
 export const UITDAGING_KANS = 0.15;
 
-const metUitdaging = <T>(niveau: number, max: number, rnd: Rnd, maak: (n: number) => T): T & { uitdaging: boolean } => {
+/** Soms (UITDAGING_KANS) een opgave van het volgende niveau; `uitdaging` zegt of dat zo is. */
+export const metUitdaging = <T>(niveau: number, max: number, rnd: Rnd, maak: (n: number) => T): T & { uitdaging: boolean } => {
   const uitdaging = niveau < max && rnd() < UITDAGING_KANS;
   return { ...maak(uitdaging ? niveau + 1 : niveau), uitdaging };
 };

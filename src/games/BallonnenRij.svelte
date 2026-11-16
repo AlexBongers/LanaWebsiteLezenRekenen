@@ -163,9 +163,4 @@
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
   }
-  .getalknop {
-    min-width: 150px;
-    font-size: 60px;
-    font-family: var(--font-titel);
-  }
 </style>

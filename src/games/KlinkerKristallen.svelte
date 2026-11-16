@@ -178,6 +178,15 @@
     color: #a78bfa;
     background: rgba(167, 139, 250, 0.15);
     border: 4px dashed #a78bfa;
+    position: relative;
+  }
+  .gat:not(.vol)::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    box-shadow: 0 0 18px 4px rgba(167, 139, 250, 0.7);
+    pointer-events: none;
     animation: puls-gat 1.4s ease-in-out infinite;
   }
   .gat.vol {
@@ -192,7 +201,7 @@
     font-size: 60px;
   }
   @keyframes puls-gat {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.5); }
-    50% { box-shadow: 0 0 18px 4px rgba(167, 139, 250, 0.7); }
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
 </style>

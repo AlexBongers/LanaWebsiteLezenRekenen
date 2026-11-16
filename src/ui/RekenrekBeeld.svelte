@@ -31,13 +31,14 @@
   );
 </script>
 
-<svg viewBox="0 0 620 170" class="rek" role="img" aria-label="Rekenrek met {basis + erbij - eraf} kralen">
+<svg viewBox="0 0 620 172" class="rek" role="img" aria-label="Rekenrek met {basis + erbij - eraf} kralen">
   <defs>
     <radialGradient id="rek-rood" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#fecaca" /><stop offset="0.5" stop-color="#ef4444" /><stop offset="1" stop-color="#991b1b" /></radialGradient>
     <radialGradient id="rek-wit" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ffffff" /><stop offset="0.6" stop-color="#e5e7eb" /><stop offset="1" stop-color="#9ca3af" /></radialGradient>
     <radialGradient id="rek-goud" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#fff7c2" /><stop offset="0.5" stop-color="#fbbf24" /><stop offset="1" stop-color="#b45309" /></radialGradient>
   </defs>
   <!-- Frame -->
+  <rect x="8" y="16" width="604" height="150" rx="18" fill="rgba(0, 0, 0, 0.35)" />
   <rect x="8" y="10" width="604" height="150" rx="18" fill="#7c2d12" />
   <rect x="18" y="20" width="584" height="130" rx="12" fill="#fef3c7" />
   {#each [0, 1] as rij}
@@ -63,13 +64,13 @@
   .rek {
     width: 100%;
     height: auto;
-    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
   }
   .kraal {
     transition: transform 0.55s cubic-bezier(0.3, 1.4, 0.5, 1), opacity 0.4s;
   }
   .kraal.goud {
-    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.9));
+    stroke: #fff7c2;
+    stroke-width: 3;
   }
   .kraal.weg {
     opacity: 0.35;

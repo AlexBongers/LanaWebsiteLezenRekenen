@@ -166,12 +166,14 @@
   }
   .equalizer span {
     width: 12px;
+    height: 46px;
+    transform-origin: bottom;
     border-radius: 6px;
     background: linear-gradient(180deg, #67e8f9, #a855f7);
     animation: bar 0.9s ease-in-out infinite alternate;
   }
   @keyframes bar {
-    from { height: 8px; }
-    to { height: 46px; }
+    from { transform: scaleY(0.17); }
+    to { transform: scaleY(1); }
   }
 </style>

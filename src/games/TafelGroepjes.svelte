@@ -148,7 +148,7 @@
   <div class="speelveld">
     {#key ronde.nummer}
       <div class="somkaart">
-        {#if o.uitdaging}<span class="ster">⭐ Uitdaging</span>{/if}
+        {#if o.uitdaging}<span class="opgave-label">⭐ Uitdaging</span>{/if}
         <span>{o.groepen}</span><span class="op">×</span><span>{o.per}</span><span class="op">=</span>
         <span class="vraag" class:goed={juist || ronde.onthuld}>{juist || ronde.onthuld ? o.antwoord : '?'}</span>
         <Luidspreker opTik={zegSom} klein />
@@ -179,7 +179,7 @@
     {/if}
 
     {#if toonSteun}
-      <div class="steun">💡 {o.steun.tekst}</div>
+      <div class="tipvak">💡 {o.steun.tekst}</div>
     {/if}
 
     {#key ronde.nummer}
@@ -202,32 +202,6 @@
 </div>
 
 <style>
-  .somkaart {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 6px 18px 6px 30px;
-    border-radius: 26px;
-    font-size: 60px;
-    font-weight: 700;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-    border: 3px solid rgba(253, 230, 138, 0.6);
-    animation: pop-in 0.4s ease-out;
-  }
-  .ster {
-    position: absolute;
-    top: -18px;
-    left: 18px;
-    padding: 2px 12px;
-    border-radius: 999px;
-    font-size: 18px;
-    color: #422006;
-    background: linear-gradient(180deg, #fde68a, #f59e0b);
-  }
-  .op {
-    color: var(--goud);
-  }
   .vraag {
     min-width: 1.3em;
     text-align: center;
@@ -257,7 +231,7 @@
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.1);
     border: 3px dashed rgba(249, 168, 212, 0.6);
-    transition: all 0.25s;
+    transition: border-color 0.25s, background-color 0.25s;
   }
   .groepje.volgende {
     border-color: #fde68a;
@@ -297,22 +271,8 @@
     font-weight: 700;
     color: #fde68a;
   }
-  .steun {
-    padding: 8px 20px;
-    border-radius: 16px;
-    background: rgba(251, 191, 36, 0.18);
-    border: 2px solid rgba(251, 191, 36, 0.6);
-    font-size: 26px;
-    font-weight: 700;
-    color: #fef3c7;
-  }
-  .getalknop {
-    min-width: 130px;
-    font-size: 52px;
-    font-family: var(--font-titel);
-  }
   @keyframes puls-groep {
-    0%, 100% { box-shadow: 0 0 0 rgba(253, 230, 138, 0); }
-    50% { box-shadow: 0 0 18px rgba(253, 230, 138, 0.8); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
   }
 </style>

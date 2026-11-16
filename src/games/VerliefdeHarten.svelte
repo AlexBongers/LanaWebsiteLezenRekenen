@@ -127,18 +127,6 @@
 </div>
 
 <style>
-  .somkaart {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 8px 18px 8px 30px;
-    border-radius: 26px;
-    font-size: 60px;
-    font-weight: 700;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-    border: 3px solid rgba(249, 168, 212, 0.6);
-    animation: pop-in 0.4s ease-out;
-  }
   .is {
     color: var(--goud);
   }
@@ -177,10 +165,5 @@
   .half.rechts {
     border-radius: 20px 100px 100px 20px;
     background: #c026d3;
-  }
-  .getalknop {
-    min-width: 150px;
-    font-size: 60px;
-    font-family: var(--font-titel);
   }
 </style>

@@ -189,7 +189,7 @@
     <div class="links">
       {#key ronde.nummer}
         <div class="opdracht" class:schud bind:this={doelEl}>
-          {#if o.uitdaging}<span class="ster">⭐ Uitdaging</span>{/if}
+          {#if o.uitdaging}<span class="opgave-label">⭐ Uitdaging</span>{/if}
           {#if o.soort === 'tel'}
             <span class="vraag">Hoeveel is dit samen?</span>
           {:else if o.soort === 'maak'}
@@ -237,7 +237,7 @@
         <div class="tafel">
           <span class="label">Je betaalt met</span>
           <div class="geld"><GeldStuk cent={o.betaald} /></div>
-          {#if hint}<p class="tip">💡 Tel verder: {geldTekst(o.prijs)} → {geldTekst(o.betaald)}</p>{/if}
+          {#if hint}<p class="tipvak">💡 Tel verder: {geldTekst(o.prijs)} → {geldTekst(o.betaald)}</p>{/if}
         </div>
       {/if}
 
@@ -246,7 +246,7 @@
           <p class="vraagregel">Heb je genoeg?</p>
         {:else}
           <p class="vraagregel">{o.genoeg ? 'Ja! Hoeveel houd je over?' : 'Nee. Hoeveel kom je te kort?'}</p>
-          {#if hint}<p class="tip">💡 Tel verder: {geldTekst(Math.min(o.heeft, o.prijs))} → {geldTekst(Math.max(o.heeft, o.prijs))}</p>{/if}
+          {#if hint}<p class="tipvak">💡 Tel verder: {geldTekst(Math.min(o.heeft, o.prijs))} → {geldTekst(Math.max(o.heeft, o.prijs))}</p>{/if}
         {/if}
       {:else if o.soort === 'terug'}
         <p class="vraagregel">Hoeveel krijg je terug?</p>
@@ -319,16 +319,6 @@
   }
   .opdracht.schud {
     animation: schud 0.5s ease-in-out;
-  }
-  .ster {
-    position: absolute;
-    top: -18px;
-    left: 18px;
-    padding: 2px 12px;
-    border-radius: 999px;
-    font-size: 18px;
-    color: #422006;
-    background: linear-gradient(180deg, #fde68a, #f59e0b);
   }
   .ding {
     font-size: 58px;
@@ -413,16 +403,6 @@
     font-size: 30px;
     font-weight: 700;
     color: #fde68a;
-  }
-  .tip {
-    margin: 8px 0 0;
-    padding: 4px 14px;
-    border-radius: 12px;
-    font-size: 22px;
-    font-weight: 700;
-    color: #fef3c7;
-    background: rgba(251, 191, 36, 0.2);
-    border: 2px solid rgba(251, 191, 36, 0.6);
   }
   .invoer {
     display: flex;

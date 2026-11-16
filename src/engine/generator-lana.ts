@@ -10,13 +10,8 @@
  * Af en toe zit er een uitdaging tussen: een opgave van het volgende niveau.
  */
 import { somUit, type Som } from './generator-rekenen';
-import { brugVan, steunVoor, UITDAGING_KANS, type RekOpgave, type Steun } from './generator-rekenschool';
+import { brugVan, metUitdaging, steunVoor, type RekOpgave, type Steun } from './generator-rekenschool';
 import { getal, kies, schud, standaardRnd, type Rnd } from './toeval';
-
-const metUitdaging = <T>(niveau: number, max: number, rnd: Rnd, maak: (n: number) => T): T & { uitdaging: boolean } => {
-  const uitdaging = niveau < max && rnd() < UITDAGING_KANS;
-  return { ...maak(uitdaging ? niveau + 1 : niveau), uitdaging };
-};
 
 // ================================================================ Rekenlab
 export const LAB_MAX = 5;

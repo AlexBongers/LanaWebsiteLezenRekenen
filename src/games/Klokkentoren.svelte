@@ -119,7 +119,7 @@
   <div class="speelveld toren">
     {#key ronde.nummer}
       <div class="boven">
-        {#if o.uitdaging}<span class="ster">⭐ Uitdaging</span>{/if}
+        {#if o.uitdaging}<span class="opgave-label naast">⭐ Uitdaging</span>{/if}
         {#if toont === 'analoog'}
           <div class="groteklok"><KlokBeeld tijd={o.tijd} {uitleg} minuten={metMinuten} /></div>
         {:else if toont === 'digitaal'}
@@ -154,7 +154,7 @@
             aria-label={kiest === 'klokken' ? `Klok ${i + 1}` : undefined}
           >
             {#if kiest === 'klokken'}
-              <span class="kleineklok"><KlokBeeld tijd={k} uitleg={uitleg && (juist || ronde.onthuld) && id === tijdId(o.tijd)} /></span>
+              <span class="kleineklok"><KlokBeeld tijd={k} klein uitleg={uitleg && (juist || ronde.onthuld) && id === tijdId(o.tijd)} /></span>
             {:else if kiest === 'digitaal'}
               <span class="scherm klein">{digitaal(k)}</span>
             {:else}
@@ -181,16 +181,9 @@
     min-height: 150px;
     animation: pop-in 0.4s ease-out;
   }
-  .ster {
-    position: absolute;
+  .naast {
     top: -6px;
     left: -90px;
-    padding: 2px 12px;
-    border-radius: 999px;
-    font-size: 18px;
-    color: #422006;
-    background: linear-gradient(180deg, #fde68a, #f59e0b);
-    white-space: nowrap;
   }
   .groteklok {
     width: 330px;

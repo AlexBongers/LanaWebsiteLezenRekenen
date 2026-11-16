@@ -357,7 +357,15 @@
     color: #422006;
     background: linear-gradient(160deg, #fff7c2, #fbbf24 55%, #d97706);
     border: 3px solid #fff7c2;
-    box-shadow: 0 6px 0 #92400e, 0 0 30px rgba(251, 191, 36, 0.7);
+    box-shadow: 0 6px 0 #92400e, 0 0 20px rgba(251, 191, 36, 0.5);
+  }
+  .uitdaging-knop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 40px rgba(251, 191, 36, 0.95);
+    pointer-events: none;
     animation: glim 2.4s ease-in-out infinite;
   }
   .uitdaging-knop .beker {
@@ -386,8 +394,8 @@
     font-size: 26px;
   }
   @keyframes glim {
-    0%, 100% { box-shadow: 0 6px 0 #92400e, 0 0 20px rgba(251, 191, 36, 0.5); }
-    50% { box-shadow: 0 6px 0 #92400e, 0 0 40px rgba(251, 191, 36, 0.95); }
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
   .school-knop {
     position: relative;

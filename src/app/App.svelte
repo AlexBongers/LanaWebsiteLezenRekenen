@@ -6,13 +6,7 @@
   import Start from './Start.svelte';
   import Tourkaart from './Tourkaart.svelte';
   import Stad from './Stad.svelte';
-  import Kleedkamer from './Kleedkamer.svelte';
-  import Plakboek from './Plakboek.svelte';
-  import Uitdaging from './Uitdaging.svelte';
-  import BaasLevel from './BaasLevel.svelte';
   import Level from './Level.svelte';
-  import Ouderhoek from './Ouderhoek.svelte';
-  import Einde from './Einde.svelte';
   import SpelKeuze from './SpelKeuze.svelte';
   import { SPEL, lanaSpellen, schoolSpellen, type SpelId } from '../games/spellen';
   import characters from '../../content/characters.json';
@@ -250,15 +244,17 @@
       {:else if scherm === 'level'}
         <Level {spel} {stadId} opTerug={naarSpellen} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
       {:else if scherm === 'baas'}
-        <BaasLevel {stadId} opTerug={() => naarStad()} opTour={naarTour} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+        {#await import('./BaasLevel.svelte') then { default: BaasLevel }}
+          <BaasLevel {stadId} opTerug={() => naarStad()} opTour={naarTour} opStop={() => (vraagStop = true)} {pauzeNodig} opPauze={naarEinde} />
+        {/await}
       {:else if scherm === 'kleedkamer'}
-        <Kleedkamer opTerug={naarTour} />
+        {#await import('./Kleedkamer.svelte') then { default: Kleedkamer }}<Kleedkamer opTerug={naarTour} />{/await}
       {:else if scherm === 'plakboek'}
-        <Plakboek opTerug={naarTour} />
+        {#await import('./Plakboek.svelte') then { default: Plakboek }}<Plakboek opTerug={naarTour} />{/await}
       {:else if scherm === 'uitdaging'}
-        <Uitdaging opTerug={naarTour} />
+        {#await import('./Uitdaging.svelte') then { default: Uitdaging }}<Uitdaging opTerug={naarTour} />{/await}
       {:else if scherm === 'einde'}
-        <Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />
+        {#await import('./Einde.svelte') then { default: Einde }}<Einde sinds={speelStart} opOpnieuw={() => (scherm = 'start')} />{/await}
       {/if}
     </div>
   {/key}
@@ -273,7 +269,7 @@
 
 <!-- De ouderhoek gebruikt het hele scherm en mag scrollen -->
 {#if scherm === 'ouder'}
-  <Ouderhoek opSluit={naarTour} />
+  {#await import('./Ouderhoek.svelte') then { default: Ouderhoek }}<Ouderhoek opSluit={naarTour} />{/await}
 {/if}
 
 <div class="draai" aria-hidden={true}>

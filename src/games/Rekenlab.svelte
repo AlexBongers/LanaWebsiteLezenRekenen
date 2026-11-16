@@ -15,8 +15,8 @@
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import { labId, labTafel, maakLab, type LabOpgave } from '../engine/generator-lana';
   import { brugVan } from '../engine/generator-rekenschool';
-  import { maakSprongen, somUitId } from '../engine/generator-rekenen';
-  import { aanDeBeurt } from '../engine/herhaling';
+  import { maakSprongen } from '../engine/generator-rekenen';
+  import { sommenUitDoosjes } from './doosjes';
   import { vg } from '../store/voortgang.svelte';
   import { somDelen, spreek } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
@@ -38,13 +38,11 @@
 
   function stelSamen(n: number, totaal: number): Opgave<LabOpgave>[] {
     // Sommen die eerder fout gingen (in welk rekenspel dan ook): hooguit twee
-    const terug: Opgave<LabOpgave>[] = [];
-    for (const { id } of aanDeBeurt(vg.herhaling, 'som.', Date.now())) {
-      const s = somUitId(id);
-      if (!s || !pastHier(s.a, s.b, s.antwoord, n)) continue;
-      terug.push({ opgave: { soort: 'som', som: s, brug: brugVan(s.a, s.op, s.b), uitdaging: false }, id, uitDoos: true });
-      if (terug.length >= 2) break;
-    }
+    const terug: Opgave<LabOpgave>[] = sommenUitDoosjes((s) => pastHier(s.a, s.b, s.antwoord, n)).map(({ id, som }) => ({
+      opgave: { soort: 'som', som, brug: brugVan(som.a, som.op, som.b), uitdaging: false },
+      id,
+      uitDoos: true,
+    }));
     // Twee tafelsommen (vanaf niveau 2), aan het eind
     const tafels: Opgave<LabOpgave>[] = [];
     for (let p = 0; tafels.length < 2 && p < 20; p++) {
@@ -211,8 +209,8 @@
     <div class="links">
       {#key ronde.nummer}
         <div class="somkaart" class:schud>
-          {#if o.uitdaging}<span class="ster">⭐ Uitdaging</span>{/if}
-          {#if ronde.rij[ronde.nummer].uitDoos}<span class="ster terug">🔁 Nog een keer</span>{/if}
+          {#if o.uitdaging}<span class="opgave-label">⭐ Uitdaging</span>{/if}
+          {#if ronde.rij[ronde.nummer].uitDoos}<span class="opgave-label terug">🔁 Nog een keer</span>{/if}
           {#if o.soort === 'som'}
             <span>{o.som.a}</span><span class="op">{teken(o.som.op)}</span><span>{o.som.b}</span><span class="op">=</span>
             <span class="vak" class:goed={juist} class:toon={ronde.onthuld} bind:this={vakEl}>{juist || ronde.onthuld ? antwoord : invoer || '?'}</span>
@@ -239,22 +237,22 @@
                 </span>
               {/each}
             </div>
-            {#if o.steun.soort === 'afleiden'}<p class="tip">💡 {o.steun.tekst}</p>{/if}
+            {#if o.steun.soort === 'afleiden'}<p class="tipvak">💡 {o.steun.tekst}</p>{/if}
           {:else}
-            <p class="tip zacht">{o.groepen} groepjes van {o.per}</p>
+            <p class="zacht">{o.groepen} groepjes van {o.per}</p>
           {/if}
         {:else if kaal}
           {#if toonRek}
             <div class="rek"><RekenrekBeeld basis={kaal.a} {erbij} {eraf} /></div>
             {#if brug && (hulp || juist || ronde.onthuld)}
-              <p class="tip">
+              <p class="tipvak">
                 💡 {kaal.a} {teken(kaal.op)} {brug.eerst} = {brug.tiental} → {brug.tiental} {teken(kaal.op)} {brug.dan} = {kaal.uit}
               </p>
             {/if}
           {:else if !opRek && (hulp || juist || ronde.onthuld)}
             <div class="lijn"><GetallenLijn {sprongen} /></div>
           {:else}
-            <p class="tip zacht">{o.soort === 'gat' ? 'Welk getal mist er?' : 'Reken het uit en typ het antwoord.'}</p>
+            <p class="zacht">{o.soort === 'gat' ? 'Welk getal mist er?' : 'Reken het uit en typ het antwoord.'}</p>
           {/if}
         {/if}
       </div>
@@ -290,40 +288,8 @@
     align-items: center;
     gap: 16px;
   }
-  .somkaart {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 10px 16px 10px 28px;
-    border-radius: 26px;
-    font-size: 66px;
-    font-weight: 700;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-    border: 3px solid rgba(253, 230, 138, 0.6);
-    animation: pop-in 0.4s ease-out;
-  }
   .somkaart.schud {
     animation: schud 0.5s ease-in-out;
-  }
-  .ster {
-    position: absolute;
-    top: -18px;
-    left: 18px;
-    padding: 2px 12px;
-    border-radius: 999px;
-    font-size: 18px;
-    color: #422006;
-    background: linear-gradient(180deg, #fde68a, #f59e0b);
-    box-shadow: 0 0 14px rgba(251, 191, 36, 0.8);
-  }
-  .ster.terug {
-    background: linear-gradient(180deg, #bae6fd, #38bdf8);
-    color: #082f49;
-    box-shadow: none;
-  }
-  .op {
-    color: var(--goud);
   }
   .vak {
     min-width: 1.7em;
@@ -358,17 +324,9 @@
     width: 560px;
     height: 130px;
   }
-  .tip {
+  .zacht {
     margin: 0;
-    padding: 6px 18px;
-    border-radius: 14px;
     font-size: 26px;
-    font-weight: 700;
-    color: #fef3c7;
-    background: rgba(251, 191, 36, 0.18);
-    border: 2px solid rgba(251, 191, 36, 0.6);
-  }
-  .tip.zacht {
     background: none;
     border: none;
     color: #fde68a;

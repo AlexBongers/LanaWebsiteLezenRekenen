@@ -14,9 +14,8 @@
   import RekenrekBeeld from '../ui/RekenrekBeeld.svelte';
   import GetallenLijn from '../ui/GetallenLijn.svelte';
   import { brugVan, maakRekenrek, type RekOpgave } from '../engine/generator-rekenschool';
-  import { somId, somUitId } from '../engine/generator-rekenen';
-  import { aanDeBeurt } from '../engine/herhaling';
-  import { vg } from '../store/voortgang.svelte';
+  import { somId } from '../engine/generator-rekenen';
+  import { sommenUitDoosjes } from './doosjes';
   import { somDelen, spreek } from '../audio/stem';
   import { speelBijna, speelGoed, speelTik } from '../audio/geluid';
   import { glitterOp } from '../ui/feest';
@@ -36,20 +35,13 @@
     return s.b < 10;
   };
 
-  /** Sommen die eerder fout gingen (ook in Dans-sommen) komen hier terug, mét het rekenrek erbij. Hooguit twee per keer. */
-  function uitDoosjes(n: number): { opgave: RekOpgave; id: string; uitDoos: boolean }[] {
-    const uit: { opgave: RekOpgave; id: string; uitDoos: boolean }[] = [];
-    for (const { id } of aanDeBeurt(vg.herhaling, 'som.', Date.now())) {
-      const s = somUitId(id);
-      if (!s || !pastHier(s, n)) continue;
-      uit.push({ opgave: { ...s, uitdaging: false, brug: brugVan(s.a, s.op, s.b) }, id, uitDoos: true });
-      if (uit.length >= 2) break;
-    }
-    return uit;
-  }
-
+  // Sommen die eerder fout gingen (ook in Dans-sommen) komen hier terug, mét het rekenrek erbij
   // svelte-ignore state_referenced_locally
-  const terug = uitDoosjes(niveau);
+  const terug = sommenUitDoosjes((s) => pastHier(s, niveau)).map(({ id, som }) => ({
+    opgave: { ...som, uitdaging: false, brug: brugVan(som.a, som.op, som.b) } as RekOpgave,
+    id,
+    uitDoos: true,
+  }));
   // svelte-ignore state_referenced_locally
   const ronde = new Ronde<RekOpgave>(
     [
@@ -210,7 +202,7 @@
   <div class="speelveld">
     {#key ronde.nummer}
       <div class="somkaart">
-        {#if o.uitdaging}<span class="ster" title="Uitdaging">⭐ Uitdaging</span>{/if}
+        {#if o.uitdaging}<span class="opgave-label">⭐ Uitdaging</span>{/if}
         <span>{o.a}</span>
         <span class="op">{o.op === '+' ? '+' : '−'}</span>
         <span>{o.b}</span>
@@ -270,33 +262,6 @@
 </div>
 
 <style>
-  .somkaart {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 8px 18px 8px 32px;
-    border-radius: 26px;
-    font-size: 64px;
-    font-weight: 700;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-    border: 3px solid rgba(253, 230, 138, 0.6);
-    animation: pop-in 0.4s ease-out;
-  }
-  .ster {
-    position: absolute;
-    top: -18px;
-    left: 18px;
-    padding: 2px 12px;
-    border-radius: 999px;
-    font-size: 18px;
-    color: #422006;
-    background: linear-gradient(180deg, #fde68a, #f59e0b);
-    box-shadow: 0 0 14px rgba(251, 191, 36, 0.8);
-  }
-  .op {
-    color: var(--goud);
-  }
   .vraag {
     min-width: 1.3em;
     text-align: center;
@@ -330,7 +295,7 @@
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.4);
-    transition: all 0.3s;
+    transition: color 0.3s, background-color 0.3s;
   }
   .stap.aan {
     color: #fff;
@@ -345,10 +310,5 @@
     font-size: 28px;
     font-weight: 700;
     color: #fde68a;
-  }
-  .getalknop {
-    min-width: 130px;
-    font-size: 54px;
-    font-family: var(--font-titel);
   }
 </style>

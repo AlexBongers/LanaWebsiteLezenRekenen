@@ -5,7 +5,23 @@
    */
   import type { KlokTijd } from '../engine/generator-lana';
 
-  let { tijd, uitleg = false, minuten = false }: { tijd: KlokTijd; uitleg?: boolean; /** Minuten (5, 10, 15…) om de rand. */ minuten?: boolean } = $props();
+  let {
+    tijd,
+    uitleg = false,
+    minuten = false,
+    klein = false,
+  }: {
+    tijd: KlokTijd;
+    uitleg?: boolean;
+    /** Minuten (5, 10, 15…) om de rand. */
+    minuten?: boolean;
+    /** Kleine klok (keuzeknop): alleen de streepjes bij de cijfers. */
+    klein?: boolean;
+  } = $props();
+
+  const STREEPJES = Array.from({ length: 60 }, (_, i) => i);
+  const UREN = Array.from({ length: 12 }, (_, i) => i + 1);
+  let streepjes = $derived(klein ? STREEPJES.filter((m) => m % 5 === 0) : STREEPJES);
 
   let minHoek = $derived(tijd.min * 6);
   let uurHoek = $derived(((tijd.uur % 12) + tijd.min / 60) * 30);
@@ -13,6 +29,7 @@
 </script>
 
 <svg viewBox="-128 -128 256 256" class="klok" role="img" aria-label="Analoge klok">
+  <circle r="114" cy="7" fill="rgba(0, 0, 0, 0.3)" />
   <circle r="112" fill="#fdf2f8" stroke="#f472b6" stroke-width="10" />
   {#if uitleg}
     <path d="M0 0 L0 -106 A106 106 0 0 1 0 106 Z" fill="rgba(74, 222, 128, 0.28)" />
@@ -20,12 +37,12 @@
     <text x="36" y="-24" text-anchor="middle" class="helft over">over</text>
     <text x="-36" y="-24" text-anchor="middle" class="helft voor">voor</text>
   {/if}
-  {#each Array.from({ length: 60 }, (_, i) => i) as m}
+  {#each streepjes as m (m)}
     {@const a = punt(m / 60, 104)}
     {@const b = punt(m / 60, m % 5 === 0 ? 92 : 98)}
     <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#831843" stroke-width={m % 5 === 0 ? 3 : 1} stroke-linecap="round" />
   {/each}
-  {#each Array.from({ length: 12 }, (_, i) => i + 1) as u}
+  {#each UREN as u (u)}
     {@const p = punt(u / 12, 76)}
     <text x={p.x} y={p.y + 8} text-anchor="middle" class="cijfer">{u}</text>
     {#if minuten}
@@ -46,7 +63,6 @@
   .klok {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
   }
   .cijfer {
     font-family: var(--font-titel);

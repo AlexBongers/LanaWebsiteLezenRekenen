@@ -125,7 +125,7 @@
   <div class="speelveld">
     {#key ronde.nummer}
       <div class="verhaal">
-        {#if o.uitdaging}<span class="ster">⭐ Uitdaging</span>{/if}
+        {#if o.uitdaging}<span class="opgave-label">⭐ Uitdaging</span>{/if}
         <p class="tekst">
           {#each woorden as w, i (i)}
             <span class:signaal={toonSignaal && signaal.has(kaal(w))}>{w}</span>{' '}
@@ -184,16 +184,6 @@
     background: linear-gradient(180deg, #f472b6, #db2777);
     border-color: #fbcfe8;
   }
-  .ster {
-    position: absolute;
-    top: -18px;
-    left: 18px;
-    padding: 2px 12px;
-    border-radius: 999px;
-    font-size: 18px;
-    color: #422006;
-    background: linear-gradient(180deg, #fde68a, #f59e0b);
-  }
   .tekst {
     margin: 0;
     font-family: var(--font-lees);
@@ -226,10 +216,5 @@
   }
   .vraagteken.goed {
     color: #86efac;
-  }
-  .getalknop {
-    min-width: 130px;
-    font-size: 52px;
-    font-family: var(--font-titel);
   }
 </style>
